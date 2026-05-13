@@ -281,6 +281,11 @@ export class SkillService {
       const anthropicFile = vscode.Uri.joinPath(root, '.antigravity', 'active_skills.xml');
 
       try {
+        // Clear old skills folders to prevent sync issues
+        try {
+          await vscode.workspace.fs.delete(skillsFolder, { recursive: true, useTrash: false });
+        } catch (e) { /* ignore if not exists */ }
+
         await vscode.workspace.fs.createDirectory(skillsFolder);
         
         let xmlContent = '<available_skills>\n';
@@ -323,7 +328,16 @@ export class SkillService {
         await vscode.workspace.fs.writeFile(universalFile, Buffer.from(mdContent, 'utf8'));
         await vscode.workspace.fs.writeFile(anthropicFile, Buffer.from(xmlContent, 'utf8'));
         
-        vscode.window.setStatusBarMessage(`$(zap) Universal Agent Context Updated`, 3000);
+        // --- Universal AI Support: Injection for other Agents ---
+        // 1. Cursor (.cursorrules)
+        const cursorRulesFile = vscode.Uri.joinPath(root, '.cursorrules');
+        await vscode.workspace.fs.writeFile(cursorRulesFile, Buffer.from(mdContent, 'utf8'));
+
+        // 2. Claude Code (CLAUDE.md)
+        const claudeMdFile = vscode.Uri.joinPath(root, 'CLAUDE.md');
+        await vscode.workspace.fs.writeFile(claudeMdFile, Buffer.from(mdContent, 'utf8'));
+
+        vscode.window.setStatusBarMessage(`$(zap) Universal Agent Context Synced`, 3000);
       } catch (err) {
         console.error('Failed to inject universal skills', err);
       }

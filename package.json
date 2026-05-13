@@ -3,7 +3,7 @@
   "displayName": "Agent Assistant",
   "description": "The definitive Expert Persona & Quota Management system for AI Agents. Empower your workflow with deep skill injection and real-time resource tracking.",
   "version": "1.0.1",
-  "icon": "resources/icons/agent_skills_hub.png",
+  "icon": "logo2.png",
   "publisher": "men3em",
   "repository": {
     "type": "git",
@@ -74,7 +74,7 @@
         {
           "id": "agent-assistant",
           "title": "Agent Assistant",
-          "icon": "resources/icons/agent_skills_hub.png"
+          "icon": "resources/icons/sidebar-icon.svg"
         }
       ]
     },
@@ -83,12 +83,12 @@
         {
           "id": "agent-assistant.accountsView",
           "name": "Accounts",
-          "icon": "resources/icons/agent_skills_hub.png"
+          "icon": "resources/icons/sidebar-icon.svg"
         },
         {
           "id": "agent-assistant.skillsView",
           "name": "Expert Skills",
-          "icon": "resources/icons/agent_skills_hub.png"
+          "icon": "resources/icons/sidebar-icon.svg"
         }
       ]
     },

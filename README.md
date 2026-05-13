@@ -2,10 +2,10 @@
 ### The Definitive AI Expert Persona & Quota Management Suite
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/men3emkhaled/antigravity-accounts-extension/main/resources/icons/agent_skills_hub.png" width="180" alt="Agent Assistant Logo">
+  <img src="./resources/icons/agent_skills_hub.png" width="256" alt="Agent Assistant Logo">
 </p>
 
-![Interface Preview](https://raw.githubusercontent.com/men3emkhaled/antigravity-accounts-extension/main/resources/images/interface-preview.png)
+![Interface Preview](./resources/images/interface-preview.png)
 
 <p align="center">
   <a href="https://github.com/men3emkhaled/antigravity-accounts-extension"><img src="https://img.shields.io/github/stars/men3emkhaled/antigravity-accounts-extension?style=for-the-badge&color=8b5cf6" alt="GitHub Stars" /></a>

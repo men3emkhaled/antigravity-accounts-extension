@@ -4,7 +4,7 @@
 
 import * as vscode from 'vscode';
 
-const CONFIG_SECTION = 'antigravityAccounts';
+const CONFIG_SECTION = 'agentAssistant';
 
 export class ExtensionConfig {
   private static instance: ExtensionConfig;

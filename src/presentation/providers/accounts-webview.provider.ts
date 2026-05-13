@@ -209,7 +209,7 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
     </head>
     <body>
       <div class="header">
-        <div style="font-size:13px;font-weight:700;opacity:0.7;">ANTIGRAVITY HUB</div>
+        <div style="font-size:13px;font-weight:700;opacity:0.7;">AGENT ASSISTANT</div>
         <div style="display:flex;gap:8px;">
           <button class="icon-btn" id="btn-global" onclick="toggleGlobal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></button>
           <button class="icon-btn ${isRefreshing ? 'spinning' : ''}" onclick="refreshAll()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></button>
