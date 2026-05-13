@@ -4,6 +4,15 @@ All notable changes to the Agent Assistant ecosystem are documented here. This p
 
 ---
 
+## [1.0.3] - 2026-05-14
+### Major Skill Library Expansion
+- Added 13 new skills: refactor-pro, git-expert, sql-expert, regex-master, api-tester, debug-expert, code-reviewer, prompt-engineer, css-master, animation-expert, design-system, color-theory, creative-ui.
+- Upgraded all existing skills with deep, opinionated, actionable instructions replacing generic 3-4 line stubs.
+- GEMINI.md injection layer: Antigravity IDE now reads skill instructions directly from workspace root.
+- Updated injection pipeline to 6 layers: GEMINI.md, CLAUDE.md, .cursorrules, .github/copilot-instructions.md, .vscode/settings.json, .gemini/settings.json.
+- Full README rewrite to document the 30+ skill library, injection mechanism, and updated installation instructions.
+- Updated LICENSE copyright holder to men3emkhaled.
+
 ## [1.0.1] - 2026-05-13
 ### Human Persona Optimization
 - Strengthened Human Persona: Implemented strict constraints to eliminate AI artifacts, emojis, and redundant conversational fillers.
