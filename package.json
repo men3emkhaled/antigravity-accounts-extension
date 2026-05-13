@@ -1,15 +1,16 @@
 {
-  "name": "antigravity-accounts",
-  "displayName": "Antigravity Accounts",
-  "description": "Advanced account synchronization and quota management for the Antigravity desktop environment. Optimizes multi-session workflows with secure credential handling and automated rotation.",
-  "version": "1.0.0",
+  "name": "agent-assistant",
+  "displayName": "Agent Assistant",
+  "description": "The definitive Expert Persona & Quota Management system for AI Agents. Empower your workflow with deep skill injection and real-time resource tracking.",
+  "version": "1.0.1",
+  "icon": "resources/icons/agent_skills_hub.png",
   "publisher": "men3em",
   "repository": {
     "type": "git",
-    "url": "https://github.com/men3emkhaled/antigravity-accounts-extension.git"
+    "url": "https://github.com/men3emkhaled/agent-assistant-extension.git"
   },
   "bugs": {
-    "url": "https://github.com/men3emkhaled/antigravity-accounts-extension/issues"
+    "url": "https://github.com/men3emkhaled/agent-assistant-extension/issues"
   },
   "license": "MIT",
   "engines": {
@@ -20,14 +21,8 @@
   ],
   "keywords": [
     "men3em",
-    "antigravity",
+    "agent-assistant",
     "antigravity hub",
-    "antigravity account-manager",
-    "antigravity multi-account",
-    "antigravity accounts",
-    "antigravity credits",
-    "antigravity tokens",
-    "antigravity model",
     "antigravity model balance",
     "antigravity balance",
     "antigravity ai",
@@ -40,142 +35,123 @@
   ],
   "activationEvents": [],
   "main": "./dist/extension.js",
-  "icon": "resources/icons/logo.png",
   "contributes": {
     "commands": [
       {
-        "command": "antigravity-accounts.openPanel",
-        "title": "Open Account Manager",
-        "category": "Antigravity Accounts"
+        "command": "agent-assistant.openPanel",
+        "title": "Open Agent Assistant Dashboard",
+        "category": "Agent Assistant"
       },
       {
-        "command": "antigravity-accounts.addAccount",
+        "command": "agent-assistant.refreshAccounts",
+        "title": "Refresh Accounts",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "agent-assistant.addAccount",
         "title": "Add Account",
-        "category": "Antigravity Accounts",
         "icon": "$(add)"
       },
       {
-        "command": "antigravity-accounts.switchAccount",
-        "title": "Switch Account",
-        "category": "Antigravity Accounts"
-      },
-      {
-        "command": "antigravity-accounts.searchAccounts",
+        "command": "agent-assistant.searchAccounts",
         "title": "Search Accounts",
         "icon": "$(search)"
       },
       {
-        "command": "antigravity-accounts.clearSearch",
+        "command": "agent-assistant.clearSearch",
         "title": "Clear Search",
         "icon": "$(close)"
       },
       {
-        "command": "antigravity-accounts.refreshAccounts",
-        "title": "Refresh All",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "antigravity-accounts.refreshBalances",
-        "title": "Refresh All Balances",
-        "category": "Antigravity Accounts",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "antigravity-accounts.setLanguage",
-        "title": "Set Language",
-        "category": "Antigravity Accounts"
-      },
-      {
-        "command": "antigravity-accounts.treeSwitch",
-        "title": "Switch",
-        "category": "Antigravity Accounts",
-        "icon": "$(arrow-swap)"
-      },
-      {
-        "command": "antigravity-accounts.treeDelete",
+        "command": "agent-assistant.treeDelete",
         "title": "Remove Account",
-        "category": "Antigravity Accounts",
+        "category": "Agent Assistant",
         "icon": "$(trash)"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "antigravity-accounts",
-          "title": "Antigravity Accounts",
-          "icon": "resources/icons/sidebar-icon.svg"
+          "id": "agent-assistant",
+          "title": "Agent Assistant",
+          "icon": "resources/icons/agent_skills_hub.png"
         }
       ]
     },
     "views": {
-      "antigravity-accounts": [
+      "agent-assistant": [
         {
-          "id": "antigravity-accounts.accountsView",
+          "id": "agent-assistant.accountsView",
           "name": "Accounts",
-          "icon": "resources/icons/sidebar-icon.svg"
+          "icon": "resources/icons/agent_skills_hub.png"
+        },
+        {
+          "id": "agent-assistant.skillsView",
+          "name": "Expert Skills",
+          "icon": "resources/icons/agent_skills_hub.png"
         }
       ]
     },
     "menus": {
       "view/item/context": [
         {
-          "command": "antigravity-accounts.treeSwitch",
+          "command": "agent-assistant.treeSwitch",
           "when": "viewItem == inactiveAccount",
           "group": "inline"
         },
         {
-          "command": "antigravity-accounts.treeDelete",
+          "command": "agent-assistant.treeDelete",
           "when": "viewItem == activeAccount || viewItem == inactiveAccount",
           "group": "inline"
         }
       ],
       "view/title": [
         {
-          "command": "antigravity-accounts.searchAccounts",
-          "when": "view == antigravity-accounts.accountsView",
+          "command": "agent-assistant.searchAccounts",
+          "when": "view == agent-assistant.accountsView",
           "group": "navigation"
         },
         {
-          "command": "antigravity-accounts.clearSearch",
-          "when": "view == antigravity-accounts.accountsView && antigravity-accounts.isSearching",
+          "command": "agent-assistant.clearSearch",
+          "when": "view == agent-assistant.accountsView && agent-assistant.isSearching",
           "group": "navigation"
         },
         {
-          "command": "antigravity-accounts.refreshAccounts",
-          "when": "view == antigravity-accounts.accountsView",
+          "command": "agent-assistant.refreshAccounts",
+          "when": "view == agent-assistant.accountsView",
           "group": "navigation"
         },
         {
-          "command": "antigravity-accounts.addAccount",
-          "when": "view == antigravity-accounts.accountsView",
+          "command": "agent-assistant.addAccount",
+          "when": "view == agent-assistant.accountsView",
           "group": "navigation"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "antigravity-accounts.openPanel",
+        "command": "agent-assistant.openPanel",
         "key": "ctrl+shift+a",
         "mac": "cmd+shift+a"
       },
       {
-        "command": "antigravity-accounts.switchAccount",
+        "command": "agent-assistant.switchAccount",
         "key": "ctrl+shift+s",
         "mac": "cmd+shift+s"
       },
       {
-        "command": "antigravity-accounts.addAccount",
+        "command": "agent-assistant.addAccount",
         "key": "ctrl+shift+n",
         "mac": "cmd+shift+n"
       },
       {
-        "command": "antigravity-accounts.refreshBalances",
+        "command": "agent-assistant.refreshBalances",
         "key": "ctrl+shift+r",
         "mac": "cmd+shift+r"
       }
     ],
     "configuration": {
-      "title": "Antigravity Accounts",
+      "title": "Agent Assistant",
       "properties": {
         "antigravityAccounts.language": {
           "type": "string",

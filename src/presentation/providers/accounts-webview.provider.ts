@@ -9,7 +9,7 @@ import { I18nService } from '../../i18n/i18n.service';
 import { Logger } from '../../core/utils/logger';
 
 export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
-  public static readonly viewType = 'antigravity-accounts.accountsView';
+  public static readonly viewType = 'agent-assistant.accountsView';
   private _view?: vscode.WebviewView;
   private _isDisposed = false;
 
@@ -50,7 +50,7 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
       try {
         switch (message.command) {
           case 'addAccount':
-            await vscode.commands.executeCommand('antigravity-accounts.addAccount');
+            await vscode.commands.executeCommand('agent-assistant.addAccount');
             break;
           case 'refreshAccounts':
             await this.accountService.refreshBalancesWorkflow(true);

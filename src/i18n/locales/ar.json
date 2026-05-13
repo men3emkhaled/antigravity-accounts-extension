@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Antigravity Accounts",
+    "appName": "Agent Assistant",
     "loading": "جارٍ التحميل...",
     "error": "خطأ",
     "success": "تم بنجاح",
@@ -190,7 +190,7 @@
     "authFailedTitle": "فشلت المصادقة",
     "authFailedDetail": "حدث خطأ أثناء المصادقة: {{error}}",
     "authSuccessTitle": "تمت المصادقة بنجاح",
-    "authSuccessDetail": "لقد تم ربط الحساب بإضافة Antigravity Accounts بنجاح. يمكنك إغلاق هذه النافذة والعودة إلى المحرر.",
+    "authSuccessDetail": "لقد تم ربط الحساب بإضافة Agent Assistant بنجاح. يمكنك إغلاق هذه النافذة والعودة إلى المحرر.",
     "noPorts": "لا توجد منافذ متاحة (Ports) لتشغيل خادم المصادقة المحلي.",
     "closeWindow": "إغلاق النافذة"
   },

@@ -1,5 +1,5 @@
 /**
- * Antigravity Accounts — VS Code Extension Entry Point
+ * Agent Assistant — VS Code Extension Entry Point
  *
  * This is the main activation/deactivation entry for the extension.
  * It follows the Composition Root pattern: all dependencies are wired here
@@ -19,6 +19,8 @@ import { AccountService } from './features/accounts/account.service';
 import { StatusBarProvider } from './presentation/providers/status-bar.provider';
 import { AccountsTreeProvider } from './presentation/providers/accounts-tree.provider';
 import { AccountsPanelProvider } from './presentation/providers/accounts-panel.provider';
+import { SkillService } from './features/skills/skill.service';
+import { SkillsTreeProvider } from './presentation/providers/skills-tree.provider';
 
 // TODO : complete Investigation Account Switching conversation
 
@@ -30,9 +32,10 @@ import { AccountsPanelProvider } from './presentation/providers/accounts-panel.p
  * - Setting up the sidebar webview
  * - Initializing the status bar
  */
-export function activate(context: vscode.ExtensionContext): void {
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const logger = Logger.getInstance();
-  logger.info('Antigravity Accounts is activating...');
+  const skillService = new SkillService(context);
+  logger.info('Agent Assistant is activating...');
 
   try {
     // ── Initialize Configuration ──
@@ -55,7 +58,7 @@ export function activate(context: vscode.ExtensionContext): void {
     updateLanguage();
 
     // ── Register Commands ──
-    const commands = registerCommands(context, i18n);
+    const commands = registerCommands(context, i18n, skillService);
     context.subscriptions.push(...commands);
 
     // ── Listen for configuration changes ──
@@ -67,9 +70,9 @@ export function activate(context: vscode.ExtensionContext): void {
       })
     );
 
-    logger.info('Antigravity Accounts activated successfully.');
+    logger.info('Agent Assistant activated successfully.');
   } catch (error) {
-    logger.error('Failed to activate Antigravity Accounts', error);
+    logger.error('Failed to activate Agent Assistant', error);
   }
 }
 
@@ -79,7 +82,7 @@ export function activate(context: vscode.ExtensionContext): void {
  */
 export function deactivate(): void {
   const logger = Logger.getInstance();
-  logger.info('Antigravity Accounts deactivated.');
+  logger.info('Agent Assistant deactivated.');
 }
 
 
@@ -90,7 +93,8 @@ export function deactivate(): void {
  */
 function registerCommands(
   context: vscode.ExtensionContext,
-  i18n: I18nService
+  i18n: I18nService,
+  skillService: SkillService
 ): vscode.Disposable[] {
   const authService = new AuthService();
   const balanceService = new BalanceService();
@@ -109,14 +113,17 @@ function registerCommands(
   disposables.push(statusBarProvider);
 
   const accountsTreeProvider = new AccountsTreeProvider(accountService, accountRepo);
-  const treeView = vscode.window.createTreeView('antigravity-accounts.accountsView', {
+  const treeView = vscode.window.createTreeView('agent-assistant.accountsView', {
     treeDataProvider: accountsTreeProvider,
     showCollapseAll: false
   });
   disposables.push(treeView);
 
+  const skillsTreeProvider = new SkillsTreeProvider(skillService);
+  vscode.window.registerTreeDataProvider('agent-assistant.skillsView', skillsTreeProvider);
+
   // Rich WebviewPanel UI (opens in editor tab)
-  const panelProvider = new AccountsPanelProvider(context.extensionUri, accountRepo, accountService);
+  const panelProvider = new AccountsPanelProvider(context.extensionUri, accountRepo, accountService, skillService);
 
   // Listen for account state changes to update UI
   disposables.push(
@@ -128,14 +135,14 @@ function registerCommands(
   // No longer syncing on startup, webview detects it dynamically on render.
 
   disposables.push(
-    vscode.commands.registerCommand('antigravity-accounts.openPanel', () => {
+    vscode.commands.registerCommand('agent-assistant.openPanel', () => {
       panelProvider.show();
     })
   );
 
   // Tree view actions
   disposables.push(
-    vscode.commands.registerCommand('antigravity-accounts.treeSwitch', async (arg: any) => {
+    vscode.commands.registerCommand('agent-assistant.treeSwitch', async (arg: any) => {
       const email = typeof arg === 'string' ? arg : arg?.email;
       if (email) {
         await accountService.switchAccountWorkflow(email);
@@ -146,10 +153,10 @@ function registerCommands(
   );
 
   disposables.push(
-    vscode.commands.registerCommand('antigravity-accounts.searchAccounts', async () => {
+    vscode.commands.registerCommand('agent-assistant.searchAccounts', async () => {
       const query = await vscode.window.showInputBox({
         placeHolder: 'Search accounts by email or name...',
-        prompt: 'Filter Antigravity Accounts'
+        prompt: 'Filter Agent Assistant'
       });
       if (query !== undefined) {
         accountsTreeProvider.setFilter(query);
@@ -158,13 +165,13 @@ function registerCommands(
   );
 
   disposables.push(
-    vscode.commands.registerCommand('antigravity-accounts.clearSearch', () => {
+    vscode.commands.registerCommand('agent-assistant.clearSearch', () => {
       accountsTreeProvider.setFilter('');
     })
   );
 
   disposables.push(
-    vscode.commands.registerCommand('antigravity-accounts.treeDelete', async (arg: any) => {
+    vscode.commands.registerCommand('agent-assistant.treeDelete', async (arg: any) => {
       const email = typeof arg === 'string' ? arg : arg?.email;
       if (email) {
         const confirm = await vscode.window.showWarningMessage(`Are you sure you want to remove ${email}?`, 'Yes', 'No');
@@ -175,16 +182,24 @@ function registerCommands(
     })
   );
 
+  disposables.push(
+    vscode.commands.registerCommand('agent-assistant.toggleSkillSidebar', (id: string) => {
+      skillService.toggleSkill(id);
+      skillsTreeProvider.refresh();
+      panelProvider.refresh();
+    })
+  );
+
 
 
   disposables.push(
-    vscode.commands.registerCommand('antigravity-accounts.addAccount', async () => {
+    vscode.commands.registerCommand('agent-assistant.addAccount', async () => {
       await accountService.addAccountWorkflow();
     })
   );
 
   disposables.push(
-    vscode.commands.registerCommand('antigravity-accounts.switchAccount', async () => {
+    vscode.commands.registerCommand('agent-assistant.switchAccount', async () => {
       // Temporary quick pick until UI is built
       const accounts = await accountRepo.getAccountSummaries();
       if (accounts.length === 0) {
@@ -215,13 +230,13 @@ function registerCommands(
   );
 
   disposables.push(
-    vscode.commands.registerCommand('antigravity-accounts.refreshBalances', async () => {
+    vscode.commands.registerCommand('agent-assistant.refreshBalances', async () => {
       await accountService.refreshBalancesWorkflow(true);
     })
   );
 
   disposables.push(
-    vscode.commands.registerCommand('antigravity-accounts.setLanguage', async () => {
+    vscode.commands.registerCommand('agent-assistant.setLanguage', async () => {
       const languages = [
         { label: i18n.t('webview.languageAuto'), description: 'auto' },
         ...i18n.getAvailableLocales().map((locale) => ({
@@ -237,7 +252,7 @@ function registerCommands(
       if (picked) {
         const extConfig = vscode.workspace.getConfiguration('antigravityAccounts');
         await extConfig.update('language', picked.description, vscode.ConfigurationTarget.Global);
-        vscode.commands.executeCommand('antigravity-accounts.openPanel'); // trigger webview focus to reflect changes if possible
+        vscode.commands.executeCommand('agent-assistant.openPanel'); // trigger webview focus to reflect changes if possible
       }
     })
   );

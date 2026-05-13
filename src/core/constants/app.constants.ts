@@ -7,7 +7,7 @@
 
 // ── Extension Identity ──
 export const EXTENSION_ID = 'antigravity-hub';
-export const EXTENSION_DISPLAY_NAME = 'Antigravity Hub';
+export const EXTENSION_DISPLAY_NAME = 'Agent Assistant';
 export const EXTENSION_PREFIX = 'antigravity-hub';
 
 // ── OAuth Configuration ──

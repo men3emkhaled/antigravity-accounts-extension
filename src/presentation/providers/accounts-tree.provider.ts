@@ -24,7 +24,7 @@ export class AccountsTreeProvider implements vscode.TreeDataProvider<AccountTree
 
   public setFilter(query: string) {
     this._filter = query.toLowerCase().trim();
-    vscode.commands.executeCommand('setContext', 'antigravity-accounts.isSearching', this._filter !== '');
+    vscode.commands.executeCommand('setContext', 'agent-assistant.isSearching', this._filter !== '');
     this.refresh();
   }
 
@@ -61,7 +61,7 @@ export class AccountsTreeProvider implements vscode.TreeDataProvider<AccountTree
           vscode.TreeItemCollapsibleState.None
         );
         emptyItem.command = {
-          command: 'antigravity-accounts.addAccount',
+          command: 'agent-assistant.addAccount',
           title: 'Add Account'
         };
         emptyItem.iconPath = new vscode.ThemeIcon('add');

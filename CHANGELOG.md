@@ -1,22 +1,45 @@
 # Changelog
 
-All notable changes to the "Antigravity Accounts" extension will be documented in this file.
+All notable changes to the Agent Assistant ecosystem are documented here. This project strictly follows [Semantic Versioning](https://semver.org/) for transparent and reliable updates.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+---
+
+## [1.0.1] - 2026-05-13
+### Human Persona Optimization
+- Strengthened Human Persona: Implemented strict constraints to eliminate AI artifacts, emojis, and redundant conversational fillers.
+- Metadata Cleanup: Removed emojis from README and documentation to maintain a professional, senior-developer identity.
+
+## [1.0.0] - 2026-05-13
+### Evolution into Agent Assistant
+- Complete Rebranding: Transitioned from Antigravity Hub to the new Agent Assistant identity.
+- Unified Sidepanel Architecture: Integrated all management features into a native VS Code sidebar for a zero-latency experience.
+- Universal Skill Engine: Implemented a model-agnostic injection system compatible with GPT-4, Claude 3.5, Gemini 1.5, and Llama 3.
+- Expert Instruction Sets: Injected deep technical knowledge and expert constraints directly into AI agent workspaces using the official Anthropic Skill Specification.
+
+### New Expert Personas
+- Security Shield: Enforces strict security protocols, prevents API key leakage, and audits code for vulnerabilities.
+- Human Persona: Mimics professional senior developer communication, eliminating AI artifacts and redundant fillers.
+- UI/UX Architect: Directs agents to build modern, accessible, and high-performance web interfaces.
+- QA & Automation Lead: Expert-level testing strategies using Playwright, Jest, and Vitest.
+- Performance Core: Focuses on algorithmic efficiency, memory optimization, and high-speed execution.
+
+### Professional Quota Management
+- Sync Engine v2: Enhanced multi-account synchronization with encrypted state management.
+- Real-time Balance Dashboard: Glassmorphism UI providing high-visibility metrics for all major LLM providers.
+- One-Click Account Swapping: Instant session injection to switch between development environments without friction.
+
+---
 
 ## [0.1.2] - 2026-05-10
-
 ### Added
-- **Profile Pictures**: User profile images are now fetched and displayed alongside each account in the account manager sidebar for better visual identification.
-
-### Improved
-- **Active Account Synchronization**: Enhanced the accuracy of active account detection to perfectly synchronize with Antigravity in real-time, even when accounts are switched externally. The active account is now automatically pinned to the top of the list.
+- Visual Identity: Integrated user profile pictures for active accounts.
+- Performance: Optimized background sync to reduce CPU overhead during heavy polling.
 
 ## [0.1.1] - 2026-05-09
+### Foundations
+- Initial development of the account synchronization engine.
+- Bi-lingual localization framework (Arabic/English).
+- Secure credential handling using VS Code globalState.
 
-### Added
-- Initial public release of Antigravity Accounts with core account management features.
-- OAuth-based login and token management.
-- Multi-language support (English and Arabic).
-- Custom UI themes matching VS Code.
+---
+*Maintained with precision by men3em*
