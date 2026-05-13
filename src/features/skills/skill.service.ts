@@ -26,11 +26,15 @@ export class SkillService {
       icon: 'word',
       isActive: false,
       color: '#2b579a',
-      fullInstructions: `
-- USE standard office-style formatting for Word documents.
-- ENSURE table of contents and headers are properly indexed.
-- SUPPORT template-based generation for official letters and technical reports.
-- OPTIMIZE for readability and professional aesthetics.`
+      fullInstructions: `- STRUCTURE documents with proper heading hierarchy (H1 > H2 > H3) — never skip levels.
+- USE styles (not manual formatting) for all headings, body text, captions, and lists to ensure consistency and easy theme changes.
+- BUILD table of contents from heading styles only — never manually type TOC entries.
+- IMPLEMENT section breaks (not page breaks) when different headers/footers are needed per section.
+- USE tracked changes and comments for collaborative editing — never overwrite directly in review mode.
+- DESIGN tables with merged headers and alternating row colors for readability — avoid borders-only tables.
+- EMBED cross-references (not hardcoded numbers) for figure/table references so they auto-update.
+- EXPORT to PDF with accessibility tags enabled — ensure all images have alt text in the document properties.
+- TEMPLATE all repeating documents: official letters, reports, memos — never rebuild from scratch.`
     },
     {
       id: 'pdf-pro',
@@ -41,11 +45,14 @@ export class SkillService {
       icon: 'pdf',
       isActive: false,
       color: '#f40f02',
-      fullInstructions: `
-- USE specialized OCR-like logic for extracting text from scanned PDFs.
-- MAINTAIN document hierarchy (Headers, Body, Footers) during split/merge.
-- IMPLEMENT secure form-filling with field validation.
-- SUPPORT digital watermarking and metadata injection for security.`
+      fullInstructions: `- DISTINGUISH between text-based PDFs (selectable text) and scanned PDFs (image-only) — apply OCR only to the latter.
+- PRESERVE document structure during merge: bookmarks, named destinations, and form fields must survive the operation.
+- IMPLEMENT form-filling with field type validation: text, checkbox, radio, dropdown, date — validate before submission.
+- APPLY digital watermarks at the page content stream level, not as floating overlays, for tamper resistance.
+- INJECT PDF/A metadata for long-term archival compliance when generating official documents.
+- OPTIMIZE PDF file size: downsample images above 150dpi for web, flatten transparent layers, subset embedded fonts.
+- REDACT sensitive data properly — use actual content removal, not black rectangle overlays (which are reversible).
+- SPLIT large PDFs by bookmark structure or page ranges, never arbitrarily — preserve context boundaries.`
     },
     {
       id: 'pdf-reading',
@@ -56,9 +63,13 @@ export class SkillService {
       icon: 'book',
       isActive: false,
       color: '#e74c3c',
-      fullInstructions: `- PERFORM read-only extraction of PDF content including tables, text, and images.
-- DO NOT attempt to write or edit the source file.
-- MAINTAIN data integrity when parsing nested tables or layouts.`
+      fullInstructions: `- PERFORM read-only extraction only — never acquire write handles or modify the source file in any way.
+- DETECT document structure: multi-column layouts, sidebars, footnotes, and headers must be parsed in reading order, not positional order.
+- EXTRACT tables by detecting cell boundaries via position clustering — output as structured 2D arrays, not raw text.
+- PRESERVE mathematical formulas and special characters (Greek, symbols) using Unicode mapping, not substitution.
+- HANDLE scanned PDFs by flagging them as image-only and returning the raw page image for external OCR processing.
+- EXTRACT hyperlinks, cross-references, and bookmark targets as separate metadata alongside the text content.
+- REPORT confidence level when text extraction is ambiguous (overlapping glyphs, damaged encoding).`
     },
     {
       id: 'pptx',
@@ -69,9 +80,14 @@ export class SkillService {
       icon: 'project',
       isActive: false,
       color: '#d24726',
-      fullInstructions: `- CREATE professional slide decks with consistent templates.
-- MANAGE slide order, content placeholders, and speaker notes.
-- OPTIMIZE visual layout for clarity and presentation impact.`
+      fullInstructions: `- ENFORCE a single visual theme: consistent fonts (max 2 families), colors (brand palette only), and spacing across all slides.
+- APPLY the 6x6 rule: max 6 bullet points per slide, max 6 words per bullet — slides are a visual aid, not a script.
+- STRUCTURE deck narrative: Problem → Insight → Solution → Proof → Call-to-Action. Every slide must serve this arc.
+- USE slide masters and layouts — never format individual slides manually. All spacing and positioning via the layout system.
+- ADD presenter notes with the full script or talking points for each slide — the deck must work standalone without the presenter.
+- DESIGN data slides with a single chart per slide, clear axis labels, and a descriptive title that states the insight (not just the topic).
+- EXPORT a PDF handout version with 3 slides per page + notes section for distribution.
+- TEST the deck in presentation mode on a 16:9 1920x1080 display before delivery — check for text cutoff and font rendering.`
     },
     {
       id: 'xlsx',
@@ -82,23 +98,35 @@ export class SkillService {
       icon: 'table',
       isActive: false,
       color: '#217346',
-      fullInstructions: `- APPLY advanced formulas (VLOOKUP, INDEX-MATCH, Pivot Table logic).
-- PERFORM deep data cleaning: removing duplicates, normalizing formats, handling null values.
-- GENERATE meaningful data visualizations and summaries from raw CSV data.`
+      fullInstructions: `- PREFER INDEX-MATCH over VLOOKUP — it handles leftward lookups, is faster on large datasets, and doesn't break on column insertion.
+- USE XLOOKUP (Excel 365+) for the most robust lookup: handles not-found cases, returns ranges, and searches in any direction.
+- BUILD pivot tables from structured tables (Ctrl+T), not raw ranges — tables auto-expand and named columns survive formula changes.
+- CLEAN data before analysis: TRIM() whitespace, PROPER()/UPPER()/LOWER() text normalization, IFERROR() for formula error masking.
+- USE Power Query for repeatable ETL transformations — never manual cleaning steps that can't be reproduced.
+- APPLY conditional formatting with formulas, not just presets — formulas give full control over logic and styling.
+- NAME ranges and tables explicitly — never use raw cell references like A1:Z500 in formulas shared with others.
+- VALIDATE data entry with Data Validation rules and dropdown lists to prevent input errors at the source.
+- USE SUMIFS/COUNTIFS/AVERAGEIFS instead of array formulas where possible — they're more readable and faster.`
     },
     {
       id: 'frontend',
       title: 'frontend-design',
       category: 'UI / Web',
-      description: 'Build modern, high-performance web interfaces with premium design aesthetics.',
-      tags: ['UI component', 'Web page', 'Dashboard'],
+      description: 'Build stunning, high-performance web interfaces with premium design aesthetics and modern architecture.',
+      tags: ['UI component', 'Web page', 'Dashboard', 'React', 'Next.js'],
       icon: 'browser',
       isActive: false,
       color: '#6366f1',
-      fullInstructions: `- ADHERE to modern Design Systems (Glassmorphism, Bento grids, Modern Typography).
-- USE Tailwind CSS for rapid styling and utility-first responsiveness.
-- IMPLEMENT Framer Motion for smooth micro-animations.
-- ENSURE component reusability and clean state management (React/Next.js).`
+      fullInstructions: `- DESIGN with a "premium product" mindset — every interface should feel polished, intentional, and wow-worthy on first glance.
+- APPLY modern layout paradigms: CSS Grid for macro layout, Flexbox for component internals, Container Queries for truly responsive components.
+- USE design tokens (CSS custom properties) for colors, spacing, typography, and shadows — never hardcode raw values.
+- IMPLEMENT a clear visual hierarchy: size, weight, color contrast, and spacing must guide the user's eye naturally.
+- CHOOSE typography intentionally: pair a display font with a readable body font. Use fluid type scales (clamp()) for responsive sizes.
+- BUILD with component-driven architecture (Atomic Design): atoms, molecules, organisms, templates, pages.
+- ENSURE every interactive element has visible focus states, hover transitions (150-200ms ease), and active/pressed feedback.
+- OPTIMIZE images: WebP format, proper aspect ratios, lazy loading, and srcset for responsive images.
+- IMPLEMENT skeleton screens instead of spinners for content loading states.
+- NEVER ship UI without testing on mobile viewport (375px), tablet (768px), and desktop (1440px).`
     },
     {
       id: 'security-shield',
@@ -109,11 +137,16 @@ export class SkillService {
       icon: 'shield',
       isActive: false,
       color: '#e11d48',
-      fullInstructions: `- NEVER hardcode API keys, tokens, secrets, or passwords in source code.
-- ALWAYS use environment variables (.env) or secret managers for sensitive data.
-- SCAN for common vulnerabilities: SQL Injection, XSS, CSRF, and Broken Auth.
-- ENFORCE "Least Privilege" principle in all code implementations.
-- WARN the user immediately if sensitive data is detected in the workspace.`
+      fullInstructions: `- NEVER hardcode secrets (API keys, tokens, passwords, connection strings) anywhere in source code, including comments and test files.
+- USE environment variables + a secrets manager (AWS Secrets Manager, Vault, Doppler) — .env files are for local dev only and must be in .gitignore.
+- SCAN every code change for: SQL Injection (parameterized queries only), XSS (output encoding + CSP headers), CSRF (SameSite cookies + CSRF tokens), IDOR (object-level authorization on every request).
+- ENFORCE Least Privilege: every API key, DB user, and service account gets only the minimum permissions it needs to function.
+- VALIDATE and sanitize ALL user input at the server — client-side validation is UX, not security.
+- IMPLEMENT rate limiting, brute-force protection, and account lockout on all authentication endpoints.
+- USE HTTPS everywhere. Never transmit sensitive data over HTTP, even on internal networks.
+- HASH passwords with bcrypt (cost factor 12+) or Argon2id — never MD5, SHA1, or SHA256 for passwords.
+- AUDIT third-party dependencies: run npm audit / pip-audit on every build. Remove unused dependencies.
+- LOG security events (failed logins, permission denials, unusual access patterns) — never log passwords or tokens.`
     },
     {
       id: 'performance-pro',
@@ -124,10 +157,16 @@ export class SkillService {
       icon: 'zap',
       isActive: false,
       color: '#fbbf24',
-      fullInstructions: `- ANALYZE and optimize time and space complexity (Big O).
-- USE efficient data structures (Maps, Sets, Typed Arrays) for large-scale operations.
-- IMPLEMENT lazy loading, caching, and debouncing where applicable.
-- ELIMINATE memory leaks and redundant computations.`
+      fullInstructions: `- PROFILE before optimizing — never guess the bottleneck. Use Chrome DevTools, clinic.js, py-spy, or language-native profilers.
+- ANALYZE algorithmic complexity first: O(n²) loops over large datasets are a bigger problem than any micro-optimization.
+- USE the right data structure: Map for O(1) key-value lookups, Set for O(1) membership tests, typed arrays for numeric processing.
+- IMPLEMENT memoization for pure functions with expensive computation — cache results keyed on input signature.
+- APPLY debounce (trailing) for search/resize handlers, throttle (leading) for scroll/mousemove — know the difference.
+- ELIMINATE unnecessary re-renders in React: useMemo for expensive calculations, useCallback for stable function references, React.memo for pure components.
+- DETECT and fix memory leaks: unsubscribed event listeners, uncleared intervals, unclosed DB connections, circular references.
+- DEFER non-critical work with requestIdleCallback (browser) or setImmediate (Node) to keep the main thread responsive.
+- BATCH DOM mutations: read all, then write all — never interleave reads and writes (causes layout thrashing).
+- USE Web Workers for CPU-intensive tasks to keep the UI thread at 60fps.`
     },
     {
       id: 'human-coder',
@@ -155,24 +194,34 @@ export class SkillService {
       icon: 'check-all',
       isActive: false,
       color: '#10b981',
-      fullInstructions: `- WRITE comprehensive unit and integration tests using Jest or Vitest.
-- IMPLEMENT end-to-end (E2E) testing with Playwright or Cypress.
-- ENFORCE 100% test coverage for critical business logic.
-- AUTOMATE regression testing and CI quality gates.`
+      fullInstructions: `- FOLLOW the testing pyramid: many unit tests (fast, isolated), fewer integration tests, minimal E2E tests (slow, expensive).
+- WRITE tests that document behavior, not implementation — test what the code does, not how it does it internally.
+- USE Arrange-Act-Assert (AAA) pattern in every test: clear setup, single action, explicit assertion.
+- MOCK external dependencies (HTTP, DB, filesystem) at the boundary — never let tests touch real external services.
+- TEST the unhappy path first: null inputs, empty arrays, network errors, auth failures — happy path is easy, edge cases catch bugs.
+- ACHIEVE meaningful coverage: 100% line coverage means nothing if critical logical branches aren't tested.
+- IMPLEMENT visual regression tests (Playwright screenshots, Storybook + Chromatic) for UI components.
+- WRITE contract tests (Pact) for service-to-service integrations — don't rely only on E2E tests for API contracts.
+- RUN tests in parallel and in random order — flaky tests that depend on ordering are hiding real bugs.
+- ADD tests before fixing bugs: write a failing test that reproduces the bug, then fix it — prevents regression.`
     },
     {
       id: 'mobile-pro',
       title: 'mobile-expert',
       category: 'Mobile Apps',
-      description: 'Build high-performance, cross-platform mobile applications with native UI feel.',
-      tags: ['Flutter', 'React Native', 'Native UI'],
+      description: 'Build high-performance, cross-platform mobile applications with native UI feel and premium UX.',
+      tags: ['Flutter', 'React Native', 'Native UI', 'iOS', 'Android'],
       icon: 'device-mobile',
       isActive: false,
       color: '#8b5cf6',
-      fullInstructions: `- BUILD cross-platform mobile apps with native-level performance.
-- OPTIMIZE for touch interactions, different screen sizes, and offline modes.
-- MANAGE app state efficiently (Provider, Riverpod, or Redux).
-- ENSURE smooth transitions and gesture-based navigation.`
+      fullInstructions: `- DESIGN for thumb-zone: primary actions in the bottom 1/3 of screen, destructive actions require confirmation and distance from primary CTA.
+- TARGET 60fps minimum for all animations and scroll interactions — profile with DevTools, not assumptions.
+- IMPLEMENT proper safe area insets for notched devices and dynamic islands.
+- OPTIMIZE startup time: lazy load heavy modules, defer non-critical initialization.
+- MANAGE app state with a clear unidirectional data flow (Riverpod/BLoC for Flutter, Redux/Zustand for React Native).
+- HANDLE offline mode explicitly: cache critical data, queue writes, sync on reconnect with conflict resolution.
+- USE platform-adaptive UI: follow Material 3 on Android, Cupertino conventions on iOS for native feel.
+- IMPLEMENT proper push notification deep-linking with navigation state restoration.`
     },
     {
       id: 'data-science',
@@ -183,24 +232,34 @@ export class SkillService {
       icon: 'graph',
       isActive: false,
       color: '#06b6d4',
-      fullInstructions: `- PERFORM exploratory data analysis (EDA) using Pandas and NumPy.
-- GENERATE insightful charts and statistical summaries.
-- IMPLEMENT machine learning pipelines and model evaluation.
-- OPTIMIZE data processing for large-scale datasets.`
+      fullInstructions: `- START every analysis with EDA: shape, dtypes, null counts, basic stats (describe()), and value distributions before any modeling.
+- VISUALIZE distributions before assuming normality — use histograms, box plots, and Q-Q plots to understand the data shape.
+- HANDLE missing data explicitly: document the imputation strategy and why (mean/median/mode/forward-fill/drop) — never silently fill.
+- ENGINEER features with domain knowledge: raw features rarely beat well-designed aggregations and transformations.
+- SPLIT data strictly: train/validation/test — never use test data for any decisions until final evaluation.
+- TRACK experiments with MLflow or W&B: every run logs hyperparameters, metrics, and artifact versions.
+- EVALUATE models beyond accuracy: use precision, recall, F1, AUC-ROC for classification; MAE, RMSE, MAPE for regression.
+- EXPLAIN model predictions with SHAP values for stakeholders — black-box results without explanation are not production-ready.
+- PROCESS large datasets with chunking (Pandas read_csv chunksize), Polars, or Dask — never load full dataset into memory blindly.
+- VERSION datasets with DVC alongside model versions — reproducibility requires knowing both the model and the data it was trained on.`
     },
     {
       id: 'ux-expert',
       title: 'ux-researcher',
       category: 'Design Psychology',
-      description: 'User-flow optimization and WCAG 2.1 accessibility standards for digital products.',
-      tags: ['A11y', 'User Flow', 'Heuristics'],
+      description: 'User-flow optimization, behavioral psychology, and WCAG 2.1 accessibility for digital products.',
+      tags: ['A11y', 'User Flow', 'Heuristics', 'Cognitive Load', 'UX'],
       icon: 'search',
       isActive: false,
       color: '#ec4899',
-      fullInstructions: `- ENSURE Web Accessibility (WCAG 2.1) compliance for all UI elements.
-- OPTIMIZE user flows to minimize cognitive load and friction.
-- APPLY Jakob Nielsen's heuristics for interface design.
-- PERFORM content hierarchy analysis for better readability.`
+      fullInstructions: `- APPLY Fitts's Law: make clickable targets large enough (min 44x44px) and close to where the user's cursor naturally rests.
+- REDUCE cognitive load: show only what's needed at each step. Progressive disclosure > information dump.
+- APPLY Jakob Nielsen's 10 heuristics — especially visibility of system status, error prevention, and recognition over recall.
+- ENSURE WCAG 2.1 AA compliance: 4.5:1 contrast for text, 3:1 for large text and UI components, keyboard navigation, ARIA roles.
+- DESIGN for error states first: empty states, loading states, error messages, and recovery paths are as important as the happy path.
+- USE the F-pattern and Z-pattern reading principles to place key information and CTAs where eyes naturally land.
+- VALIDATE every flow against: Can a new user complete this task in under 3 clicks? Is every step's purpose obvious?
+- APPLY Hick's Law: fewer choices = faster decisions. Reduce options at every decision point.`
     },
     {
       id: 'tech-writer',
@@ -211,10 +270,15 @@ export class SkillService {
       icon: 'book',
       isActive: false,
       color: '#64748b',
-      fullInstructions: `- WRITE clear, concise, and professional documentation for developers and users.
-- CREATE comprehensive README files with setup guides and examples.
-- DOCUMENT API endpoints using OpenAPI/Swagger specifications.
-- TRANSLATE complex technical concepts into easy-to-understand language.`
+      fullInstructions: `- WRITE for the reader's context: junior devs need explanation, senior devs need reference — know which doc type you're writing.
+- STRUCTURE READMEs: What it does → Why use it → Quick start (working in under 5 minutes) → Full docs link. Never bury the quick start.
+- DOCUMENT APIs with OpenAPI 3.1: include request/response schemas, error codes, authentication, and at least one real example per endpoint.
+- USE ADRs (Architecture Decision Records) for every significant technical decision: context, options considered, decision made, consequences.
+- WRITE runbooks for operational tasks: step-by-step, with expected outputs and troubleshooting for common failure points.
+- KEEP docs co-located with code (docs/ folder in repo) — external wikis go stale and drift from reality.
+- ADD code examples that actually run — test all code snippets in documentation as part of CI.
+- DOCUMENT the WHY, not just the WHAT — code shows what it does, docs must explain why this approach was chosen.
+- MAINTAIN a CHANGELOG following Keep a Changelog format: Added, Changed, Deprecated, Removed, Fixed, Security per version.`
     },
     {
       id: 'cloud-arch',
@@ -225,10 +289,16 @@ export class SkillService {
       icon: 'cloud',
       isActive: false,
       color: '#0ea5e9',
-      fullInstructions: `- DESIGN scalable, microservices-oriented architectures.
-- USE Docker and Kubernetes best practices for containerization.
-- IMPLEMENT robust CI/CD pipelines (GitHub Actions, GitLab CI).
-- OPTIMIZE for high availability and fault tolerance.`
+      fullInstructions: `- DESIGN for failure: every external dependency (DB, cache, API) must have a circuit breaker, timeout, and fallback strategy.
+- BUILD Docker images in multi-stage builds: builder stage (full SDK) → runtime stage (minimal base image like distroless or alpine).
+- DEFINE Kubernetes resource requests AND limits for every container — containers without limits cause node OOM kills.
+- IMPLEMENT health checks: /healthz (liveness) and /readyz (readiness) endpoints on every service.
+- USE GitOps (ArgoCD/Flux) for Kubernetes deployments — cluster state declared in Git, never applied manually.
+- DESIGN CI/CD pipelines with distinct stages: lint → test → build → security scan → deploy to staging → smoke test → promote to prod.
+- IMPLEMENT blue-green or canary deployments for zero-downtime releases — never deploy directly to 100% traffic.
+- STORE infrastructure as code (Terraform/Pulumi) — no manual cloud console changes in production environments.
+- ENFORCE least-privilege IAM roles per service — no shared service accounts, no wildcard permissions.
+- MONITOR with the RED method: Request rate, Error rate, Duration (latency percentiles p50/p95/p99) per service.`
     },
     {
       id: 'backend-arch',
@@ -239,10 +309,16 @@ export class SkillService {
       icon: 'server',
       isActive: false,
       color: '#1e293b',
-      fullInstructions: `- DESIGN RESTful or GraphQL APIs with proper versioning and security.
-- OPTIMIZE database schemas and queries for high performance (SQL/NoSQL).
-- IMPLEMENT robust caching strategies using Redis or similar.
-- DESIGN event-driven architectures with message brokers (RabbitMQ/Kafka).`
+      fullInstructions: `- DESIGN APIs contract-first: define the OpenAPI spec before writing any implementation code.
+- VERSION APIs in the URL path (/v1/, /v2/) — never in headers for public APIs. Maintain backward compatibility for at least one major version.
+- IMPLEMENT the repository pattern to decouple business logic from data storage — services should never query the DB directly.
+- USE CQRS (Command Query Responsibility Segregation) for systems with heavy read/write asymmetry — separate read models from write models.
+- CACHE at the right layer: CDN for static assets, Redis for session/computed data, DB query cache for slow repeated queries.
+- DESIGN for idempotency in all write operations — clients will retry, and duplicate processing must be safe.
+- USE async messaging (Kafka/RabbitMQ/SQS) to decouple services and absorb traffic spikes — never synchronous calls for non-critical paths.
+- IMPLEMENT database connection pooling with explicit min/max pool sizes — never open unbounded connections.
+- ADD correlation IDs to every request/response and propagate them through all service calls for distributed tracing.
+- DESIGN pagination for all list endpoints: cursor-based pagination for large, frequently-updated datasets; offset-based for small static lists.`
     },
     {
       id: 'embedded-systems',
@@ -253,10 +329,15 @@ export class SkillService {
       icon: 'circuit-board',
       isActive: false,
       color: '#b91c1c',
-      fullInstructions: `- WRITE efficient C/C++ code for memory-constrained embedded systems.
-- MANAGE real-time operating systems (FreeRTOS, Zephyr) and thread priority.
-- IMPLEMENT hardware communication protocols (I2C, SPI, UART).
-- OPTIMIZE for low power consumption and deterministic behavior.`
+      fullInstructions: `- NEVER use dynamic memory allocation (malloc/free) in interrupt handlers or time-critical code paths — use static allocation or memory pools.
+- DESIGN interrupt service routines (ISRs) to be as short as possible: set a flag or post to a queue, then handle in task context.
+- APPLY MISRA-C guidelines for safety-critical embedded code: no implicit type conversions, no recursion, bounded loops.
+- VALIDATE all hardware communication: implement timeout and retry logic for I2C/SPI/UART — assume buses can hang.
+- USE volatile for variables shared between ISRs and main code — compiler optimization will break non-volatile shared state.
+- IMPLEMENT watchdog timers in all production firmware — if the system hangs, it must recover autonomously.
+- MINIMIZE power consumption: use sleep modes aggressively, reduce clock speed during idle, power-gate unused peripherals.
+- TEST with real hardware AND simulation (QEMU, Renode) — hardware-only testing misses integration edge cases.
+- VERSION firmware with semantic versioning stored in flash — bootloaders must validate firmware version and checksum before boot.`
     },
     {
       id: 'game-dev',
@@ -267,10 +348,15 @@ export class SkillService {
       icon: 'game',
       isActive: false,
       color: '#7c3aed',
-      fullInstructions: `- IMPLEMENT complex game loops and state management.
-- OPTIMIZE physics simulations and collision detection.
-- WRITE custom shaders (HLSL/GLSL) for advanced visual effects.
-- ENSURE high frame rates through profiling and asset optimization.`
+      fullInstructions: `- IMPLEMENT the game loop with fixed physics timestep (Update at fixed delta) and variable render rate — decouple physics from frame rate.
+- USE an Entity-Component-System (ECS) architecture for large scenes: data-oriented design beats deep inheritance hierarchies for performance.
+- PROFILE with engine-native tools (Unity Profiler, Unreal Insights) before optimizing — never guess where CPU/GPU time is spent.
+- OPTIMIZE draw calls: batch static geometry, use GPU instancing for repeated meshes, atlas textures to reduce material switches.
+- WRITE shaders with LOD in mind: full-quality for hero assets, simplified for distant or low-end hardware. Use shader variants, not if-statements.
+- IMPLEMENT spatial partitioning (BVH, octree, spatial hash) for collision detection — brute-force O(n²) checks kill performance at scale.
+- POOL game objects (bullets, particles, enemies) — instantiate/destroy cycles cause GC spikes. Pool everything that spawns frequently.
+- DESIGN save systems with versioning: serialize game state to a versioned format that can be migrated forward across game updates.
+- TARGET platforms explicitly: PC (uncapped FPS + quality presets), console (locked 60fps), mobile (30fps + aggressive LOD + battery budgets).`
     },
     {
       id: 'web3-blockchain',
@@ -281,10 +367,15 @@ export class SkillService {
       icon: 'link-external',
       isActive: false,
       color: '#f59e0b',
-      fullInstructions: `- WRITE secure, gas-efficient smart contracts (Solidity/Vyper).
-- PERFORM deep security audits to prevent reentrancy and other vulnerabilities.
-- IMPLEMENT Web3 provider integrations and wallet interactions.
-- DESIGN decentralized storage architectures (IPFS/Arweave).`
+      fullInstructions: `- APPLY Checks-Effects-Interactions pattern in every function: validate inputs, update state, then call external contracts — prevents reentrancy.
+- USE OpenZeppelin audited contract libraries for standard functionality (ERC20, ERC721, AccessControl) — never reimplement security-critical code.
+- OPTIMIZE gas: use calldata over memory for read-only function params, pack struct variables to fit in 32-byte slots, use events for historical data.
+- AUDIT for: reentrancy, integer overflow (use SafeMath or Solidity 0.8+), access control bypass, front-running, oracle manipulation.
+- NEVER store sensitive data on-chain — all on-chain data is public. Use zero-knowledge proofs or off-chain storage with on-chain commitment.
+- IMPLEMENT multi-sig governance for contract admin functions — single-key admin is a centralization risk and single point of failure.
+- WRITE comprehensive test suites with Hardhat/Foundry: unit tests, integration tests, and invariant/fuzz tests for all state-changing functions.
+- DESIGN upgrade paths carefully: use proxy patterns (UUPS/Transparent) only when necessary — immutable contracts are safer when possible.
+- PERFORM economic attack analysis: model game theory incentives to ensure honest behavior is always the most profitable strategy.`
     },
     {
       id: 'mlops-engineer',
@@ -295,10 +386,15 @@ export class SkillService {
       icon: 'pulse',
       isActive: false,
       color: '#14b8a6',
-      fullInstructions: `- AUTOMATE machine learning model deployment and versioning.
-- IMPLEMENT robust data and model monitoring pipelines.
-- USE DVC (Data Version Control) and MLflow for lifecycle management.
-- SCALE inference services using specialized container orchestration.`
+      fullInstructions: `- VERSION everything: data (DVC), code (Git), models (MLflow/W&B), and environments (Docker) — reproducibility requires all four to be pinned.
+- BUILD training pipelines as DAGs (Airflow, Prefect, Kubeflow Pipelines) — not linear scripts. Each step must be independently rerunnable.
+- IMPLEMENT data quality checks before every training run: schema validation, distribution drift detection, null/outlier thresholds.
+- MONITOR models in production for data drift (input distribution shift) and concept drift (relationship between inputs and outputs changes).
+- DESIGN serving infrastructure for latency SLAs: batch inference for throughput, real-time serving (Triton, TorchServe, vLLM) for low-latency.
+- IMPLEMENT A/B testing and shadow mode for new model versions — never switch 100% traffic to an untested model.
+- TRACK model lineage: for every deployed model, record the exact dataset version, hyperparameters, and evaluation metrics.
+- DESIGN feature stores (Feast, Tecton) to share features between training and serving — eliminate training-serving skew.
+- AUTOMATE model retraining triggers: schedule-based AND metric-based (performance degradation threshold).`
     },
     {
       id: 'file-reader',
@@ -309,9 +405,13 @@ export class SkillService {
       icon: 'files',
       isActive: false,
       color: '#10b981',
-      fullInstructions: `- AUTOMATICALLY detect file types and route them to the correct parser.
-- EXTRACT context from unstructured data sources efficiently.
-- MAP local file paths to workspace-relative paths for the Agent.`
+      fullInstructions: `- DETECT file type by MIME type and magic bytes, not just extension — extensions can be wrong or missing.
+- ROUTE to the appropriate parser: PDF → pdf-reading skill, DOCX → docx skill, XLSX → xlsx skill, images → vision analysis, JSON/CSV → direct parse.
+- EXTRACT content and return it as structured, typed data — not raw strings. Tables as 2D arrays, key-value as objects, lists as arrays.
+- MAP all file paths to workspace-relative paths for consistent cross-platform handling.
+- VALIDATE file size before processing: warn the user for files over 10MB, refuse processing for files over 50MB without explicit confirmation.
+- HANDLE binary files gracefully: return file metadata and type description instead of attempting text extraction.
+- CACHE parsed file content per session — don't re-parse the same file on every reference within a conversation.`
     },
     {
       id: 'anthropic-knowledge',
@@ -322,9 +422,205 @@ export class SkillService {
       icon: 'hubot',
       isActive: false,
       color: '#f59e0b',
-      fullInstructions: `- CONSULT official Anthropic documentation for the latest API/Model updates.
-- DO NOT rely on cached or outdated memory for Claude-specific technical specs.
-- PROVIDE accurate pricing, rate limits, and feature comparisons.`
+      fullInstructions: `- CONSULT official Anthropic documentation (docs.anthropic.com) for all Claude API, model, and pricing questions — training data may be outdated.
+- DIFFERENTIATE model tiers clearly: Haiku (fast/cheap) vs Sonnet (balanced) vs Opus (most capable) — match model to task requirements.
+- KNOW the context window sizes, token limits, and pricing per model tier for accurate cost estimation.
+- EXPLAIN Claude-specific features accurately: extended thinking, tool use, vision, system prompts, multi-turn conversations, batching.
+- WARN when a requested feature may have changed since training cutoff — always verify against current docs for production implementations.
+- COMPARE models for the specific use case: latency-sensitive apps need Haiku, complex reasoning needs Opus, most apps suit Sonnet.
+- PROVIDE working API code examples using the official Anthropic Python SDK or TypeScript SDK, not raw HTTP.`
+    },
+    {
+      id: 'refactor-pro',
+      title: 'refactor-pro',
+      category: 'Code Quality',
+      description: 'Transform messy code into clean, maintainable, SOLID-compliant implementations.',
+      tags: ['Clean Code', 'SOLID', 'Design Patterns', 'Refactor'],
+      icon: 'symbol-class',
+      isActive: false,
+      color: '#0ea5e9',
+      fullInstructions: `- APPLY SOLID principles (Single Responsibility, Open/Closed, Liskov, Interface Segregation, Dependency Inversion) in every refactor.\n- ELIMINATE code smells: long methods, god classes, magic numbers, deep nesting, duplicate logic.\n- PREFER composition over inheritance. Favor small, focused functions with single clear responsibility.\n- APPLY appropriate design patterns (Factory, Strategy, Observer, Repository) where they reduce complexity.\n- ENSURE refactored code is functionally identical to original — never change behavior during refactor.\n- KEEP diffs minimal and incremental. Never refactor and add features simultaneously.`
+    },
+    {
+      id: 'git-expert',
+      title: 'git-expert',
+      category: 'Version Control',
+      description: 'Advanced Git workflows, branching strategies, and history management.',
+      tags: ['Git', 'Branching', 'Rebase', 'Conflict Resolution'],
+      icon: 'source-control',
+      isActive: false,
+      color: '#f97316',
+      fullInstructions: `- USE conventional commits format: feat/fix/chore/docs/refactor/test/perf(scope): description.\n- PREFER rebase over merge for feature branches to maintain linear history.\n- RESOLVE conflicts by understanding both sides — never blindly accept ours/theirs.\n- APPLY Git worktrees for parallel work on multiple branches without stashing.\n- WRITE atomic commits: one logical change per commit, always passing tests.\n- USE interactive rebase (rebase -i) to squash, reorder, and clean history before merging.\n- NEVER force-push to shared/protected branches. Use --force-with-lease only on personal branches.`
+    },
+    {
+      id: 'sql-expert',
+      title: 'sql-expert',
+      category: 'Database',
+      description: 'Advanced SQL query optimization, schema design, and database performance tuning.',
+      tags: ['SQL', 'Query Optimization', 'Indexing', 'Schema Design'],
+      icon: 'database',
+      isActive: false,
+      color: '#22c55e',
+      fullInstructions: `- ANALYZE query execution plans (EXPLAIN/EXPLAIN ANALYZE) before optimizing.\n- DESIGN indexes based on actual query patterns — avoid over-indexing.\n- USE CTEs (WITH) for readability and window functions for analytical queries instead of subqueries.\n- APPLY proper normalization (3NF) for OLTP; consider denormalization for OLAP/reporting.\n- AVOID N+1 query patterns — always batch related queries or use JOINs.\n- USE transactions explicitly for multi-step writes. Always consider isolation levels.\n- NEVER use SELECT * in production code — always specify columns explicitly.`
+    },
+    {
+      id: 'regex-master',
+      title: 'regex-master',
+      category: 'Text Processing',
+      description: 'Construct, explain, and optimize complex regular expressions across all flavors.',
+      tags: ['Regex', 'Pattern Matching', 'Text Parsing'],
+      icon: 'symbol-keyword',
+      isActive: false,
+      color: '#a855f7',
+      fullInstructions: `- BREAK complex patterns into named groups (?<name>...) for readability.\n- EXPLAIN every non-trivial pattern with inline comments or step-by-step breakdown.\n- USE non-capturing groups (?:...) when you don't need the captured value.\n- PREFER possessive quantifiers or atomic groups to avoid catastrophic backtracking.\n- ALWAYS test regex against edge cases: empty strings, Unicode, special characters, multiline input.\n- SPECIFY the correct flags: case-insensitive (i), multiline (m), dotAll (s), global (g), unicode (u).\n- WARN when a simpler string method (split, indexOf, startsWith) would be more appropriate.`
+    },
+    {
+      id: 'api-tester',
+      title: 'api-tester',
+      category: 'API Testing',
+      description: 'Systematic REST and GraphQL API testing, edge case coverage, and contract validation.',
+      tags: ['REST', 'GraphQL', 'API Testing', 'Edge Cases'],
+      icon: 'plug',
+      isActive: false,
+      color: '#06b6d4',
+      fullInstructions: `- TEST all HTTP status code scenarios: 200, 201, 400, 401, 403, 404, 409, 422, 429, 500.\n- VALIDATE response schema, not just status codes — check field types, nullability, and required fields.\n- TEST boundary conditions: empty arrays, null fields, max-length strings, zero values, negative numbers.\n- VERIFY idempotency for PUT/PATCH/DELETE endpoints.\n- TEST rate limiting behavior and retry-after headers.\n- SIMULATE network failures: timeouts, partial responses, connection resets.\n- FOR GraphQL: test query depth limits, N+1 resolver patterns, and error handling in partial responses.`
+    },
+    {
+      id: 'debug-expert',
+      title: 'debug-expert',
+      category: 'Debugging',
+      description: 'Systematic root cause analysis and debugging strategy for complex software issues.',
+      tags: ['Debugging', 'Root Cause', 'Profiling', 'Tracing'],
+      icon: 'debug',
+      isActive: false,
+      color: '#ef4444',
+      fullInstructions: `- FOLLOW scientific method: reproduce consistently, isolate variables, form hypothesis, test.\n- NARROW scope with binary search — eliminate half the codebase per step.\n- READ error messages fully and literally before assuming the cause.\n- CHECK recent changes first (git log/diff) before deep-diving into older code.\n- ADD minimal targeted logging/breakpoints — never scatter random debug statements.\n- DISTINGUISH between symptoms and root causes — fix the cause, not the symptom.\n- VERIFY fix by reproducing the original bug scenario, not just running the happy path.\n- DOCUMENT findings: what the bug was, why it happened, and what the fix does.`
+    },
+    {
+      id: 'code-reviewer',
+      title: 'code-reviewer',
+      category: 'Code Review',
+      description: 'Thorough, constructive code review focusing on correctness, security, and maintainability.',
+      tags: ['PR Review', 'Code Quality', 'Feedback', 'Best Practices'],
+      icon: 'eye',
+      isActive: false,
+      color: '#64748b',
+      fullInstructions: `- PRIORITIZE feedback by severity: bugs/security > correctness > performance > style.\n- ALWAYS explain WHY a change is needed, not just what to change.\n- DISTINGUISH blocking issues from suggestions — use "nit:" prefix for non-blocking style comments.\n- CHECK for: missing error handling, unclosed resources, race conditions, SQL injection, XSS vectors.\n- VERIFY tests cover the new code paths and edge cases, not just the happy path.\n- PRAISE good patterns and clever solutions — code review is bidirectional learning.\n- NEVER review more than 400 lines at once — request smaller PRs if needed.\n- FOCUS on the code, never on the author — keep all feedback technical and impersonal.`
+    },
+    {
+      id: 'prompt-engineer',
+      title: 'prompt-engineer',
+      category: 'AI Engineering',
+      description: 'Craft precise, effective prompts for LLMs to maximize output quality and consistency.',
+      tags: ['Prompting', 'LLM', 'Chain-of-Thought', 'Few-Shot'],
+      icon: 'comment-discussion',
+      isActive: false,
+      color: '#8b5cf6',
+      fullInstructions: `- DEFINE role, context, task, output format, and constraints in every system prompt.\n- USE chain-of-thought (think step by step) for reasoning-heavy tasks.\n- PROVIDE few-shot examples when the output format is non-trivial or ambiguous.\n- CONSTRAIN output format explicitly: JSON schema, markdown structure, word limits.\n- TEST prompts against adversarial inputs — assume the model will try edge cases.\n- SEPARATE instructions from data using clear delimiters (XML tags, triple quotes, or code fences).\n- ITERATE systematically — change one variable per test run to isolate improvements.\n- DOCUMENT prompt versions and their performance like code — treat prompts as first-class artifacts.`
+    },
+    {
+      id: 'css-master',
+      title: 'css-master',
+      category: 'CSS / Styling',
+      description: 'Deep CSS mastery: layouts, custom properties, cascade layers, and cutting-edge techniques.',
+      tags: ['CSS', 'Grid', 'Flexbox', 'Custom Properties', 'Cascade'],
+      icon: 'symbol-color',
+      isActive: false,
+      color: '#38bdf8',
+      fullInstructions: `- USE CSS custom properties (variables) at :root for the full design token system: --color-*, --space-*, --radius-*, --shadow-*, --font-*.
+- MASTER the cascade: use @layer to organize styles (reset, base, components, utilities, overrides) with explicit specificity control.
+- APPLY fluid typography with clamp(): clamp(1rem, 2.5vw + 0.5rem, 1.5rem) — eliminate media query breakpoints for type.
+- USE logical properties (margin-inline, padding-block) for internationalization and RTL support from day one.
+- IMPLEMENT :has() selector for parent-state styling instead of JavaScript class toggling where possible.
+- USE container queries (@container) for component-level responsiveness instead of viewport-only media queries.
+- APPLY the @property rule for type-safe, animatable custom properties with proper syntax, inherits, and initial-value.
+- LEVERAGE CSS Grid subgrid for aligning nested elements across parent grid tracks.
+- USE :is() and :where() to reduce specificity bloat in complex selectors.
+- NEVER use !important except in utility classes where it's intentional — it's a specificity debt sign.
+- PREFER gap over margin for spacing in flex/grid contexts. Margin is for flow layout only.
+- WRITE CSS that reads like documentation: group related properties, add comments for non-obvious choices.`
+    },
+    {
+      id: 'animation-expert',
+      title: 'animation-expert',
+      category: 'Motion Design',
+      description: 'Craft fluid micro-interactions, page transitions, and physics-based animations that delight users.',
+      tags: ['CSS Animation', 'Micro-interactions', 'GSAP', 'Framer Motion', 'Motion Design'],
+      icon: 'zap',
+      isActive: false,
+      color: '#f43f5e',
+      fullInstructions: `- FOLLOW the 12 principles of animation: squash & stretch, anticipation, follow-through, and easing are most critical for UI.
+- USE cubic-bezier curves intentionally: ease-out for elements entering the screen, ease-in for exiting, ease-in-out for state changes.
+- TARGET animation durations: micro-interactions 100-200ms, page transitions 250-400ms, complex sequences 400-600ms. Never exceed 700ms for interactive feedback.
+- IMPLEMENT View Transitions API for native-feeling page transitions in SPAs and MPAs.
+- USE CSS @keyframes with will-change: transform and opacity only — never animate layout-triggering properties (width, height, top, left).
+- APPLY the FLIP technique (First, Last, Invert, Play) for performant layout animations.
+- USE Framer Motion's layout prop and AnimatePresence for React component enter/exit animations.
+- IMPLEMENT spring physics (stiffness, damping, mass) for natural-feeling interactions instead of linear easing.
+- ALWAYS respect prefers-reduced-motion: wrap all non-essential animations in a media query check.
+- CHAIN animations with AnimationTimeline or GSAP ScrollTrigger for scroll-driven storytelling.
+- AVOID animating more than 2-3 properties simultaneously — it creates visual noise, not delight.`
+    },
+    {
+      id: 'design-system-architect',
+      title: 'design-system',
+      category: 'Design Systems',
+      description: 'Architect scalable design systems with tokens, component libraries, and living documentation.',
+      tags: ['Design Tokens', 'Component Library', 'Storybook', 'Figma Tokens', 'Style Dictionary'],
+      icon: 'layers',
+      isActive: false,
+      color: '#7c3aed',
+      fullInstructions: `- STRUCTURE tokens in 3 tiers: Primitive (raw values) → Semantic (purpose-driven aliases) → Component (specific usage).
+- USE Style Dictionary or Theo to transform tokens from a single JSON source into CSS variables, JS objects, iOS Swift, Android XML.
+- DEFINE component API contracts before implementation: props, variants, states, slots, and composition patterns.
+- BUILD components at 4 levels: Base (unstyled, accessible) → Styled (design applied) → Composed (multi-component) → Page-level.
+- DOCUMENT every component in Storybook with: description, props table, all variant stories, do/don't examples, and accessibility notes.
+- ENFORCE the open/closed principle in components: open for extension via props/slots, closed for internal modification.
+- VERSION the design system semantically: breaking changes = major, new components = minor, fixes = patch.
+- MAINTAIN a decision log (ADR - Architecture Decision Records) for every non-obvious design or API decision.
+- BUILD visual regression tests with Chromatic or Percy to catch unintended style changes in CI.
+- DEFINE contribution guidelines: naming conventions, file structure, required stories, and review process.`
+    },
+    {
+      id: 'color-theory-expert',
+      title: 'color-theory',
+      category: 'Visual Design',
+      description: 'Apply color theory, psychology, and accessibility to craft harmonious, expressive palettes.',
+      tags: ['Color Palette', 'HSL', 'Contrast', 'Color Psychology', 'Dark Mode'],
+      icon: 'paintcan',
+      isActive: false,
+      color: '#f59e0b',
+      fullInstructions: `- WORK in HSL color space for intuitive adjustments: same hue, vary lightness for tints/shades, vary saturation for vibrancy.
+- BUILD a 11-step palette (50-950) for each brand color using perceptual uniformity — not linear lightness steps.
+- ENSURE WCAG AA contrast for all text: 4.5:1 for body text, 3:1 for large text (18px+ or 14px+ bold), 3:1 for UI components.
+- USE the 60-30-10 rule: 60% neutral background, 30% secondary surface, 10% accent/brand color.
+- DESIGN dark mode as a separate palette, not just inverted lightness — dark surfaces use low-saturation, slightly warm neutrals (#1a1a2e not #000000).
+- APPLY color psychology purposefully: blue = trust/stability, green = success/growth, red = error/urgency, amber = warning/attention.
+- AVOID pure black (#000000) and pure white (#ffffff) — use near-black (#0f172a) and near-white (#f8fafc) for softer, more premium feel.
+- TEST palette under color blindness simulations (deuteranopia, protanopia) — never use color as the sole conveyor of meaning.
+- CREATE semantic color aliases: --color-surface, --color-on-surface, --color-primary, --color-on-primary, --color-error, --color-success.
+- USE oklch() for perceptually uniform colors in modern browsers — produces more consistent gradients than hsl().`
+    },
+    {
+      id: 'creative-ui-pro',
+      title: 'creative-ui',
+      category: 'Premium UI',
+      description: 'Create visually stunning, award-worthy interfaces using advanced CSS and modern design trends.',
+      tags: ['Glassmorphism', 'Neumorphism', 'Bento Grid', 'Aurora', 'Premium Design'],
+      icon: 'star-full',
+      isActive: false,
+      color: '#e879f9',
+      fullInstructions: `- THINK like a designer, not just a developer: before writing code, define the emotion the interface should evoke.
+- IMPLEMENT Glassmorphism correctly: backdrop-filter: blur(12px) + semi-transparent background (rgba with 10-20% opacity) + subtle border (1px solid rgba(255,255,255,0.2)) + soft shadow.
+- USE Bento Grid layouts for dashboard/landing pages: asymmetric grid with feature cards of varying sizes (1x1, 2x1, 1x2, 2x2).
+- CREATE Aurora/gradient mesh backgrounds with radial-gradient blobs + mix-blend-mode for depth without images.
+- APPLY noise texture overlay (SVG filter feTurbulence or CSS noise) at 3-8% opacity to add premium tactility to flat surfaces.
+- IMPLEMENT glow effects with box-shadow layering: multiple shadows at different blur radii in the brand color.
+- USE CSS @property with animation for smooth gradient transitions — gradients are not animatable without it.
+- BUILD scroll-driven animations with animation-timeline: scroll() for parallax and reveal effects without JavaScript.
+- APPLY text-gradient with background-clip: text for striking hero typography.
+- CREATE depth with layered shadows: use 3-5 shadow layers at different blur/offset values instead of one heavy shadow.
+- VALIDATE every "creative" decision against usability: if a user pauses to understand the UI, the creativity has failed.`
     }
   ];
 
@@ -350,30 +646,48 @@ export class SkillService {
 
   private async injectSkillsToWorkspace() {
     const activeSkills = this.skills.filter(s => s.isActive);
-    if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
-      const root = vscode.workspace.workspaceFolders[0].uri;
-      const skillsFolder = vscode.Uri.joinPath(root, '.antigravity', 'skills');
-      const universalFile = vscode.Uri.joinPath(root, '.antigravity', 'UNIVERSAL_AGENT_GUIDE.md');
-      const anthropicFile = vscode.Uri.joinPath(root, '.antigravity', 'active_skills.xml');
+    if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
+      return;
+    }
 
+    const root = vscode.workspace.workspaceFolders[0].uri;
+    const skillsFolder = vscode.Uri.joinPath(root, '.antigravity', 'skills');
+    const universalFile = vscode.Uri.joinPath(root, '.antigravity', 'UNIVERSAL_AGENT_GUIDE.md');
+    const anthropicFile = vscode.Uri.joinPath(root, '.antigravity', 'active_skills.xml');
+
+    try {
+      // Clear old skills folders to prevent sync issues
       try {
-        // Clear old skills folders to prevent sync issues
-        try {
-          await vscode.workspace.fs.delete(skillsFolder, { recursive: true, useTrash: false });
-        } catch (e) { /* ignore if not exists */ }
+        await vscode.workspace.fs.delete(skillsFolder, { recursive: true, useTrash: false });
+      } catch (e) { /* ignore if not exists */ }
 
-        await vscode.workspace.fs.createDirectory(skillsFolder);
-        
-        let xmlContent = '<available_skills>\n';
-        let mdContent = `# 🧠 UNIVERSAL AGENT COMMAND CENTER\n\n`;
-        mdContent += `> **SYSTEM INSTRUCTION**: You are an advanced AI Agent. You MUST adopt the following expert personas and adhere to their technical guidelines for all subsequent interactions in this workspace.\n\n`;
-        mdContent += `## 🛠 Active Specialist Skills\n\n`;
+      await vscode.workspace.fs.createDirectory(skillsFolder);
+
+      // --- Build the persistent system instruction content ---
+      const skillNames = activeSkills.map(s => s.title.toUpperCase()).join(', ');
+      const persistentHeader = activeSkills.length > 0
+        ? [
+            `# AGENT ASSISTANT — ACTIVE EXPERT SKILLS`,
+            ``,
+            `> CRITICAL SYSTEM INSTRUCTION: You MUST follow ALL guidelines below for EVERY message in this conversation.`,
+            `> Do NOT forget these instructions after the first response. They apply to the ENTIRE session.`,
+            `> Active Skills: ${skillNames}`,
+            ``,
+          ].join('\n')
+        : '';
+
+      let mdContent = persistentHeader;
+      let xmlContent = '<available_skills>\n';
+      let compactInstructions = ''; // For injection into settings/chat instructions
+
+      if (activeSkills.length > 0) {
+        mdContent += `## Expert Skill Guidelines\n\n`;
 
         for (const skill of activeSkills) {
           const skillDir = vscode.Uri.joinPath(skillsFolder, skill.id);
           const skillMdFile = vscode.Uri.joinPath(skillDir, 'SKILL.md');
           await vscode.workspace.fs.createDirectory(skillDir);
-          
+
           const skillMdContent = `# Skill: ${skill.title}\n\n` +
             `## Instructions\n${skill.fullInstructions}\n\n` +
             `## Triggers\n${skill.tags.map(t => `- ${t}`).join('\n')}\n`;
@@ -381,11 +695,13 @@ export class SkillService {
           await vscode.workspace.fs.writeFile(skillMdFile, Buffer.from(skillMdContent, 'utf8'));
 
           // Build Universal Markdown
-          mdContent += `### ✅ ${skill.title.toUpperCase()} (${skill.category})\n`;
+          mdContent += `### ${skill.title.toUpperCase()} (${skill.category})\n`;
           mdContent += `**Role**: ${skill.description}\n`;
-          mdContent += `**Expert Guidelines**:\n${skill.fullInstructions}\n`;
-          mdContent += `**Activation Keywords**: \`${skill.tags.join('`, `')}\`\n\n`;
+          mdContent += `**Guidelines**:\n${skill.fullInstructions}\n`;
           mdContent += `---\n\n`;
+
+          // Compact version for settings injection
+          compactInstructions += `[${skill.title.toUpperCase()}]: ${skill.fullInstructions.trim()} `;
 
           // Keep Anthropic XML for backward compatibility
           xmlContent += '  <skill>\n';
@@ -394,29 +710,129 @@ export class SkillService {
           xmlContent += `    <location>${skillMdFile.fsPath}</location>\n`;
           xmlContent += '  </skill>\n';
         }
-
-        xmlContent += '</available_skills>';
-
-        if (activeSkills.length === 0) {
-          mdContent += `*No specialized skills currently active. Operating in standard assistant mode.*\n`;
-        }
-
-        await vscode.workspace.fs.writeFile(universalFile, Buffer.from(mdContent, 'utf8'));
-        await vscode.workspace.fs.writeFile(anthropicFile, Buffer.from(xmlContent, 'utf8'));
-        
-        // --- Universal AI Support: Injection for other Agents ---
-        // 1. Cursor (.cursorrules)
-        const cursorRulesFile = vscode.Uri.joinPath(root, '.cursorrules');
-        await vscode.workspace.fs.writeFile(cursorRulesFile, Buffer.from(mdContent, 'utf8'));
-
-        // 2. Claude Code (CLAUDE.md)
-        const claudeMdFile = vscode.Uri.joinPath(root, 'CLAUDE.md');
-        await vscode.workspace.fs.writeFile(claudeMdFile, Buffer.from(mdContent, 'utf8'));
-
-        vscode.window.setStatusBarMessage(`$(zap) Universal Agent Context Synced`, 3000);
-      } catch (err) {
-        console.error('Failed to inject universal skills', err);
+      } else {
+        mdContent += `No specialized skills currently active. Operating in standard assistant mode.\n`;
       }
+
+      xmlContent += '</available_skills>';
+
+      // --- Write .antigravity internal files ---
+      await vscode.workspace.fs.writeFile(universalFile, Buffer.from(mdContent, 'utf8'));
+      await vscode.workspace.fs.writeFile(anthropicFile, Buffer.from(xmlContent, 'utf8'));
+
+      // ============================================================
+      // LAYER 1: .github/copilot-instructions.md (Gemini / Copilot)
+      // This is the OFFICIAL file that VS Code Copilot Chat and
+      // Gemini Code Assist read automatically on EVERY prompt.
+      // ============================================================
+      const githubDir = vscode.Uri.joinPath(root, '.github');
+      try { await vscode.workspace.fs.createDirectory(githubDir); } catch (e) { /* exists */ }
+      const copilotInstructionsFile = vscode.Uri.joinPath(githubDir, 'copilot-instructions.md');
+      await vscode.workspace.fs.writeFile(copilotInstructionsFile, Buffer.from(mdContent, 'utf8'));
+
+      // ============================================================
+      // LAYER 2: .vscode/settings.json — chat.instructions
+      // Injected directly into VS Code's chat instructions array
+      // so the agent sees them in its system prompt every time.
+      // ============================================================
+      await this.injectChatInstructions(root, activeSkills, compactInstructions);
+
+      // ============================================================
+      // LAYER 3: Cursor (.cursorrules)
+      // ============================================================
+      const cursorRulesFile = vscode.Uri.joinPath(root, '.cursorrules');
+      await vscode.workspace.fs.writeFile(cursorRulesFile, Buffer.from(mdContent, 'utf8'));
+
+      // ============================================================
+      // LAYER 4: Claude Code + Antigravity (CLAUDE.md)
+      // ============================================================
+      const claudeMdFile = vscode.Uri.joinPath(root, 'CLAUDE.md');
+      await vscode.workspace.fs.writeFile(claudeMdFile, Buffer.from(mdContent, 'utf8'));
+
+      // ============================================================
+      // LAYER 5: Antigravity IDE / Gemini (GEMINI.md)
+      // Antigravity IDE reads: CLAUDE.md, GEMINI.md, .github/copilot-instructions.md
+      // ============================================================
+      const geminiMdFile = vscode.Uri.joinPath(root, 'GEMINI.md');
+      await vscode.workspace.fs.writeFile(geminiMdFile, Buffer.from(mdContent, 'utf8'));
+
+      // ============================================================
+      // LAYER 6: Gemini Code Assist (.gemini/settings.json)
+      // ============================================================
+      const geminiDir = vscode.Uri.joinPath(root, '.gemini');
+      try { await vscode.workspace.fs.createDirectory(geminiDir); } catch (e) { /* exists */ }
+      const geminiStyleFile = vscode.Uri.joinPath(geminiDir, 'settings.json');
+      const geminiSettings = JSON.stringify({
+        codeAssist: {
+          systemInstruction: activeSkills.length > 0
+            ? `You have the following expert personas active. Follow their guidelines for EVERY response: ${compactInstructions.trim()}`
+            : ''
+        }
+      }, null, 2);
+      await vscode.workspace.fs.writeFile(geminiStyleFile, Buffer.from(geminiSettings, 'utf8'));
+
+      const count = activeSkills.length;
+      vscode.window.setStatusBarMessage(
+        count > 0
+          ? `$(zap) ${count} Expert Skill(s) synced to all AI agents`
+          : `$(info) All skills deactivated — agents reset to default mode`,
+        4000
+      );
+    } catch (err) {
+      console.error('Failed to inject universal skills', err);
+    }
+  }
+
+  /**
+   * Inject active skill instructions into .vscode/settings.json
+   * under the "github.copilot.chat.codeGeneration.instructions" key.
+   * This ensures VS Code's built-in Copilot/Gemini chat reads them
+   * as part of its system prompt on every single message.
+   */
+  private async injectChatInstructions(
+    root: vscode.Uri,
+    activeSkills: Skill[],
+    compactInstructions: string
+  ) {
+    const vscodeDir = vscode.Uri.joinPath(root, '.vscode');
+    const settingsFile = vscode.Uri.joinPath(vscodeDir, 'settings.json');
+
+    try {
+      try { await vscode.workspace.fs.createDirectory(vscodeDir); } catch (e) { /* exists */ }
+
+      // Read existing settings if they exist
+      let existingSettings: Record<string, any> = {};
+      try {
+        const raw = await vscode.workspace.fs.readFile(settingsFile);
+        const text = Buffer.from(raw).toString('utf8');
+        // Strip comments for JSON parse safety
+        const stripped = text.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
+        existingSettings = JSON.parse(stripped);
+      } catch (e) { /* file doesn't exist or parse error, start fresh */ }
+
+      // Build instruction entries
+      const agentAssistantMarker = '[Agent Assistant]';
+      
+      // Remove any previous Agent Assistant entries
+      const existingInstructions: any[] = existingSettings['github.copilot.chat.codeGeneration.instructions'] || [];
+      const cleaned = existingInstructions.filter(
+        (entry: any) => typeof entry === 'string'
+          ? !entry.includes(agentAssistantMarker)
+          : !(entry.text && entry.text.includes(agentAssistantMarker))
+      );
+
+      if (activeSkills.length > 0) {
+        cleaned.push({
+          text: `${agentAssistantMarker} PERSISTENT EXPERT INSTRUCTIONS — Apply these to EVERY response in this session: ${compactInstructions.trim()}`
+        });
+      }
+
+      existingSettings['github.copilot.chat.codeGeneration.instructions'] = cleaned;
+
+      const content = JSON.stringify(existingSettings, null, 2);
+      await vscode.workspace.fs.writeFile(settingsFile, Buffer.from(content, 'utf8'));
+    } catch (err) {
+      console.error('Failed to inject chat instructions into .vscode/settings.json', err);
     }
   }
 
@@ -435,5 +851,7 @@ export class SkillService {
         s.isActive = state[s.id];
       }
     });
+    // Sync instruction files on activation with previously saved state
+    this.injectSkillsToWorkspace();
   }
 }

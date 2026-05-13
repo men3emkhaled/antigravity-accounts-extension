@@ -1,5 +1,5 @@
 # Agent Assistant
-### The Definitive AI Expert Persona & Quota Management Suite
+### AI Expert Persona & Quota Management for VS Code
 
 <p align="center">
   <img src="./logo2.png" width="320" alt="Agent Assistant Logo">
@@ -15,55 +15,139 @@
 
 ---
 
-[English](#technical-overview) | [العربية](#الرؤية-التقنية)
+[English](#overview) | [العربية](#نظرة-عامة)
 
-## Technical Overview
-Agent Assistant serves as a high-fidelity orchestration layer for AI-native development environments. It facilitates the injection of professional constraints, specialized workflows, and expert personas directly into the agent's context window. By automating the deployment of workspace-specific instructions, it ensures that general-purpose models operate within the rigorous standards required for senior-level engineering.
+## Overview
 
-## Key Capabilities
+Agent Assistant is a VS Code extension with two core functions:
 
-### Universal Context Injection
-*   **Zero-Config Synchronization**: Automatically generates and updates `.cursorrules` (for Cursor) and `CLAUDE.md` (for Claude Code) to ensure consistent instruction adoption across different AI tools.
-*   **Deep Memory Integration**: Utilizes the `.antigravity/` workspace structure to provide persistent, discoverable context for all compliant AI agents.
-*   **Persona Enforcement**: Strictly defines the agent's technical behavior, linguistic tone, and domain-specific methodologies.
+**Account Management** — manage multiple Antigravity accounts from the VS Code sidebar. See real-time balances and switch between accounts with one click, without leaving your editor.
 
-### Resource & Quota Management
-*   **Real-Time Synchronization**: Monitors account balances and usage quotas across multiple AI platforms simultaneously.
-*   **High-Visibility Dashboard**: Features a premium Glassmorphism interface designed for professional environments, providing critical resource metrics at a glance.
-*   **Session Management**: Simplifies the process of account rotation and authentication without disrupting active development workflows.
-
-## Expert Skill Library
-
-| Persona | Core Specialization | Technical Guidelines |
-| :--- | :--- | :--- |
-| **Senior Human Coder** | Professional Delivery | Removes AI linguistic markers, enforces clean-code standards, and prioritizes pragmatic solutions. |
-| **Security Architect** | Vulnerability Mitigation | OWASP compliance, secret management, and real-time scanning for credential exposure. |
-| **UX/UI Researcher** | Design Excellence | WCAG 2.1 accessibility, user-flow optimization, and application of Jakob Nielsen’s heuristics. |
-| **Cloud Engineer** | Infrastructure Scaling | Docker orchestration, Kubernetes best practices, and robust CI/CD pipeline development. |
-| **QA Specialist** | Quality Assurance | Automated test generation (Jest, Playwright) and enforcement of high coverage benchmarks. |
-
-## Deployment Guide
-
-1.  **Installation**: Download the latest `.vsix` from the GitHub Releases section.
-2.  **Activation**: Open the Agent Assistant view in the VS Code sidebar.
-3.  **Selection**: Toggle the specialist skills required for your current technical objective.
-4.  **Verification**: Confirm adoption by querying your agent: "Identify active expert personas and their technical constraints."
+**Expert Skills** — give your AI agent a specialized role by enabling skills from the sidebar. The extension writes the instructions into every file the agent reads automatically, so the persona persists across the entire session — not just the first message.
 
 ---
 
-<h2 id="الرؤية-التقنية" dir="rtl">الرؤية التقنية</h2>
+## How Skill Injection Works
+
+When you enable a skill, the extension writes the instructions to all agent instruction files simultaneously:
+
+| File | Agent |
+| :--- | :--- |
+| `GEMINI.md` | Antigravity IDE |
+| `CLAUDE.md` | Claude Code |
+| `.cursorrules` | Cursor |
+| `.github/copilot-instructions.md` | GitHub Copilot / Gemini |
+| `.vscode/settings.json` | VS Code built-in chat |
+| `.gemini/settings.json` | Gemini Code Assist |
+
+The instructions include a persistent header that explicitly tells the agent to apply the guidelines for **every message in the session**, not just the first.
+
+On extension activation, previously enabled skills are automatically re-injected — no manual re-enabling required.
+
+---
+
+## Expert Skill Library (30+ Skills)
+
+### Development & Code Quality
+| Skill | Description |
+| :--- | :--- |
+| `refactor-pro` | SOLID principles, design patterns, code smells elimination |
+| `debug-expert` | Scientific debugging, root cause analysis, systematic isolation |
+| `code-reviewer` | PR review prioritization, security checks, constructive feedback |
+| `performance-optimizer` | Big O analysis, profiling, memory leak detection, Web Workers |
+| `security-guard` | OWASP top 10, secret management, dependency auditing |
+| `qa-tester` | Testing pyramid, AAA pattern, contract tests, visual regression |
+| `git-expert` | Conventional commits, rebase workflows, atomic commits |
+| `sql-expert` | Query optimization, indexing strategy, execution plan analysis |
+| `regex-master` | Named groups, backtracking prevention, flag selection |
+| `api-tester` | Status code coverage, schema validation, idempotency testing |
+| `prompt-engineer` | Role definition, chain-of-thought, few-shot examples |
+
+### Design & CSS
+| Skill | Description |
+| :--- | :--- |
+| `frontend-design` | Component architecture, design tokens, fluid typography, skeleton screens |
+| `css-master` | Cascade layers, container queries, `@property`, subgrid, logical properties |
+| `animation-expert` | Spring physics, FLIP technique, View Transitions API, `prefers-reduced-motion` |
+| `design-system` | Token tiers, Style Dictionary, Storybook, visual regression CI |
+| `color-theory` | HSL palettes, oklch(), WCAG contrast, dark mode design, 60-30-10 rule |
+| `creative-ui` | Glassmorphism, Bento Grid, scroll-driven animations, gradient mesh |
+| `ux-researcher` | Fitts's Law, Hick's Law, WCAG 2.1 AA, F-pattern, error state design |
+
+### Infrastructure & Systems
+| Skill | Description |
+| :--- | :--- |
+| `cloud-architect` | GitOps, blue-green deployments, RED monitoring, Terraform, multi-stage Docker |
+| `backend-architect` | CQRS, idempotency, cursor pagination, repository pattern, correlation IDs |
+| `mlops-expert` | Feature stores, drift detection, shadow mode, pipeline DAGs |
+| `embedded-expert` | MISRA-C, ISR design, watchdog timers, static allocation |
+| `mobile-expert` | Thumb-zone design, 60fps targeting, safe area insets, offline sync |
+
+### Productivity & Communication
+| Skill | Description |
+| :--- | :--- |
+| `human-persona` | Eliminates AI markers and emojis, senior developer tone |
+| `technical-writer` | ADRs, runbooks, co-located docs, OpenAPI 3.1 |
+| `docx` | Heading hierarchy, styles, cross-references, TOC |
+| `pdf` / `pdf-reading` | OCR detection, proper redaction, structure-aware extraction |
+| `pptx` | 6x6 rule, narrative arc, slide masters |
+| `xlsx` | INDEX-MATCH, Power Query, named ranges, data validation |
+| `data-scientist` | EDA, SHAP explainability, DVC versioning |
+| `web3-expert` | CEI pattern, OpenZeppelin, gas optimization, fuzz tests |
+
+---
+
+## Installation
+
+**From VS Code Marketplace:**
+Search for **Agent Assistant** in the Extensions panel (`Ctrl+Shift+X`).
+
+**Manual install:**
+Download the latest `.vsix` from [Releases](https://github.com/men3emkhaled/agent-assistant-extension/releases) and run:
+```
+code --install-extension agent-assistant-x.x.x.vsix
+```
+
+---
+
+## Quick Start
+
+1. Open the **Agent Assistant** panel from the VS Code activity bar.
+2. Add your Antigravity accounts under the **Accounts** section.
+3. Enable the skills you need from the **Expert Skills** section.
+4. Open a new chat with your AI agent — the personas are active from message one.
+
+---
+
+<h2 id="نظرة-عامة" dir="rtl">نظرة عامة</h2>
 
 <p dir="rtl">
-نظام Agent Assistant هو طبقة إدارة متطورة لبيئات البرمجة المدعومة بالذكاء الاصطناعي. يقوم النظام بتحويل النماذج اللغوية العامة إلى مبرمجين متخصصين عبر حقن مهارات فنية دقيقة وقيود مهنية في سياق العمل، مما يضمن أداءً يطابق معايير كبار مهندسي البرمجيات.
+Agent Assistant هو extension لـ VS Code بيشتغل على جانبين:
 </p>
 
-<h2 dir="rtl">الإمكانيات الجوهرية</h2>
-
 <ul dir="rtl">
-  <li><strong>حقن السياق العالمي</strong>: توليد تلقائي لملفات الإرشادات لبيئات Cursor و Claude Code لضمان تبني المهارات فوراً وبدون تدخل يدوي.</li>
-  <li><strong>إدارة الموارد والكوتا</strong>: مزامنة فورية للأرصدة عبر واجهة زجاجية عصرية مصممة للمحترفين.</li>
-  <li><strong>مكتبة مهارات الخبراء</strong>: تحويل شخصية الأيجنت إلى خبير حماية، مهندس سحابي، أو مدقق جودة بضغطة زر واحدة.</li>
+  <li><strong>إدارة الاكونتات</strong> — بيجمع كل حسابات Antigravity بتاعتك في مكان واحد جوه VS Code. بتشوف الـ balance لكل حساب في الوقت الفعلي وبتعمل switch بينهم بكليكة واحدة.</li>
+  <li><strong>Expert Skills</strong> — بتفعّل skill من الـ sidebar وبيكتب الـ extension التعليمات في كل الملفات اللي الـ agent بيقرأها تلقائياً. الشخصية بتفضل فاكرها طول الشات مش بس أول رسالة.</li>
 </ul>
 
+<h3 dir="rtl">ازاي بيشتغل الـ Injection</h3>
+
+<p dir="rtl">
+لما تفعّل أي skill، الـ extension بيكتب التعليمات في كل الملفات دي في نفس الوقت:
+</p>
+
+<ul dir="rtl">
+  <li><code>GEMINI.md</code> — لـ Antigravity IDE</li>
+  <li><code>CLAUDE.md</code> — لـ Claude Code</li>
+  <li><code>.cursorrules</code> — لـ Cursor</li>
+  <li><code>.github/copilot-instructions.md</code> — لـ GitHub Copilot / Gemini</li>
+  <li><code>.vscode/settings.json</code> — لـ VS Code chat</li>
+</ul>
+
+<p dir="rtl">
+وعند فتح VS Code، الـ Skills اللي كانت مفعلة بترجع تتحقن تلقائياً من غير ما تعمل أي حاجة.
+</p>
+
 ---
-*Developed with technical precision by men3em*
+
+*Developed by [men3em](https://github.com/men3emkhaled)*

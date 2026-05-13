@@ -2,7 +2,7 @@
   "name": "agent-assistant",
   "displayName": "Agent Assistant",
   "description": "The definitive Expert Persona & Quota Management system for AI Agents. Empower your workflow with deep skill injection and real-time resource tracking.",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "icon": "logo2.png",
   "publisher": "men3em",
   "repository": {
