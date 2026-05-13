@@ -1,13 +1,13 @@
 # Antigravity Accounts
 
 <p align="center">
-  <a href="https://github.com/men3emkhaledkhaled/antigravity-accounts-extension"><img src="https://img.shields.io/github/stars/men3em/antigravity-accounts?style=flat-square&color=007acc" alt="GitHub Stars" /></a>
-  <a href="https://github.com/men3emkhaledkhaled/antigravity-accounts-extension/issues"><img src="https://img.shields.io/github/issues/men3em/antigravity-accounts?style=flat-square&color=f14c4c" alt="GitHub Issues" /></a>
+  <a href="https://github.com/men3emkhaled/antigravity-accounts-extension"><img src="https://img.shields.io/github/stars/men3emkhaled/antigravity-accounts-extension?style=flat-square&color=007acc" alt="GitHub Stars" /></a>
+  <a href="https://github.com/men3emkhaled/antigravity-accounts-extension/issues"><img src="https://img.shields.io/github/issues/men3emkhaled/antigravity-accounts-extension?style=flat-square&color=f14c4c" alt="GitHub Issues" /></a>
 </p>
 
 
 <p align="center">
-  ![Antigravity Accounts Details](for-details.png)
+  <img src="https://raw.githubusercontent.com/men3emkhaled/antigravity-accounts-extension/master/for-details.png" alt="Antigravity Accounts Details" width="100%" />
 </p>
 
 
@@ -27,6 +27,16 @@ Antigravity Accounts is a specialized management extension for the Antigravity d
 - Data Portability: Encrypted export and import protocols for secure workspace migration.
 - Localized Experience: Native support for English and Arabic interface configurations.
 
+## Installation
+
+1. **Download**: Go to the [Releases](https://github.com/men3emkhaled/antigravity-accounts-extension/releases) page and download the latest `.vsix` file.
+2. **Install in VS Code**:
+   - Open VS Code.
+   - Go to the **Extensions** view (`Ctrl+Shift+X`).
+   - Click the **...** (Views and More Actions) at the top right of the Extensions sidebar.
+   - Select **Install from VSIX...**
+   - Choose the downloaded `.vsix` file.
+
 ## Requirements
 
 - Antigravity Desktop: Version 1.23.2 or newer.
@@ -35,8 +45,9 @@ Antigravity Accounts is a specialized management extension for the Antigravity d
 ## Usage
 
 1. Access the **Antigravity Accounts** module from the VS Code Activity Bar.
-2. Utilize the **Add Account** function to initiate secure authentication.
-3. Select **Activate** on the target account to update the global session. The editor will perform a standard reload to apply configuration changes.
+2. Use the **Search** icon (🔍) to filter accounts quickly if you have a large list.
+3. Utilize the **Add Account** function to initiate secure authentication.
+4. Select **SWITCH** on the target account inside the Hub Panel to update the global session. The editor will perform a standard reload to apply configuration changes.
 
 ## Technical Support
 
@@ -65,6 +76,21 @@ For technical inquiries or issue reporting:
   <li><strong>تجربة محلية</strong>: دعم كامل لواجهة المستخدم باللغتين العربية والإنجليزية.</li>
 </ul>
 
+<h2 dir="rtl">التثبيت</h2>
+
+<ol dir="rtl">
+  <li><strong>التحميل</strong>: اذهب إلى صفحة <a href="https://github.com/men3emkhaled/antigravity-accounts-extension/releases">الإصدارات (Releases)</a> وحمل أحدث ملف بصيغة <code>.vsix</code>.</li>
+  <li><strong>التثبيت في VS Code</strong>:
+    <ul>
+      <li>افتح VS Code.</li>
+      <li>انتقل إلى واجهة الـ <strong>Extensions</strong> (<code>Ctrl+Shift+X</code>).</li>
+      <li>اضغط على علامة <strong>...</strong> (المزيد من الإجراءات) في أعلى القائمة الجانبية.</li>
+      <li>اختر <strong>Install from VSIX...</strong>.</li>
+      <li>حدد الملف الذي قمت بتحميله.</li>
+    </ul>
+  </li>
+</ol>
+
 <h2 dir="rtl">المتطلبات</h2>
 
 <ul dir="rtl">
@@ -76,8 +102,9 @@ For technical inquiries or issue reporting:
 
 <ol dir="rtl">
   <li>افتح وحدة <strong>Antigravity Accounts</strong> من شريط الأدوات الجانبي.</li>
+  <li>استخدم أيقونة <strong>البحث</strong> (🔍) لتصفية الحسابات بسرعة إذا كان لديك قائمة كبيرة.</li>
   <li>استخدم وظيفة <strong>إضافة حساب</strong> لبدء عملية المصادقة الآمنة.</li>
-  <li>اضغط على <strong>تنشيط</strong> للحساب المطلوب لتحديث الجلسة؛ سيقوم المحرر بإعادة تحميل تلقائية لتطبيق الإعدادات الجديدة.</li>
+  <li>اضغط على <strong>SWITCH</strong> للحساب المطلوب داخل الـ Hub Panel لتنشيط الجلسة.</li>
 </ol>
 
 <h2 dir="rtl">الدعم الفني</h2>

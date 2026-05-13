@@ -2,11 +2,11 @@
   "name": "antigravity-accounts",
   "displayName": "Antigravity Accounts",
   "description": "Advanced account synchronization and quota management for the Antigravity desktop environment. Optimizes multi-session workflows with secure credential handling and automated rotation.",
-  "version": "0.1.52",
+  "version": "1.0.0",
   "publisher": "men3em",
   "repository": {
     "type": "git",
-    "url": "https://github.com/men3emkhaled/antigravity-accounts-extension"
+    "url": "https://github.com/men3emkhaled/antigravity-accounts-extension.git"
   },
   "bugs": {
     "url": "https://github.com/men3emkhaled/antigravity-accounts-extension/issues"
@@ -58,6 +58,21 @@
         "command": "antigravity-accounts.switchAccount",
         "title": "Switch Account",
         "category": "Antigravity Accounts"
+      },
+      {
+        "command": "antigravity-accounts.searchAccounts",
+        "title": "Search Accounts",
+        "icon": "$(search)"
+      },
+      {
+        "command": "antigravity-accounts.clearSearch",
+        "title": "Clear Search",
+        "icon": "$(close)"
+      },
+      {
+        "command": "antigravity-accounts.refreshAccounts",
+        "title": "Refresh All",
+        "icon": "$(refresh)"
       },
       {
         "command": "antigravity-accounts.refreshBalances",
@@ -116,12 +131,22 @@
       ],
       "view/title": [
         {
-          "command": "antigravity-accounts.addAccount",
+          "command": "antigravity-accounts.searchAccounts",
           "when": "view == antigravity-accounts.accountsView",
           "group": "navigation"
         },
         {
-          "command": "antigravity-accounts.refreshBalances",
+          "command": "antigravity-accounts.clearSearch",
+          "when": "view == antigravity-accounts.accountsView && antigravity-accounts.isSearching",
+          "group": "navigation"
+        },
+        {
+          "command": "antigravity-accounts.refreshAccounts",
+          "when": "view == antigravity-accounts.accountsView",
+          "group": "navigation"
+        },
+        {
+          "command": "antigravity-accounts.addAccount",
           "when": "view == antigravity-accounts.accountsView",
           "group": "navigation"
         }

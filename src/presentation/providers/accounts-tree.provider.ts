@@ -9,16 +9,23 @@ import { AccountService } from '../../features/accounts/account.service';
 import { Logger } from '../../core/utils/logger';
 
 export class AccountsTreeProvider implements vscode.TreeDataProvider<AccountTreeItem> {
-  private _onDidChangeTreeData = new vscode.EventEmitter<AccountTreeItem | undefined | void>();
-  readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
+  private _filter: string = '';
+  private _onDidChangeTreeData: vscode.EventEmitter<AccountTreeItem | undefined | void> = new vscode.EventEmitter<AccountTreeItem | undefined | void>();
+  readonly onDidChangeTreeData: vscode.Event<AccountTreeItem | undefined | void> = this._onDidChangeTreeData.event;
 
   constructor(
-    private readonly accountRepo: IAccountRepository,
-    private readonly accountService: AccountService
+    private readonly accountService: AccountService,
+    private readonly accountRepo: IAccountRepository
   ) {
     this.accountService.onAccountsChanged(() => {
       this.refresh();
     });
+  }
+
+  public setFilter(query: string) {
+    this._filter = query.toLowerCase().trim();
+    vscode.commands.executeCommand('setContext', 'antigravity-accounts.isSearching', this._filter !== '');
+    this.refresh();
   }
 
   refresh(): void {
@@ -36,8 +43,16 @@ export class AccountsTreeProvider implements vscode.TreeDataProvider<AccountTree
     }
 
     try {
-      const accounts = await this.accountRepo.getAccountSummaries();
+      let accounts = await this.accountRepo.getAccountSummaries();
       const activeEmail = await this.accountService.getActiveAntigravityEmail();
+
+      // Apply Filter
+      if (this._filter) {
+        accounts = accounts.filter(a => 
+          a.email.toLowerCase().includes(this._filter) || 
+          (a.displayName && a.displayName.toLowerCase().includes(this._filter))
+        );
+      }
 
       if (accounts.length === 0) {
         const emptyItem = new AccountTreeItem(

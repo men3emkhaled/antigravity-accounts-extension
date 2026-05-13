@@ -108,10 +108,10 @@ function registerCommands(
   const statusBarProvider = new StatusBarProvider(accountRepo, accountService);
   disposables.push(statusBarProvider);
 
-  const accountsTreeProvider = new AccountsTreeProvider(accountRepo, accountService);
+  const accountsTreeProvider = new AccountsTreeProvider(accountService, accountRepo);
   const treeView = vscode.window.createTreeView('antigravity-accounts.accountsView', {
     treeDataProvider: accountsTreeProvider,
-    showCollapseAll: true
+    showCollapseAll: false
   });
   disposables.push(treeView);
 
@@ -142,6 +142,24 @@ function registerCommands(
         // Delay significantly to let Antigravity IDE's webview host stabilize
         setTimeout(() => accountsTreeProvider.refresh(), 1000);
       }
+    })
+  );
+
+  disposables.push(
+    vscode.commands.registerCommand('antigravity-accounts.searchAccounts', async () => {
+      const query = await vscode.window.showInputBox({
+        placeHolder: 'Search accounts by email or name...',
+        prompt: 'Filter Antigravity Accounts'
+      });
+      if (query !== undefined) {
+        accountsTreeProvider.setFilter(query);
+      }
+    })
+  );
+
+  disposables.push(
+    vscode.commands.registerCommand('antigravity-accounts.clearSearch', () => {
+      accountsTreeProvider.setFilter('');
     })
   );
 
