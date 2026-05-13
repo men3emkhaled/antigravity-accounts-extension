@@ -1,17 +1,15 @@
 /**
- * Accounts Webview Provider - DEBUG & FIX 0.1.22
+ * Accounts Panel Provider — WebviewPanel-based (editor tab) for Antigravity IDE compatibility.
+ * Uses createWebviewPanel instead of WebviewViewProvider to bypass service worker issues.
  */
 
 import * as vscode from 'vscode';
 import { IAccountRepository } from '../../core/domain/repositories/account.repository';
 import { AccountService } from '../../features/accounts/account.service';
-import { I18nService } from '../../i18n/i18n.service';
 import { Logger } from '../../core/utils/logger';
 
-export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
-  public static readonly viewType = 'antigravity-accounts.accountsView';
-  private _view?: vscode.WebviewView;
-  private _isDisposed = false;
+export class AccountsPanelProvider {
+  private _panel?: vscode.WebviewPanel;
 
   constructor(
     private readonly extensionUri: vscode.Uri,
@@ -23,30 +21,27 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
     });
   }
 
-  public resolveWebviewView(webviewView: vscode.WebviewView) {
-    this._view = webviewView;
-    this._isDisposed = false;
+  public show() {
+    if (this._panel) {
+      this._panel.reveal(vscode.ViewColumn.One);
+      this.refresh();
+      return;
+    }
 
-    webviewView.webview.options = { 
-      enableScripts: true, 
-      localResourceRoots: [this.extensionUri] 
-    };
+    this._panel = vscode.window.createWebviewPanel(
+      'antigravity-accounts.panel',
+      'Antigravity Hub',
+      vscode.ViewColumn.One,
+      {
+        enableScripts: true
+      }
+    );
 
-    // CRITICAL: Set a minimal valid HTML synchronously BEFORE any async work.
-    // This prevents "Could not register service worker: InvalidStateError"
-    // on Antigravity IDE / VS Code forks where the webview iframe needs
-    // a valid document immediately upon creation.
-    webviewView.webview.html = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><p style="color:var(--vscode-foreground);font-family:sans-serif;padding:16px;opacity:0.5;">Loading...</p></body></html>`;
-
-    webviewView.onDidDispose(() => {
-      this._isDisposed = true;
-      this._view = undefined;
+    this._panel.onDidDispose(() => {
+      this._panel = undefined;
     });
 
-    // DEBUG: Log all incoming messages
-    webviewView.webview.onDidReceiveMessage(async message => {
-      Logger.getInstance().info(`Webview message received: ${message.command} for ${message.email}`);
-      
+    this._panel.webview.onDidReceiveMessage(async message => {
       try {
         switch (message.command) {
           case 'addAccount':
@@ -56,44 +51,27 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
             await this.accountService.refreshBalancesWorkflow(true);
             break;
           case 'switchAccount':
-            Logger.getInstance().info(`Executing switch for ${message.email}`);
             await this.accountService.switchAccountWorkflow(message.email);
             break;
           case 'deleteAccount':
-            Logger.getInstance().info(`Executing delete for ${message.email}`);
             await this.accountService.removeAccountWorkflow(message.email);
             break;
         }
       } catch (err) {
-        Logger.getInstance().error(`Command ${message.command} failed`, err);
+        Logger.getInstance().error(`Panel command ${message.command} failed`, err);
       }
     });
 
-    // Small delay to let webview iframe fully initialize before setting real content
-    setTimeout(() => this.refresh(), 300);
+    // Delay significantly to let Antigravity IDE's webview host stabilize
+    setTimeout(() => this.refresh(), 1000);
   }
 
   public async refresh() {
-    if (!this._view || this._isDisposed) return;
-
+    if (!this._panel) return;
     try {
-      const html = await this._getHtmlForWebview();
-      // Double-check view is still valid after async work
-      if (this._view && !this._isDisposed) {
-        this._view.webview.html = html;
-      }
+      this._panel.webview.html = await this._getHtml();
     } catch (err) {
-      Logger.getInstance().error('Webview refresh failed, retrying...', err);
-      // Retry once after a delay
-      setTimeout(async () => {
-        try {
-          if (this._view && !this._isDisposed) {
-            this._view.webview.html = await this._getHtmlForWebview();
-          }
-        } catch (retryErr) {
-          Logger.getInstance().error('Webview refresh retry also failed', retryErr);
-        }
-      }, 1000);
+      Logger.getInstance().error('Panel refresh failed', err);
     }
   }
 
@@ -104,8 +82,7 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
     return text;
   }
 
-  private async _getHtmlForWebview(): Promise<string> {
-    const nonce = this._getNonce();
+  private async _getHtml(): Promise<string> {
     const rawAccounts = await this.accountRepo.getAccountSummaries();
     const activeEmail = await this.accountService.getActiveAntigravityEmail();
     const isRefreshing = this.accountService.isRefreshing();
@@ -123,35 +100,47 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
     });
 
     const getHeroStats = (acc: any) => {
-      let stats = { claude: 0, pro: 0, flash: 0 };
-      if (acc?.balances) {
-        Object.keys(acc.balances).forEach(k => {
-          const l = k.toLowerCase();
-          if (l.includes('claude') && !l.includes('all')) stats.claude = acc.balances[k]?.value || acc.balances[k] || 0;
-          if (l.includes('pro') || k === 'google_one_ai' || l.includes('total')) stats.pro = acc.balances[k]?.value || acc.balances[k] || 0;
-          if (l.includes('flash')) stats.flash = acc.balances[k]?.value || acc.balances[k] || 0;
-        });
-      }
-      return stats;
+      const balances = acc?.balances || {};
+      const findStat = (patterns: string[]) => {
+        let minVal = 101; // Higher than 100 to detect first match
+        let found = false;
+        for (const key of Object.keys(balances)) {
+          const lk = key.toLowerCase();
+          if (lk && patterns.some(p => lk.includes(p))) {
+            const val = balances[key];
+            const current = typeof val === 'number' ? val : (val as any)?.value || 0;
+            if (current < minVal) {
+              minVal = current;
+              found = true;
+            }
+          }
+        }
+        return found ? minVal : 0;
+      };
+
+      return {
+        claude: findStat(['claude', 'sonnet', 'opus', 'haiku']),
+        geminiPro: findStat(['pro', 'google_one', 'ultra']),
+        geminiFlash: findStat(['flash'])
+      };
     };
 
     const accountsDataForJs = sortedAccounts.map(a => ({ email: a.email, stats: getHeroStats(a) }));
     const activeAcc = sortedAccounts.find(a => a.email === activeEmail) || sortedAccounts[0];
-    const initialStats = activeAcc ? getHeroStats(activeAcc) : { claude: 0, pro: 0, flash: 0 };
+    const initialStats = activeAcc ? getHeroStats(activeAcc) : { claude: 0, geminiPro: 0, geminiFlash: 0 };
 
     const cardsHtml = sortedAccounts.map(acc => `
       <div class="acc-card ${acc.email === activeEmail ? 'active' : ''} ${isRefreshing ? 'refreshing' : ''}" id="card-${acc.email.replace(/[@.]/g, '-')}" onclick="previewAcc('${acc.email}')">
         <div class="card-main">
           <div class="avatar-wrap">
             <div class="avatar">
-              ${acc.avatarUrl ? `<img src="${acc.avatarUrl}" onerror="this.style.display='none'">` : ''}
               <span class="avatar-letter">${(acc.displayName || 'U')[0].toUpperCase()}</span>
             </div>
             ${acc.email === activeEmail ? '<div class="active-dot"></div>' : ''}
           </div>
           <div class="info">
-            <div class="name">${acc.displayName}</div>
-            <div class="email">${acc.email}</div>
+            <div class="name">${acc.email}</div>
+            <div class="email">${acc.displayName || ''}</div>
           </div>
           <div class="badge ${acc.status || 'active'}">${(acc.status || 'active').toUpperCase()}</div>
         </div>
@@ -166,18 +155,19 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
     <html lang="en">
     <head>
       <meta charset="UTF-8">
-      <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src https: data:; script-src 'nonce-${nonce}'; connect-src https://fonts.googleapis.com https://fonts.gstatic.com;">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
       <style>
         :root {
-          --bg: var(--vscode-sideBar-background); --fg: var(--vscode-foreground); --border: var(--vscode-sideBar-border);
+          --bg: var(--vscode-editor-background); --fg: var(--vscode-foreground); --border: var(--vscode-panel-border, var(--vscode-sideBar-border));
           --primary: var(--vscode-button-background); --primary-fg: var(--vscode-button-foreground);
           --neon-pro: #6366f1; --neon-orange: #f97316; --neon-cyan: #06b6d4; --neon-purple: #a855f7;
         }
-        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--fg); margin: 0; padding: 0; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--fg); margin: 0; padding: 0; display:flex; justify-content:center; }
+        .container { max-width: 420px; width: 100%; }
         .header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 100; }
         .icon-btn { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border); background: rgba(128,128,128,0.05); color: var(--fg); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .icon-btn:hover { background: rgba(128,128,128,0.15); }
         .icon-btn.spinning svg { animation: spin 1s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
@@ -188,12 +178,23 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
         .tile-claude { --tile-color: var(--neon-orange); } .tile-pro { --tile-color: var(--neon-pro); } .tile-flash { --tile-color: var(--neon-cyan); }
 
         .acc-list { padding: 0 16px 16px 16px; }
-        .acc-card { background: rgba(128,128,128,0.02); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; }
-        .acc-card.refreshing { animation: pulse 1.5s infinite; opacity: 0.7; pointer-events: none; }
-        @keyframes pulse { 0% { border-color: var(--border); } 50% { border-color: var(--neon-pro); } 100% { border-color: var(--border); } }
+        .acc-card { background: rgba(128,128,128,0.02); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; }
+        .acc-card.refreshing::after {
+          content: "";
+          position: absolute;
+          top: 0; left: -100%; width: 100%; height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+          animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer { 100% { left: 100%; } }
         .acc-card.preview-selected { padding: 4px; border-color: var(--neon-pro); background: rgba(99, 102, 241, 0.05); transform: scale(0.98); }
 
+        .progress-bar { position: absolute; bottom: 0; left: 0; height: 2px; width: 0; background: var(--neon-pro); transition: width 0.3s; }
+        .progress-active { width: 100%; animation: progress-indet 2s infinite linear; }
+        @keyframes progress-indet { 0% { left: -40%; width: 40%; } 100% { left: 100%; width: 40%; } }
+
         .card-main { padding: 12px; display: flex; align-items: center; gap: 10px; }
+        .avatar-wrap { position: relative; }
         .avatar { width: 36px; height: 36px; background: var(--primary); color: var(--primary-fg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; position: relative; overflow: hidden; }
         .avatar img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; }
         .active-dot { position: absolute; bottom: -2px; right: -2px; width: 10px; height: 10px; background: #10b981; border: 2px solid var(--bg); border-radius: 50%; z-index: 10; }
@@ -208,21 +209,27 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
       </style>
     </head>
     <body>
-      <div class="header">
-        <div style="font-size:13px;font-weight:700;opacity:0.7;">ANTIGRAVITY HUB</div>
-        <div style="display:flex;gap:8px;">
-          <button class="icon-btn" id="btn-global" onclick="toggleGlobal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></button>
-          <button class="icon-btn ${isRefreshing ? 'spinning' : ''}" onclick="refreshAll()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></button>
-          <button class="icon-btn" onclick="addAcc()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+      <div class="container">
+        <div class="header">
+          <div style="display:flex;flex-direction:column;">
+            <div style="font-size:13px;font-weight:700;opacity:0.7;">ANTIGRAVITY HUB</div>
+            <div style="font-size:8px;opacity:0.4;font-weight:600;margin-top:2px;" id="last-update">LAST SYNC: ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="icon-btn" id="btn-global" onclick="toggleGlobal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></button>
+            <button class="icon-btn ${isRefreshing ? 'spinning' : ''}" id="btn-refresh" onclick="refreshAll()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></button>
+            <button class="icon-btn" onclick="addAcc()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+          </div>
+          <div class="progress-bar ${isRefreshing ? 'progress-active' : ''}"></div>
         </div>
+        <div class="dashboard">
+          <div class="stat-tile tile-claude"><div class="stat-label">Claude 4.6</div><div class="stat-val" id="val-c">${initialStats.claude}%</div></div>
+          <div class="stat-tile tile-pro"><div class="stat-label">Gemini Pro 3.1</div><div class="stat-val" id="val-p">${initialStats.geminiPro}%</div></div>
+          <div class="stat-tile tile-flash"><div class="stat-label">Gemini Flash 3</div><div class="stat-val" id="val-f">${initialStats.geminiFlash}%</div></div>
+        </div>
+        <div class="acc-list">${cardsHtml}</div>
       </div>
-      <div class="dashboard">
-        <div class="stat-tile tile-claude"><div class="stat-label">Claude</div><div class="stat-val" id="val-c">${initialStats.claude}%</div></div>
-        <div class="stat-tile tile-pro"><div class="stat-label">Pro</div><div class="stat-val" id="val-p">${initialStats.pro}%</div></div>
-        <div class="stat-tile tile-flash"><div class="stat-label">Flash</div><div class="stat-val" id="val-f">${initialStats.flash}%</div></div>
-      </div>
-      <div class="acc-list">${cardsHtml}</div>
-      <script nonce="${nonce}">
+      <script>
         const vscode = acquireVsCodeApi();
         const accs = ${JSON.stringify(accountsDataForJs)};
         let currentPreview = null;
@@ -230,14 +237,8 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
 
         function addAcc() { vscode.postMessage({ command: 'addAccount' }); }
         function refreshAll() { vscode.postMessage({ command: 'refreshAccounts' }); }
-        
-        // FIX: Added stopPropagation to ensure buttons don't trigger preview
-        function doSwitch(email) { 
-          vscode.postMessage({ command: 'switchAccount', email: email }); 
-        }
-        function doDelete(email) { 
-          vscode.postMessage({ command: 'deleteAccount', email: email }); 
-        }
+        function doSwitch(email) { vscode.postMessage({ command: 'switchAccount', email: email }); }
+        function doDelete(email) { vscode.postMessage({ command: 'deleteAccount', email: email }); }
 
         function toggleGlobal() {
           isGlobal = !isGlobal;
@@ -256,12 +257,14 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
         function calculateGlobal() {
           if (accs.length === 0) return updateStats(null);
           const totals = accs.reduce((acc, curr) => ({
-            claude: acc.claude + curr.stats.claude, pro: acc.pro + curr.stats.pro, flash: acc.flash + curr.stats.flash
-          }), { claude: 0, pro: 0, flash: 0 });
+            claude: acc.claude + curr.stats.claude, 
+            geminiPro: acc.geminiPro + curr.stats.geminiPro, 
+            geminiFlash: acc.geminiFlash + curr.stats.geminiFlash
+          }), { claude: 0, geminiPro: 0, geminiFlash: 0 });
           updateStats({
             claude: Math.round(totals.claude / accs.length),
-            pro: Math.round(totals.pro / accs.length),
-            flash: Math.round(totals.flash / accs.length)
+            geminiPro: Math.round(totals.geminiPro / accs.length),
+            geminiFlash: Math.round(totals.geminiFlash / accs.length)
           });
         }
 
@@ -269,8 +272,11 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
           if (${isRefreshing}) return;
           isGlobal = false;
           document.getElementById('btn-global').classList.remove('active-global');
+          
           const targetCard = document.getElementById('card-' + email.replace(/[@.]/g, '-'));
+          
           if (currentPreview === email) {
+            // Already selected, do nothing or toggle off
             currentPreview = null;
             targetCard.classList.remove('preview-selected');
             updateStats(null);
@@ -285,8 +291,8 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
 
         function updateStats(stats) {
           document.getElementById('val-c').innerText = (stats ? stats.claude : 0) + '%';
-          document.getElementById('val-p').innerText = (stats ? stats.pro : 0) + '%';
-          document.getElementById('val-f').innerText = (stats ? stats.flash : 0) + '%';
+          document.getElementById('val-p').innerText = (stats ? stats.geminiPro : 0) + '%';
+          document.getElementById('val-f').innerText = (stats ? stats.geminiFlash : 0) + '%';
         }
       </script>
     </body>

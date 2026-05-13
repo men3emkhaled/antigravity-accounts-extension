@@ -5,6 +5,7 @@
  * Uses native fetch API (available in modern VS Code / Node.js).
  */
 
+import * as vscode from 'vscode';
 import { API } from '../constants/app.constants';
 import { Logger } from '../utils/logger';
 
@@ -25,7 +26,7 @@ export class ApiClient {
                      process.platform === 'darwin' ? 'darwin' : 'linux';
     const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
     
-    return `antigravity/${version} ${platform}/${arch}`;
+    return `CloudCode-VSCode/${version} VSCode/${vscode.version} (antigravity-hub)`;
   }
 
   /**

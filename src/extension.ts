@@ -17,7 +17,8 @@ import { AccountRepositoryImpl } from './infrastructure/storage/account.reposito
 import { StateDbService } from './infrastructure/storage/state-db.service';
 import { AccountService } from './features/accounts/account.service';
 import { StatusBarProvider } from './presentation/providers/status-bar.provider';
-import { AccountsWebviewProvider } from './presentation/providers/accounts-webview.provider';
+import { AccountsTreeProvider } from './presentation/providers/accounts-tree.provider';
+import { AccountsPanelProvider } from './presentation/providers/accounts-panel.provider';
 
 // TODO : complete Investigation Account Switching conversation
 
@@ -107,10 +108,15 @@ function registerCommands(
   const statusBarProvider = new StatusBarProvider(accountRepo, accountService);
   disposables.push(statusBarProvider);
 
-  const accountsProvider = new AccountsWebviewProvider(context.extensionUri, accountRepo, accountService);
-  disposables.push(
-    vscode.window.registerWebviewViewProvider(AccountsWebviewProvider.viewType, accountsProvider)
-  );
+  const accountsTreeProvider = new AccountsTreeProvider(accountRepo, accountService);
+  const treeView = vscode.window.createTreeView('antigravity-accounts.accountsView', {
+    treeDataProvider: accountsTreeProvider,
+    showCollapseAll: true
+  });
+  disposables.push(treeView);
+
+  // Rich WebviewPanel UI (opens in editor tab)
+  const panelProvider = new AccountsPanelProvider(context.extensionUri, accountRepo, accountService);
 
   // Listen for account state changes to update UI
   disposables.push(
@@ -123,8 +129,31 @@ function registerCommands(
 
   disposables.push(
     vscode.commands.registerCommand('antigravity-accounts.openPanel', () => {
-      // Focus the webview panel in the sidebar
-      vscode.commands.executeCommand('antigravity-accounts.accountsView.focus');
+      panelProvider.show();
+    })
+  );
+
+  // Tree view actions
+  disposables.push(
+    vscode.commands.registerCommand('antigravity-accounts.treeSwitch', async (arg: any) => {
+      const email = typeof arg === 'string' ? arg : arg?.email;
+      if (email) {
+        await accountService.switchAccountWorkflow(email);
+        // Delay significantly to let Antigravity IDE's webview host stabilize
+        setTimeout(() => accountsTreeProvider.refresh(), 1000);
+      }
+    })
+  );
+
+  disposables.push(
+    vscode.commands.registerCommand('antigravity-accounts.treeDelete', async (arg: any) => {
+      const email = typeof arg === 'string' ? arg : arg?.email;
+      if (email) {
+        const confirm = await vscode.window.showWarningMessage(`Are you sure you want to remove ${email}?`, 'Yes', 'No');
+        if (confirm === 'Yes') {
+          await accountService.removeAccountWorkflow(email);
+        }
+      }
     })
   );
 

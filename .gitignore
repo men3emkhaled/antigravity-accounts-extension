@@ -1,7 +1,7 @@
-repo.zip
 node_modules/
-out/
 dist/
+.vscode/
 *.vsix
-antigravity-backup.json
-end-report.md
+__pycache__/
+*.pyc
+.DS_Store

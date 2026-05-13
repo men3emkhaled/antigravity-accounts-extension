@@ -1,15 +1,15 @@
 {
   "name": "antigravity-accounts",
   "displayName": "Antigravity Accounts",
-  "description": "Manage multiple Antigravity accounts seamlessly - switch, monitor credits, and auto-rotate with one click.",
-  "version": "0.1.22",
+  "description": "Advanced account synchronization and quota management for the Antigravity desktop environment. Optimizes multi-session workflows with secure credential handling and automated rotation.",
+  "version": "0.1.52",
   "publisher": "men3em",
   "repository": {
     "type": "git",
-    "url": "https://github.com/devhakeem5/antigravity-hub-extension"
+    "url": "https://github.com/men3emkhaled/antigravity-accounts-extension"
   },
   "bugs": {
-    "url": "https://github.com/devhakeem5/antigravity-hub-extension/issues"
+    "url": "https://github.com/men3emkhaled/antigravity-accounts-extension/issues"
   },
   "license": "MIT",
   "engines": {
@@ -38,12 +38,9 @@
     "credits",
     "multi-account"
   ],
-  "activationEvents": [
-    "*",
-    "onView:antigravity-accounts.accountsView"
-  ],
+  "activationEvents": [],
   "main": "./dist/extension.js",
-  "icon": "resources/icons/logo_with_title_bordered.png",
+  "icon": "resources/icons/logo.png",
   "contributes": {
     "commands": [
       {
@@ -54,7 +51,8 @@
       {
         "command": "antigravity-accounts.addAccount",
         "title": "Add Account",
-        "category": "Antigravity Accounts"
+        "category": "Antigravity Accounts",
+        "icon": "$(add)"
       },
       {
         "command": "antigravity-accounts.switchAccount",
@@ -64,12 +62,25 @@
       {
         "command": "antigravity-accounts.refreshBalances",
         "title": "Refresh All Balances",
-        "category": "Antigravity Accounts"
+        "category": "Antigravity Accounts",
+        "icon": "$(refresh)"
       },
       {
         "command": "antigravity-accounts.setLanguage",
         "title": "Set Language",
         "category": "Antigravity Accounts"
+      },
+      {
+        "command": "antigravity-accounts.treeSwitch",
+        "title": "Switch",
+        "category": "Antigravity Accounts",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "antigravity-accounts.treeDelete",
+        "title": "Remove Account",
+        "category": "Antigravity Accounts",
+        "icon": "$(trash)"
       }
     ],
     "viewsContainers": {
@@ -84,10 +95,35 @@
     "views": {
       "antigravity-accounts": [
         {
-          "type": "webview",
           "id": "antigravity-accounts.accountsView",
           "name": "Accounts",
           "icon": "resources/icons/sidebar-icon.svg"
+        }
+      ]
+    },
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "antigravity-accounts.treeSwitch",
+          "when": "viewItem == inactiveAccount",
+          "group": "inline"
+        },
+        {
+          "command": "antigravity-accounts.treeDelete",
+          "when": "viewItem == activeAccount || viewItem == inactiveAccount",
+          "group": "inline"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "antigravity-accounts.addAccount",
+          "when": "view == antigravity-accounts.accountsView",
+          "group": "navigation"
+        },
+        {
+          "command": "antigravity-accounts.refreshBalances",
+          "when": "view == antigravity-accounts.accountsView",
+          "group": "navigation"
         }
       ]
     },

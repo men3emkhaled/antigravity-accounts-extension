@@ -48,6 +48,14 @@ export class BalanceService implements IBalanceService {
         result.balances = { ...result.balances, ...modelQuotas };
       }
 
+      // Strategy 4: Fallback fetchCredits
+      if (Object.keys(result.balances).length === 0) {
+        const credits = await this.tryFetchCredits(accessToken);
+        if (credits) {
+          result.balances = { ...result.balances, ...credits };
+        }
+      }
+
       if (Object.keys(result.balances).length === 0) {
         result.hasError = true;
       }
@@ -64,7 +72,7 @@ export class BalanceService implements IBalanceService {
     try {
       const data = await ApiClient.request<any>(API.LOAD_CODE_ASSIST, {
         method: 'POST',
-        body: { metadata: { ideType: 'ANTIGRAVITY' } },
+        body: { metadata: { ideType: 'VSCODE' } },
         accessToken
       });
       return this.parseCodeAssistData(data);
@@ -75,7 +83,7 @@ export class BalanceService implements IBalanceService {
     try {
       const data = await ApiClient.request<any>(API.DAILY_LOAD_CODE_ASSIST, {
         method: 'POST',
-        body: { metadata: { ide_type: 'ANTIGRAVITY', ide_version: API.DEFAULT_VERSION, ide_name: 'antigravity' } },
+        body: { metadata: { ide_type: 'VSCODE', ide_version: API.DEFAULT_VERSION, ide_name: 'vscode' } },
         accessToken
       });
       return this.parseCodeAssistData(data);
@@ -84,20 +92,35 @@ export class BalanceService implements IBalanceService {
 
   private async tryFetchAvailableModels(accessToken: string, projectId?: string): Promise<Record<string, any>> {
     const balances: Record<string, any> = {};
-    const body = projectId ? { project: projectId } : {};
+    
     for (const url of API.FETCH_MODELS_URLS) {
-      try {
-        const data = await ApiClient.request<any>(url, { method: 'POST', body, accessToken });
-        if (data?.models) {
-          Object.entries<any>(data.models).forEach(([id, m]) => {
-            if (m.quotaInfo) {
-              const fraction = m.quotaInfo.remainingFraction ?? 0;
-              balances[id] = { value: Math.round(fraction * 100), resetTime: m.quotaInfo.resetTime };
+      // Try both with and without project ID to be sure
+      const bodies = projectId ? [{ project: projectId }, {}] : [{}];
+      
+      for (const body of bodies) {
+        try {
+          const data = await ApiClient.request<any>(url, { method: 'POST', body, accessToken });
+          const models = data?.models;
+          if (!models) continue;
+
+          const modelEntries = Array.isArray(models) ? models.map((m: any) => [m.id || m.modelId, m]) : Object.entries(models);
+
+          modelEntries.forEach((entry: any) => {
+            const [id, m] = entry;
+            if (!m || typeof m !== 'object') return;
+            
+            const quota = m.quotaInfo || m.quota_info;
+            if (quota) {
+              const fraction = quota.remainingFraction ?? quota.remaining_fraction ?? quota.fraction ?? 0;
+              const reset = quota.resetTime || quota.reset_time;
+              const key = (id || 'default').toString().toLowerCase();
+              balances[key] = { value: Math.round(fraction * 100), resetTime: reset };
             }
           });
+
           if (Object.keys(balances).length > 0) return balances;
-        }
-      } catch {}
+        } catch {}
+      }
     }
     return balances;
   }
@@ -106,18 +129,49 @@ export class BalanceService implements IBalanceService {
     if (!data) return null;
     const balances: Record<string, number> = {};
     let planName: string | undefined;
-    if (data.paidTier) {
-      planName = data.paidTier.name;
-      if (Array.isArray(data.paidTier.availableCredits)) {
-        data.paidTier.availableCredits.forEach((c: any) => {
-          const name = (c.creditType || c.modelName || c.modelId || 'default').toString().toLowerCase();
-          const amount = parseInt((c.creditAmount ?? c.amount ?? 0).toString(), 10);
+    
+    const tier = data.paidTier || data.paid_tier || data.currentTier || data.current_tier;
+    if (tier) {
+      planName = tier.name;
+      const credits = tier.availableCredits || tier.available_credits;
+      if (Array.isArray(credits)) {
+        credits.forEach((c: any) => {
+          const name = (c.creditType || c.credit_type || c.modelName || c.model_name || c.modelId || c.model_id || 'default').toString().toLowerCase();
+          const amount = parseInt((c.creditAmount ?? c.credit_amount ?? c.amount ?? 0).toString(), 10);
           if (!isNaN(amount)) balances[name] = amount;
         });
       }
     }
-    if (!planName && data.currentTier) planName = data.currentTier.name;
-    return { balances: Object.keys(balances).length > 0 ? balances : undefined, planName, projectId: data.cloudaicompanionProject };
+    
+    return { 
+      balances: Object.keys(balances).length > 0 ? balances : undefined, 
+      planName, 
+      projectId: data.cloudaicompanionProject || data.cloudaicompanion_project || data.projectId || data.project_id
+    };
+  }
+
+  private async tryFetchCredits(accessToken: string): Promise<Record<string, any> | null> {
+    try {
+      const data = await ApiClient.request<any>(API.FETCH_CREDITS, {
+        method: 'POST',
+        body: {},
+        accessToken
+      });
+      if (data && typeof data === 'object') {
+        const balances: Record<string, any> = {};
+        const credits = data.credits || data.availableCredits || data.available_credits;
+        if (Array.isArray(credits)) {
+          credits.forEach((c: any) => {
+            const name = (c.type || c.modelId || 'default').toString().toLowerCase();
+            balances[name] = { value: c.amount || c.value || 0 };
+          });
+        } else if (data.amount !== undefined || data.value !== undefined) {
+          balances['total'] = { value: data.amount || data.value || 0 };
+        }
+        return Object.keys(balances).length > 0 ? balances : null;
+      }
+    } catch { return null; }
+    return null;
   }
 
   private parsePlanName(name?: string): AccountPlan {

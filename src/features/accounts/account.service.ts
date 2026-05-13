@@ -95,6 +95,21 @@ export class AccountService {
           let tokens = await this.accountRepo.getTokens(account.email);
           if (!tokens) return;
 
+          // Token Refresh Logic: Refresh if expired or expiring soon (within 5 minutes)
+          const nowSeconds = Math.floor(Date.now() / 1000);
+          if (tokens.expiresAt < nowSeconds + 300) {
+            try {
+              const refreshed = await this.authService.refreshAccessToken(tokens.refreshToken);
+              tokens.accessToken = refreshed.accessToken;
+              tokens.expiresAt = nowSeconds + refreshed.expiresIn;
+              await this.accountRepo.storeTokens(account.email, tokens);
+            } catch (refreshError) {
+              Logger.getInstance().error(`Token refresh failed for ${account.email}`, refreshError);
+              await this.accountRepo.updateAccount(account.email, { status: AccountStatus.ERROR });
+              return;
+            }
+          }
+
           const balanceInfo = await this.balanceService.getBalanceInfo(tokens.accessToken);
           let status = balanceInfo.hasError ? AccountStatus.ERROR : AccountStatus.ACTIVE;
           
@@ -105,7 +120,9 @@ export class AccountService {
             lastRefreshedAt: new Date().toISOString()
           });
 
-        } catch (e) {}
+        } catch (e) {
+          Logger.getInstance().error(`Refresh failed for ${account.email}`, e);
+        }
       }));
 
       // Wait for both the actual work and the minimal UX delay

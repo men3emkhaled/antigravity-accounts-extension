@@ -1,0 +1,40 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="main_grad" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#06C1E9"/>
+      <stop offset="1" stop-color="#06357E"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(512 512) rotate(90) scale(450)">
+      <stop stop-color="#06C1E9" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#06357E" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="20" result="blur"/>
+    </filter>
+  </defs>
+
+  <!-- Background Subtle Glow -->
+  <circle cx="512" cy="512" r="450" fill="url(#glow)"/>
+
+  <!-- Orbital Rings -->
+  <circle cx="512" cy="512" r="400" stroke="url(#main_grad)" stroke-width="4" stroke-dasharray="10 20" opacity="0.2"/>
+  <circle cx="512" cy="512" r="350" stroke="url(#main_grad)" stroke-width="2" opacity="0.4"/>
+
+  <!-- Main Sphere Base -->
+  <circle cx="512" cy="512" r="300" fill="#011B44"/>
+  <circle cx="512" cy="512" r="300" fill="url(#main_grad)" opacity="0.8"/>
+
+  <!-- Inner Detail / Core -->
+  <path d="M512 212C346.315 212 212 346.315 212 512C212 677.685 346.315 812 512 812C677.685 812 812 677.685 812 512C812 346.315 677.685 212 512 212ZM512 762C373.929 762 262 650.071 262 512C262 373.929 373.929 262 512 262C650.071 262 762 373.929 762 512C762 650.071 650.071 762 512 762Z" fill="white" opacity="0.1"/>
+
+  <!-- Antigravity Waves -->
+  <path d="M512 312C401.543 312 312 401.543 312 512C312 622.457 401.543 712 512 712C622.457 712 712 622.457 712 512C712 401.543 622.457 312 512 312ZM512 662C429.157 662 362 594.843 362 512C362 429.157 429.157 362 512 362C594.843 362 662 429.157 662 512C662 594.843 594.843 662 512 662Z" fill="white" opacity="0.2"/>
+
+  <!-- Floating Elements (The "11" style abstraction) -->
+  <rect x="492" y="412" width="40" height="200" rx="20" fill="white" opacity="0.9"/>
+  <circle cx="512" cy="512" r="60" fill="white" filter="url(#blur)" opacity="0.5"/>
+  <circle cx="512" cy="512" r="30" fill="white"/>
+
+  <!-- Highlight -->
+  <path d="M512 212C346.315 212 212 346.315 212 512C212 530 215 550 220 570C250 400 380 262 512 262C644 262 774 400 804 570C809 550 812 530 812 512C812 346.315 677.685 212 512 212Z" fill="white" opacity="0.3"/>
+</svg>
