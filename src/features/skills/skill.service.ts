@@ -13,13 +13,16 @@ export interface Skill {
 }
 
 export class SkillService {
+  private _onDidChangeSkills = new vscode.EventEmitter<void>();
+  public readonly onDidChangeSkills = this._onDidChangeSkills.event;
+
   private skills: Skill[] = [
     {
       id: 'docx',
       title: 'docx',
       category: 'Word Documents',
-      description: 'بالكامل من تقارير Word إنشاء، قراءة، وتعديل ملفات وخطابات ونماذج لفهارس وعناوين ورقمه صفحات.',
-      tags: ['docx.تعديل', 'تقرير/مذكرة/خطاب', 'Word doc إنشاء'],
+      description: 'Create, read, and edit Word documents, reports, and templates with professional formatting.',
+      tags: ['docx.edit', 'Report/Memo', 'Word creation'],
       icon: 'word',
       isActive: false,
       color: '#2b579a',
@@ -33,8 +36,8 @@ export class SkillService {
       id: 'pdf-pro',
       title: 'pdf',
       category: 'PDF Processing',
-      description: 'استخراج نصوص، دمج، تقسيم، PDF: كل عمليات الـ ووترمارك، تشفير، وملء فورمات.',
-      tags: ['ملء فورم', 'PDF دمج/تقسيم', 'PDF إنشاء'],
+      description: 'Advanced PDF operations: text extraction, merging, splitting, watermarking, and form filling.',
+      tags: ['Form filling', 'PDF Merge/Split', 'PDF Creation'],
       icon: 'pdf',
       isActive: false,
       color: '#f40f02',
@@ -48,8 +51,8 @@ export class SkillService {
       id: 'pdf-reading',
       title: 'pdf-reading',
       category: 'PDF Reading Only',
-      description: 'فقط — نصوص، جداول، PDF قراءة واستخراج محتوى من صور، وفورمات — بدون تعديل أو إنشاء.',
-      tags: ['تحليل محتوى', 'استخراج نص', 'PDF قراءة'],
+      description: 'High-fidelity PDF parsing for text, tables, and images without modifying source files.',
+      tags: ['Content Analysis', 'Text Extraction', 'PDF Read'],
       icon: 'book',
       isActive: false,
       color: '#e74c3c',
@@ -61,8 +64,8 @@ export class SkillService {
       id: 'pptx',
       title: 'pptx',
       category: 'PowerPoint',
-      description: 'PowerPoint — slides إنشاء وتعديل وقراءة عروض وتركيب ملفات speaker notes. templates.',
-      tags: ['pptx. ملف', 'Slide deck', 'عرض تقديمي'],
+      description: 'Create and manage professional presentation decks, templates, and speaker notes.',
+      tags: ['pptx.file', 'Slide deck', 'Presentation'],
       icon: 'project',
       isActive: false,
       color: '#d24726',
@@ -74,8 +77,8 @@ export class SkillService {
       id: 'xlsx',
       title: 'xlsx',
       category: 'Excel / Spreadsheets',
-      description: 'فورمولاز، Excel و CSV — فتح، قراءة، إنشاء وتعديل ملفات تنسيق، تنظيف بيانات، وشارتات.',
-      tags: ['xlsx. ملف', 'spreadsheet إنشاء', 'CSV تنظيف'],
+      description: 'Complex data manipulation, formulas, pivot tables, and visualization for Excel/CSV.',
+      tags: ['xlsx.file', 'Spreadsheet creation', 'Data Cleaning'],
       icon: 'table',
       isActive: false,
       color: '#217346',
@@ -87,8 +90,8 @@ export class SkillService {
       id: 'frontend',
       title: 'frontend-design',
       category: 'UI / Web',
-      description: 'بناء واجهات ويب احترافية — React components، landing pages، dashboards — بتصميم مميز وبعيد عن الـ generic.',
-      tags: ['UI component', 'صفحة ويب', 'Dashboard'],
+      description: 'Build modern, high-performance web interfaces with premium design aesthetics.',
+      tags: ['UI component', 'Web page', 'Dashboard'],
       icon: 'browser',
       isActive: false,
       color: '#6366f1',
@@ -101,8 +104,8 @@ export class SkillService {
       id: 'security-shield',
       title: 'security-guard',
       category: 'Cyber Security',
-      description: 'حماية الكود من تسريب المفاتيح (API Keys) والثغرات الأمنية. يمنع نهائياً وضع بيانات حساسة في الكود.',
-      tags: ['API حماية', 'Security Audit', 'منع تسريب'],
+      description: 'Proactive code auditing and protection against credential leaks and vulnerabilities.',
+      tags: ['API Protection', 'Security Audit', 'Leak Prevention'],
       icon: 'shield',
       isActive: false,
       color: '#e11d48',
@@ -116,7 +119,7 @@ export class SkillService {
       id: 'performance-pro',
       title: 'performance-optimizer',
       category: 'Core Engineering',
-      description: 'تحسين أداء الكود وسرعة التنفيذ. يركز على الـ Algorithms وكفاءة استهلاك الميموري.',
+      description: 'Deep optimization for execution speed, algorithmic efficiency, and memory usage.',
       tags: ['Code Speed', 'Optimization', 'Big O'],
       icon: 'zap',
       isActive: false,
@@ -130,22 +133,24 @@ export class SkillService {
       id: 'human-coder',
       title: 'human-persona',
       category: 'Stealth Coding',
-      description: 'الكتابة بأسلوب بشري محترف. يمنع الكومنتات اللي بتدل إنه AI ويمنع الايموجيز نهائياً.',
+      description: 'Professional human-like communication. Eliminates AI markers and excessive emojis.',
       tags: ['Human Style', 'No Emojis', 'Clean Tone'],
       icon: 'person',
       isActive: false,
       color: '#334155',
       fullInstructions: `- ZERO TOLERANCE FOR EMOJIS: Never use icons or any other symbols.
-- ELIMINATE CONVERSATIONAL FILLER: Do not say "Certainly!", "I understand", or "Here is the updated code". Start directly with the technical content or code.
+- ELIMINATE CONVERSATIONAL FILLER: Do not use generic AI greetings or filler phrases in any language. Start directly with the technical content.
+- MULTILINGUAL PROFESSIONALISM: Maintain a professional, senior-level technical tone in the user's preferred language (e.g., Arabic or English).
 - ADOPT SENIOR PRAGMATISM: Write code and comments as a focused human senior developer would. Use concise, technical language.
 - NO AI MARKERS: Do not explain obvious logic or use repetitive AI-style bullet points.
-- PURE TECHNICAL DELIVERY: If asked for code, provide only the code and essential technical notes in a professional, dry tone.`
+- PURE TECHNICAL DELIVERY: Provide only the code and essential technical notes in a professional, dry tone.
+`
     },
     {
       id: 'qa-expert',
       title: 'qa-tester',
       category: 'Software Quality',
-      description: 'خبير في اختبار الكود وضمان الجودة. Jest, Playwright, Cypress, and Unit Testing.',
+      description: 'Expertise in automated testing, bug hunting, and quality assurance benchmarks.',
       tags: ['Unit Test', 'Integration', 'Bug Hunting'],
       icon: 'check-all',
       isActive: false,
@@ -159,7 +164,7 @@ export class SkillService {
       id: 'mobile-pro',
       title: 'mobile-expert',
       category: 'Mobile Apps',
-      description: 'تطوير تطبيقات موبايل احترافية باستخدام Flutter أو React Native.',
+      description: 'Build high-performance, cross-platform mobile applications with native UI feel.',
       tags: ['Flutter', 'React Native', 'Native UI'],
       icon: 'device-mobile',
       isActive: false,
@@ -173,7 +178,7 @@ export class SkillService {
       id: 'data-science',
       title: 'data-scientist',
       category: 'Data & AI',
-      description: 'تحليل البيانات، بناء النماذج، والتعامل مع الـ Big Data. Python, Pandas, NumPy.',
+      description: 'Comprehensive data analysis, model building, and big data visualization.',
       tags: ['Python Data', 'ML Ops', 'Visualization'],
       icon: 'graph',
       isActive: false,
@@ -187,7 +192,7 @@ export class SkillService {
       id: 'ux-expert',
       title: 'ux-researcher',
       category: 'Design Psychology',
-      description: 'تحسين تجربة المستخدم وسهولة الوصول (Accessibility). بيفهم اليوزر بيفكر إزاي.',
+      description: 'User-flow optimization and WCAG 2.1 accessibility standards for digital products.',
       tags: ['A11y', 'User Flow', 'Heuristics'],
       icon: 'search',
       isActive: false,
@@ -201,7 +206,7 @@ export class SkillService {
       id: 'tech-writer',
       title: 'technical-writer',
       category: 'Documentation',
-      description: 'كتابة توثيق (Documentation) احترافي، READMEs، و API Docs.',
+      description: 'Professional technical documentation, API specifications, and README architecture.',
       tags: ['Docs', 'README', 'API Spec'],
       icon: 'book',
       isActive: false,
@@ -215,7 +220,7 @@ export class SkillService {
       id: 'cloud-arch',
       title: 'cloud-architect',
       category: 'DevOps / Infrastructure',
-      description: 'بناء بنية تحتية سحابية قوية. Docker, Kubernetes, CI/CD, and Scalability.',
+      description: 'Scalable infrastructure design, containerization, and robust CI/CD orchestration.',
       tags: ['Docker', 'CI/CD', 'Scalable'],
       icon: 'cloud',
       isActive: false,
@@ -226,11 +231,81 @@ export class SkillService {
 - OPTIMIZE for high availability and fault tolerance.`
     },
     {
+      id: 'backend-arch',
+      title: 'backend-architect',
+      category: 'System Design',
+      description: 'Scalable API architecture, high-performance databases, and microservices logic.',
+      tags: ['API Design', 'Database', 'Microservices'],
+      icon: 'server',
+      isActive: false,
+      color: '#1e293b',
+      fullInstructions: `- DESIGN RESTful or GraphQL APIs with proper versioning and security.
+- OPTIMIZE database schemas and queries for high performance (SQL/NoSQL).
+- IMPLEMENT robust caching strategies using Redis or similar.
+- DESIGN event-driven architectures with message brokers (RabbitMQ/Kafka).`
+    },
+    {
+      id: 'embedded-systems',
+      title: 'embedded-expert',
+      category: 'Hardware / IoT',
+      description: 'Low-level firmware development, RTOS management, and hardware communication.',
+      tags: ['C/C++', 'Firmware', 'IoT'],
+      icon: 'circuit-board',
+      isActive: false,
+      color: '#b91c1c',
+      fullInstructions: `- WRITE efficient C/C++ code for memory-constrained embedded systems.
+- MANAGE real-time operating systems (FreeRTOS, Zephyr) and thread priority.
+- IMPLEMENT hardware communication protocols (I2C, SPI, UART).
+- OPTIMIZE for low power consumption and deterministic behavior.`
+    },
+    {
+      id: 'game-dev',
+      title: 'game-developer',
+      category: 'Graphics / Media',
+      description: 'Game mechanics, physics optimization, and shader development (Unity/Unreal).',
+      tags: ['Unity', 'Unreal', 'Shaders'],
+      icon: 'game',
+      isActive: false,
+      color: '#7c3aed',
+      fullInstructions: `- IMPLEMENT complex game loops and state management.
+- OPTIMIZE physics simulations and collision detection.
+- WRITE custom shaders (HLSL/GLSL) for advanced visual effects.
+- ENSURE high frame rates through profiling and asset optimization.`
+    },
+    {
+      id: 'web3-blockchain',
+      title: 'web3-expert',
+      category: 'Blockchain',
+      description: 'Smart contract development, security auditing, and decentralized application logic.',
+      tags: ['Solidity', 'Smart Contracts', 'Web3.js'],
+      icon: 'link-external',
+      isActive: false,
+      color: '#f59e0b',
+      fullInstructions: `- WRITE secure, gas-efficient smart contracts (Solidity/Vyper).
+- PERFORM deep security audits to prevent reentrancy and other vulnerabilities.
+- IMPLEMENT Web3 provider integrations and wallet interactions.
+- DESIGN decentralized storage architectures (IPFS/Arweave).`
+    },
+    {
+      id: 'mlops-engineer',
+      title: 'mlops-expert',
+      category: 'Machine Learning',
+      description: 'Model deployment pipelines, data versioning, and AI lifecycle monitoring.',
+      tags: ['DVC', 'Model Deploy', 'Pipelines'],
+      icon: 'pulse',
+      isActive: false,
+      color: '#14b8a6',
+      fullInstructions: `- AUTOMATE machine learning model deployment and versioning.
+- IMPLEMENT robust data and model monitoring pipelines.
+- USE DVC (Data Version Control) and MLflow for lifecycle management.
+- SCALE inference services using specialized container orchestration.`
+    },
+    {
       id: 'file-reader',
       title: 'file-reading',
       category: 'Universal File Router',
-      description: '(PDF, docx, xlsx, ذكي يعرف يقرأ أي نوع ملف Router CSV, JSON, ويختار الطريقة الصح لكل نوع (صور.',
-      tags: ['ملف مرفوع', 'mnt/user-data/uploads/', 'اقرأ الملف ده'],
+      description: 'Intelligent file parsing router for various formats including images and data.',
+      tags: ['File Upload', 'mnt/user-data/uploads/', 'Read File'],
       icon: 'files',
       isActive: false,
       color: '#10b981',
@@ -242,8 +317,8 @@ export class SkillService {
       id: 'anthropic-knowledge',
       title: 'product-self-knowledge',
       category: 'Anthropic Products',
-      description: 'قبل ما يجاوب على docs لـ Anthropic يتحقق من الرسمية لـ بدل ما يجاوب على Claude.ai أو Claude API, Claude Code قديمة ما يعتمد على memory.',
-      tags: ['Claude API', 'Claude أسعار', 'Claude Code'],
+      description: 'Direct consultation of official Anthropic docs for real-time API and feature specs.',
+      tags: ['Claude API', 'Claude Pricing', 'Claude Code'],
       icon: 'hubot',
       isActive: false,
       color: '#f59e0b',
@@ -267,6 +342,7 @@ export class SkillService {
       skill.isActive = !skill.isActive;
       this.saveState();
       this.injectSkillsToWorkspace(); // Sync with Agent context
+      this._onDidChangeSkills.fire();
       return true;
     }
     return false;

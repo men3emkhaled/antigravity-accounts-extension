@@ -17,6 +17,7 @@ import { AccountsPanelProvider } from './presentation/providers/accounts-panel.p
 import { AccountsWebviewProvider } from './presentation/providers/accounts-webview.provider';
 import { SkillService } from './features/skills/skill.service';
 import { SkillsTreeProvider } from './presentation/providers/skills-tree.provider';
+import { PersonaDiagnosticProvider } from './presentation/providers/persona-diagnostic.provider';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const logger = Logger.getInstance();
@@ -58,6 +59,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         webviewProvider
       )
     );
+
+    const personaDiagnosticProvider = new PersonaDiagnosticProvider(context, skillService);
+    context.subscriptions.push(personaDiagnosticProvider);
 
     // Register Commands
     const commands = registerCommands(context, skillService, accountService, accountRepo, accountsTreeProvider, skillsTreeProvider, panelProvider);

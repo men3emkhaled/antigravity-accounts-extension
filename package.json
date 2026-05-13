@@ -63,6 +63,12 @@
         "icon": "$(close)"
       },
       {
+        "command": "agent-assistant.treeSwitch",
+        "title": "Switch to Account",
+        "category": "Agent Assistant",
+        "icon": "$(zap)"
+      },
+      {
         "command": "agent-assistant.treeDelete",
         "title": "Remove Account",
         "category": "Agent Assistant",
