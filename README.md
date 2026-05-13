@@ -2,69 +2,68 @@
 ### The Definitive AI Expert Persona & Quota Management Suite
 
 <p align="center">
-  <img src="./resources/icons/agent_skills_hub.png" width="256" alt="Agent Assistant Logo">
+  <img src="./logo2.png" width="320" alt="Agent Assistant Logo">
 </p>
 
 ![Interface Preview](./resources/images/interface-preview.png)
 
 <p align="center">
-  <a href="https://github.com/men3emkhaled/antigravity-accounts-extension"><img src="https://img.shields.io/github/stars/men3emkhaled/antigravity-accounts-extension?style=for-the-badge&color=8b5cf6" alt="GitHub Stars" /></a>
-  <a href="https://github.com/men3emkhaled/antigravity-accounts-extension/releases"><img src="https://img.shields.io/github/v/release/men3emkhaled/antigravity-accounts-extension?style=for-the-badge&color=10b981" alt="Release" /></a>
-  <a href="https://github.com/men3emkhaled/antigravity-accounts-extension/issues"><img src="https://img.shields.io/github/issues/men3emkhaled/antigravity-accounts-extension?style=for-the-badge&color=f43f5e" alt="Issues" /></a>
+  <a href="https://github.com/men3emkhaled/agent-assistant-extension"><img src="https://img.shields.io/github/stars/men3emkhaled/agent-assistant-extension?style=for-the-badge&color=8b5cf6" alt="GitHub Stars" /></a>
+  <a href="https://github.com/men3emkhaled/agent-assistant-extension/releases"><img src="https://img.shields.io/github/v/release/men3emkhaled/agent-assistant-extension?style=for-the-badge&color=10b981" alt="Release" /></a>
+  <a href="https://github.com/men3emkhaled/agent-assistant-extension/issues"><img src="https://img.shields.io/github/issues/men3emkhaled/agent-assistant-extension?style=for-the-badge&color=f43f5e" alt="Issues" /></a>
 </p>
 
 ---
 
-[English](#the-vision) | [العربية](#الرؤية)
+[English](#technical-overview) | [العربية](#الرؤية-التقنية)
 
-## The Vision
-Agent Assistant is an elite orchestration layer for AI-native software engineering. It bridges the gap between general-purpose models and domain-specific excellence by injecting professional constraints, technical workflows, and expert personas directly into the agent's cognition.
+## Technical Overview
+Agent Assistant serves as a high-fidelity orchestration layer for AI-native development environments. It facilitates the injection of professional constraints, specialized workflows, and expert personas directly into the agent's context window. By automating the deployment of workspace-specific instructions, it ensures that general-purpose models operate within the rigorous standards required for senior-level engineering.
 
 ## Key Capabilities
 
-### Expert Persona Injection
-*   Domain Expertise: Instantly elevate your agent's performance in fields like Security, UI/UX, and QA.
-*   Universal Context: Works seamlessly with Claude, GPT, Gemini, and Llama using official Anthropic Skill Specs.
-*   Deep Memory Sync: Automatically generates .antigravity/ context files that agents discover and prioritize.
+### Universal Context Injection
+*   **Zero-Config Synchronization**: Automatically generates and updates `.cursorrules` (for Cursor) and `CLAUDE.md` (for Claude Code) to ensure consistent instruction adoption across different AI tools.
+*   **Deep Memory Integration**: Utilizes the `.antigravity/` workspace structure to provide persistent, discoverable context for all compliant AI agents.
+*   **Persona Enforcement**: Strictly defines the agent's technical behavior, linguistic tone, and domain-specific methodologies.
 
-### Professional Resource Mastery
-*   Precision Quota Sync: Real-time balance monitoring for multi-account environments.
-*   Account Rotation Engine: Securely switch sessions without breaking your development flow.
-*   Glassmorphism Dashboard: A premium, high-visibility UI designed for professional focus.
+### Resource & Quota Management
+*   **Real-Time Synchronization**: Monitors account balances and usage quotas across multiple AI platforms simultaneously.
+*   **High-Visibility Dashboard**: Features a premium Glassmorphism interface designed for professional environments, providing critical resource metrics at a glance.
+*   **Session Management**: Simplifies the process of account rotation and authentication without disrupting active development workflows.
 
 ## Expert Skill Library
 
-| Role | Expertise | Core Technologies |
+| Persona | Core Specialization | Technical Guidelines |
 | :--- | :--- | :--- |
-| Security Guard | Vulnerability Auditing | OWASP, Secret Protection, .env Safety |
-| UI Architect | Modern Web Design | Tailwind CSS, Framer Motion, A11y |
-| Performance | Code Efficiency | Big O Analysis, Memory Management |
-| Human Coder | Senior Persona | No AI Artifacts, Pragmatic, Professional |
-| QA Specialist | Quality Assurance | Playwright, Jest, Vitest, E2E Testing |
-| Mobile Lead | Cross-Platform Engineering | Flutter, React Native, Native UI |
+| **Senior Human Coder** | Professional Delivery | Removes AI linguistic markers, enforces clean-code standards, and prioritizes pragmatic solutions. |
+| **Security Architect** | Vulnerability Mitigation | OWASP compliance, secret management, and real-time scanning for credential exposure. |
+| **UX/UI Researcher** | Design Excellence | WCAG 2.1 accessibility, user-flow optimization, and application of Jakob Nielsen’s heuristics. |
+| **Cloud Engineer** | Infrastructure Scaling | Docker orchestration, Kubernetes best practices, and robust CI/CD pipeline development. |
+| **QA Specialist** | Quality Assurance | Automated test generation (Jest, Playwright) and enforcement of high coverage benchmarks. |
 
-## Setup Guide
+## Deployment Guide
 
-1.  Deploy: Install the official .vsix from Releases.
-2.  Activate: Access the Agent Assistant icon in the sidebar.
-3.  Optimize: Enable the expert skills your current project demands.
-4.  Confirm: Ask your agent: "Show me your active skills and expert instructions."
+1.  **Installation**: Download the latest `.vsix` from the GitHub Releases section.
+2.  **Activation**: Open the Agent Assistant view in the VS Code sidebar.
+3.  **Selection**: Toggle the specialist skills required for your current technical objective.
+4.  **Verification**: Confirm adoption by querying your agent: "Identify active expert personas and their technical constraints."
 
 ---
 
-<h2 id="الرؤية" dir="rtl">الرؤية</h2>
+<h2 id="الرؤية-التقنية" dir="rtl">الرؤية التقنية</h2>
 
 <p dir="rtl">
-Agent Assistant هو نظام إدارة متكامل لمستقبل البرمجة المعتمدة على الذكاء الاصطناعي. يقوم النظام بتحويل النماذج العامة إلى خبراء متخصصين عبر حقن تعليمات تقنية وقيود مهنية دقيقة في ذاكرة الأيجنت، مما يضمن نتائج بمستوى كبار المهندسين.
+نظام Agent Assistant هو طبقة إدارة متطورة لبيئات البرمجة المدعومة بالذكاء الاصطناعي. يقوم النظام بتحويل النماذج اللغوية العامة إلى مبرمجين متخصصين عبر حقن مهارات فنية دقيقة وقيود مهنية في سياق العمل، مما يضمن أداءً يطابق معايير كبار مهندسي البرمجيات.
 </p>
 
 <h2 dir="rtl">الإمكانيات الجوهرية</h2>
 
 <ul dir="rtl">
-  <li>حقن الخبرات الخبيرة: تحويل شخصية الأيجنت إلى خبير حماية، مهندس واجهات، أو مدقق جودة في ثوانٍ.</li>
-  <li>توافقية عالمية: يدعم كافة النماذج الرائدة (GPT-4, Claude 3.5, Gemini) عبر بروتوكولات Anthropic الرسمية.</li>
-  <li>إدارة الحصص المتقدمة: مزامنة فورية ومراقبة دقيقة للأرصدة عبر واجهة زجاجية عصرية وفائقة السرعة.</li>
+  <li><strong>حقن السياق العالمي</strong>: توليد تلقائي لملفات الإرشادات لبيئات Cursor و Claude Code لضمان تبني المهارات فوراً وبدون تدخل يدوي.</li>
+  <li><strong>إدارة الموارد والكوتا</strong>: مزامنة فورية للأرصدة عبر واجهة زجاجية عصرية مصممة للمحترفين.</li>
+  <li><strong>مكتبة مهارات الخبراء</strong>: تحويل شخصية الأيجنت إلى خبير حماية، مهندس سحابي، أو مدقق جودة بضغطة زر واحدة.</li>
 </ul>
 
 ---
-*Created with precision by men3em*
+*Developed with technical precision by men3em*
