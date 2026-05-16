@@ -15,6 +15,8 @@
  */
 
 import { Logger } from '../core/utils/logger';
+import enLocale from './locales/en.json';
+import arLocale from './locales/ar.json';
 
 /** Describes a registered locale */
 export interface LocaleInfo {
@@ -196,13 +198,13 @@ export class I18nService {
     // English
     this.registerLocale(
       { code: 'en', name: 'English', dir: 'ltr' },
-      require('./locales/en.json')
+      enLocale as unknown as TranslationDict
     );
 
     // Arabic
     this.registerLocale(
       { code: 'ar', name: 'العربية', dir: 'rtl' },
-      require('./locales/ar.json')
+      arLocale as unknown as TranslationDict
     );
   }
 }

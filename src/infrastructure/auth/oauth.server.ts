@@ -42,7 +42,7 @@ export class OAuthServer {
       let timeoutHandle: NodeJS.Timeout;
 
       const cleanup = () => {
-        if (timeoutHandle) clearTimeout(timeoutHandle);
+        if (timeoutHandle) {clearTimeout(timeoutHandle);}
         if (this.server) {
           this.server.close();
           this.server = null;

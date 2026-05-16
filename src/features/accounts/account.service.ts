@@ -56,7 +56,7 @@ export class AccountService {
   async switchAccountWorkflow(email: string): Promise<void> {
     const account = await this.accountRepo.getAccount(email);
     const tokens = await this.accountRepo.getTokens(email);
-    if (!account || !tokens) return;
+    if (!account || !tokens) {return;}
 
     const deviceProfile = await this.accountRepo.getDeviceProfile(email);
     const result = await this.stateDbService.injectAccountState(account, tokens, deviceProfile);
@@ -78,7 +78,7 @@ export class AccountService {
    */
   async refreshBalancesWorkflow(notify: boolean = true): Promise<void> {
     const now = Date.now();
-    if (this._isRefreshing) return;
+    if (this._isRefreshing) {return;}
 
     this._isRefreshing = true;
     this._onAccountsChanged.fire(); // Notify start
@@ -92,8 +92,8 @@ export class AccountService {
 
       const refreshPromise = Promise.all(accounts.map(async (account) => {
         try {
-          let tokens = await this.accountRepo.getTokens(account.email);
-          if (!tokens) return;
+          const tokens = await this.accountRepo.getTokens(account.email);
+          if (!tokens) {return;}
 
           // Token Refresh Logic: Refresh if expired or expiring soon (within 5 minutes)
           const nowSeconds = Math.floor(Date.now() / 1000);
@@ -111,7 +111,7 @@ export class AccountService {
           }
 
           const balanceInfo = await this.balanceService.getBalanceInfo(tokens.accessToken);
-          let status = balanceInfo.hasError ? AccountStatus.ERROR : AccountStatus.ACTIVE;
+          const status = balanceInfo.hasError ? AccountStatus.ERROR : AccountStatus.ACTIVE;
           
           await this.accountRepo.updateAccount(account.email, {
             balances: balanceInfo.balances,

@@ -4,6 +4,14 @@ All notable changes to the Agent Assistant ecosystem are documented here. This p
 
 ---
 
+## [1.0.5] - 2026-05-16
+### Expert Skills Categorization & UI Overhaul
+- **Skill Folders**: Introduced a hierarchical tree view for Expert Skills, organizing 60+ skills into 9 premium categories (e.g., Premium UI & Design, System Architecture).
+- **Frontend Design Library**: Restored 10 individual high-fidelity design system skills (Apple HIG, Uber, Material 3, etc.) as standalone selectable entities within the UI folder.
+- **RTL Support**: Renamed and prioritized "arabic-rtl for chat", pinning it to the absolute top of the sidebar for instant access.
+- **Custom Skill Builder 2.0**: Upgraded the builder with a category selection dropdown, ensuring new skills are perfectly integrated into the folder structure.
+- **Dynamic Sync**: Fixed real-time synchronization between Custom Skills management and the Expert Skills sidebar.
+
 ## [1.0.3] - 2026-05-14
 ### Major Skill Library Expansion
 - Added 13 new skills: refactor-pro, git-expert, sql-expert, regex-master, api-tester, debug-expert, code-reviewer, prompt-engineer, css-master, animation-expert, design-system, color-theory, creative-ui.

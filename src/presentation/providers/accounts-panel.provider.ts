@@ -78,7 +78,7 @@ export class AccountsPanelProvider {
   }
 
   public async refresh() {
-    if (!this._panel) return;
+    if (!this._panel) {return;}
     try {
       this._panel.webview.html = await this._getHtml();
     } catch (err) {
@@ -89,7 +89,7 @@ export class AccountsPanelProvider {
   private _getNonce(): string {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let i = 0; i < 32; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+    for (let i = 0; i < 32; i++) {text += possible.charAt(Math.floor(Math.random() * possible.length));}
     return text;
   }
 
@@ -99,14 +99,14 @@ export class AccountsPanelProvider {
     const isRefreshing = this.accountService.isRefreshing();
 
     const getAvgBalance = (acc: any) => {
-      if (!acc.balances || Object.keys(acc.balances).length === 0) return 0;
+      if (!acc.balances || Object.keys(acc.balances).length === 0) {return 0;}
       const values = Object.values(acc.balances).map((v: any) => typeof v === 'number' ? v : (v?.value || 0));
       return values.reduce((a, b) => a + b, 0) / values.length;
     };
 
     const sortedAccounts = [...rawAccounts].sort((a, b) => {
-      if (a.email === activeEmail) return -1;
-      if (b.email === activeEmail) return 1;
+      if (a.email === activeEmail) {return -1;}
+      if (b.email === activeEmail) {return 1;}
       return getAvgBalance(b) - getAvgBalance(a);
     });
 
@@ -170,85 +170,271 @@ export class AccountsPanelProvider {
       <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
       <style>
         :root {
-          --bg: var(--vscode-editor-background); --fg: var(--vscode-foreground); --border: var(--vscode-panel-border, var(--vscode-sideBar-border));
-          --primary: var(--vscode-button-background); --primary-fg: var(--vscode-button-foreground);
-          --neon-pro: #6366f1; --neon-orange: #f97316; --neon-cyan: #06b6d4; --neon-purple: #a855f7;
+          --bg: var(--vscode-editor-background);
+          --fg: var(--vscode-foreground);
+          --border: var(--vscode-panel-border, var(--vscode-sideBar-border));
+          --primary: var(--vscode-button-background);
+          --primary-fg: var(--vscode-button-foreground);
+          
+          /* Premium Palette */
+          --neon-pro: #6366f1;
+          --neon-orange: #f97316;
+          --neon-cyan: #06b6d4;
+          --neon-purple: #a855f7;
+          --neon-pink: #ec4899;
+          --neon-green: #10b981;
+          
+          /* Glassmorphism */
+          --glass-bg: rgba(255, 255, 255, 0.03);
+          --glass-border: rgba(255, 255, 255, 0.1);
+          --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+          
+          --radius-lg: 16px;
+          --radius-md: 12px;
+          --radius-sm: 8px;
+          
+          --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--fg); margin: 0; padding: 0; display:flex; justify-content:center; }
-        .container { max-width: 420px; width: 100%; }
-        .header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 100; }
-        .icon-btn { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border); background: rgba(128,128,128,0.05); color: var(--fg); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
-        .icon-btn:hover { background: rgba(128,128,128,0.15); }
+
+        body { 
+          font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif; 
+          background: var(--bg); 
+          color: var(--fg); 
+          margin: 0; padding: 0; 
+          display:flex; justify-content:center;
+          overflow-x: hidden;
+        }
+
+        /* Aurora Background Effect */
+        body::before {
+          content: "";
+          position: fixed;
+          top: -50%; left: -50%; width: 200%; height: 200%;
+          background: radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+                      radial-gradient(circle at 70% 70%, rgba(236, 72, 153, 0.05) 0%, transparent 40%);
+          z-index: -1;
+          pointer-events: none;
+        }
+
+        .container { max-width: 440px; width: 100%; position: relative; }
+
+        .header { 
+          display: flex; align-items: center; justify-content: space-between; 
+          padding: 16px; 
+          border-bottom: 1px solid var(--border); 
+          position: sticky; top: 0; 
+          background: rgba(var(--vscode-editor-background-rgb, 30, 30, 30), 0.8); 
+          backdrop-filter: blur(12px);
+          z-index: 100; 
+        }
+
+        .icon-btn { 
+          width: 32px; height: 32px; border-radius: var(--radius-sm); 
+          border: 1px solid var(--border); background: var(--glass-bg); 
+          color: var(--fg); display: flex; align-items: center; justify-content: center; 
+          cursor: pointer; transition: var(--transition); 
+        }
+        .icon-btn:hover { background: var(--glass-border); border-color: var(--neon-pro); transform: translateY(-1px); }
         .icon-btn.spinning svg { animation: spin 1s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        .dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 16px; }
-        .stat-tile { background: rgba(128,128,128,0.03); border: 1px solid var(--border); padding: 12px 4px; border-radius: 12px; text-align: center; }
-        .stat-label { font-size: 8px; font-weight: 700; opacity: 0.4; text-transform: uppercase; margin-bottom: 4px; }
-        .stat-val { font-size: 16px; font-weight: 700; }
-        .tile-claude { --tile-color: var(--neon-orange); } .tile-pro { --tile-color: var(--neon-pro); } .tile-flash { --tile-color: var(--neon-cyan); }
+        .dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 16px; }
+        .stat-tile { 
+          background: var(--glass-bg); border: 1px solid var(--glass-border); 
+          padding: 14px 8px; border-radius: var(--radius-md); 
+          text-align: center; transition: var(--transition);
+          position: relative; overflow: hidden;
+        }
+        .stat-tile:hover { transform: translateY(-2px); border-color: var(--tile-color, var(--neon-pro)); }
+        .stat-tile::after {
+          content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
+          background: var(--tile-color, var(--neon-pro)); opacity: 0.3;
+        }
+        .stat-label { font-size: 9px; font-weight: 700; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .stat-val { font-size: 18px; font-weight: 700; }
+        .tile-claude { --tile-color: var(--neon-orange); } 
+        .tile-pro { --tile-color: var(--neon-pro); } 
+        .tile-flash { --tile-color: var(--neon-cyan); }
 
         /* Tabs */
-        .header-nav { display: flex; gap: 4px; background: rgba(128,128,128,0.05); padding: 4px; border-radius: 10px; margin-bottom: 0; }
-        .nav-btn { padding: 6px 12px; border: none; background: transparent; color: var(--fg); font-size: 11px; font-weight: 600; cursor: pointer; border-radius: 8px; opacity: 0.5; transition: 0.3s; display: flex; align-items: center; gap: 6px; }
-        .nav-btn.active { background: var(--bg); opacity: 1; box-shadow: 0 2px 8px rgba(0,0,0,0.2); color: var(--neon-pro); }
-        .tab-content { display: none; }
+        .header-nav { display: flex; gap: 4px; background: var(--glass-bg); padding: 4px; border-radius: var(--radius-md); }
+        .nav-btn { 
+          padding: 8px 16px; border: none; background: transparent; 
+          color: var(--fg); font-size: 12px; font-weight: 600; 
+          cursor: pointer; border-radius: var(--radius-sm); 
+          opacity: 0.5; transition: var(--transition); 
+          display: flex; align-items: center; gap: 8px; 
+        }
+        .nav-btn.active { background: var(--bg); opacity: 1; box-shadow: var(--glass-shadow); color: var(--neon-pro); }
+
+        .tab-content { display: none; animation: fadeIn 0.4s ease-out; }
         .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Search & Filter Bar */
+        .search-bar { padding: 0 16px 12px 16px; display: flex; gap: 8px; }
+        .search-input-wrap { flex: 1; position: relative; }
+        .search-input { 
+          width: 100%; background: var(--glass-bg); border: 1px solid var(--border); 
+          border-radius: var(--radius-md); padding: 10px 12px 10px 36px; 
+          color: var(--fg); font-size: 13px; font-family: inherit;
+          transition: var(--transition);
+        }
+        .search-input:focus { outline: none; border-color: var(--neon-pro); background: var(--glass-border); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.4; }
+
+        .filter-btn {
+          padding: 8px 12px; border: 1px solid var(--border); background: var(--glass-bg);
+          border-radius: var(--radius-md); color: var(--fg); font-size: 11px; font-weight: 600;
+          cursor: pointer; transition: var(--transition);
+        }
+        .filter-btn:hover { border-color: var(--neon-pro); }
 
         /* Skills Grid */
-        .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; padding: 16px; }
-        .skill-card { background: rgba(128,128,128,0.03); border: 1px solid var(--border); border-radius: 16px; padding: 20px; transition: 0.3s; position: relative; display: flex; flex-direction: column; gap: 12px; }
-        .skill-card:hover { border-color: var(--neon-pro); background: rgba(99, 102, 241, 0.05); transform: translateY(-2px); }
+        .skills-grid { 
+          display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+          gap: 16px; padding: 0 16px 16px 16px; 
+        }
+        
+        .skill-card { 
+          background: var(--glass-bg); border: 1px solid var(--glass-border); 
+          border-radius: var(--radius-lg); padding: 20px; 
+          transition: var(--transition); position: relative; 
+          display: flex; flex-direction: column; gap: 14px;
+          backdrop-filter: blur(8px);
+          animation: cardEntrance 0.5s ease-out both;
+        }
+        @keyframes cardEntrance { 
+          from { opacity: 0; transform: scale(0.95) translateY(20px); } 
+          to { opacity: 1; transform: scale(1) translateY(0); } 
+        }
+
+        .skill-card:hover { 
+          border-color: var(--neon-pro); 
+          background: rgba(99, 102, 241, 0.05); 
+          transform: translateY(-4px); 
+          box-shadow: 0 12px 24px -8px rgba(0,0,0,0.3);
+        }
+
         .skill-header { display: flex; align-items: flex-start; justify-content: space-between; }
-        .skill-icon-box { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .skill-info-meta { flex: 1; padding-left: 14px; }
-        .skill-title { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
-        .skill-category { font-size: 10px; opacity: 0.5; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-        .skill-desc { font-size: 11px; line-height: 1.5; opacity: 0.7; height: 50px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+        .skill-icon-box { 
+          width: 48px; height: 48px; border-radius: var(--radius-md); 
+          display: flex; align-items: center; justify-content: center; 
+          font-size: 24px; color: #fff; 
+          box-shadow: 0 8px 16px -4px rgba(0,0,0,0.2);
+          transition: var(--transition);
+        }
+        .skill-card:hover .skill-icon-box { transform: scale(1.1) rotate(5deg); }
+
+        .skill-info-meta { flex: 1; padding-left: 16px; }
+        .skill-title { font-weight: 700; font-size: 16px; margin-bottom: 4px; letter-spacing: -0.2px; }
+        .skill-category { font-size: 10px; opacity: 0.4; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .skill-desc { 
+          font-size: 12px; line-height: 1.6; opacity: 0.7; 
+          height: 58px; overflow: hidden; 
+          display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; 
+        }
+
         .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-        .tag { font-size: 9px; padding: 3px 8px; border-radius: 6px; background: rgba(128,128,128,0.1); font-weight: 600; }
-        .skill-footer { margin-top: 8px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 12px; }
+        .tag { 
+          font-size: 9px; padding: 4px 10px; border-radius: 20px; 
+          background: var(--glass-border); font-weight: 600; 
+          color: var(--fg); opacity: 0.8;
+          border: 1px solid transparent;
+          transition: var(--transition);
+        }
+        .skill-card:hover .tag { border-color: rgba(255,255,255,0.1); opacity: 1; }
+
+        .skill-footer { 
+          margin-top: 8px; display: flex; align-items: center; 
+          justify-content: space-between; border-top: 1px solid var(--border); 
+          padding-top: 16px; 
+        }
         
         /* Premium Toggle */
-        .switch { position: relative; display: inline-block; width: 34px; height: 20px; }
+        .switch { position: relative; display: inline-block; width: 38px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(128,128,128,0.2); transition: .4s; border-radius: 20px; }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        .slider { 
+          position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; 
+          background-color: var(--glass-border); transition: .4s; border-radius: 34px; 
+        }
+        .slider:before { 
+          position: absolute; content: ""; height: 16px; width: 16px; 
+          left: 3px; bottom: 3px; background-color: white; 
+          transition: .4s; border-radius: 50%;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
         input:checked + .slider { background-color: var(--neon-pro); }
-        input:checked + .slider:before { transform: translateX(14px); }
+        input:checked + .slider:before { transform: translateX(16px); }
         
-        .skill-status { font-size: 9px; font-weight: 700; opacity: 0.6; }
-        .skill-status.active { color: var(--neon-pro); opacity: 1; }
+        .skill-status { font-size: 10px; font-weight: 800; opacity: 0.4; letter-spacing: 1px; }
+        .skill-status.active { color: var(--neon-pro); opacity: 1; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
+        .learn-more-btn {
+          background: transparent; border: 1px solid var(--border);
+          color: var(--fg); font-size: 10px; font-weight: 700;
+          padding: 6px 12px; border-radius: var(--radius-sm);
+          cursor: pointer; transition: var(--transition);
+          opacity: 0.7;
+        }
+        .learn-more-btn:hover { opacity: 1; border-color: var(--neon-pro); background: var(--glass-bg); }
+
+        /* Accounts List */
         .acc-list { padding: 0 16px 16px 16px; }
-        .acc-card { background: rgba(128,128,128,0.02); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; }
+        .acc-card { 
+          background: var(--glass-bg); border: 1px solid var(--border); 
+          border-radius: var(--radius-md); margin-bottom: 12px; 
+          cursor: pointer; transition: var(--transition); 
+          position: relative; overflow: hidden;
+          backdrop-filter: blur(4px);
+        }
+        .acc-card:hover { border-color: var(--neon-pro); transform: scale(1.01); }
+        
         .acc-card.refreshing::after {
-          content: "";
-          position: absolute;
-          top: 0; left: -100%; width: 100%; height: 100%;
+          content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
           background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
-          animation: shimmer 1.5s infinite;
+          animation: shimmer 2s infinite;
         }
         @keyframes shimmer { 100% { left: 100%; } }
-        .acc-card.preview-selected { padding: 4px; border-color: var(--neon-pro); background: rgba(99, 102, 241, 0.05); transform: scale(0.98); }
-
-        .progress-bar { position: absolute; bottom: 0; left: 0; height: 2px; width: 0; background: var(--neon-pro); transition: width 0.3s; }
-        .progress-active { width: 100%; animation: progress-indet 2s infinite linear; }
-        @keyframes progress-indet { 0% { left: -40%; width: 40%; } 100% { left: 100%; width: 40%; } }
-
-        .card-main { padding: 12px; display: flex; align-items: center; gap: 10px; }
-        .avatar-wrap { position: relative; }
-        .avatar { width: 36px; height: 36px; background: var(--primary); color: var(--primary-fg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; position: relative; overflow: hidden; }
-        .avatar img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; }
-        .active-dot { position: absolute; bottom: -2px; right: -2px; width: 10px; height: 10px; background: #10b981; border: 2px solid var(--bg); border-radius: 50%; z-index: 10; }
-        .info { flex: 1; min-width: 0; } .name { font-weight: 600; font-size: 12px; } .email { font-size: 10px; opacity: 0.5; }
-        .badge { font-size: 7px; font-weight: 800; padding: 2px 5px; border-radius: 4px; background: rgba(128,128,128,0.1); margin-left: auto; }
         
-        .actions { display: flex; border-top: 1px solid var(--border); }
-        .btn { flex: 1; padding: 8px; background: transparent; border: none; font-size: 9px; font-weight: 700; color: var(--fg); opacity: 0.6; cursor: pointer; }
-        .btn:hover { opacity: 1; background: rgba(128,128,128,0.05); }
-        .btn-switch { border-right: 1px solid var(--border); color: var(--neon-pro); }
-        .btn-remove:hover { color: #f87171; }
+        .acc-card.preview-selected { border-color: var(--neon-pro); background: rgba(99, 102, 241, 0.05); }
+
+        .card-main { padding: 14px; display: flex; align-items: center; gap: 12px; }
+        .avatar { 
+          width: 40px; height: 40px; background: var(--primary); 
+          color: var(--primary-fg); border-radius: 10px; 
+          display: flex; align-items: center; justify-content: center; 
+          font-weight: 700; font-size: 18px;
+        }
+        .active-dot { 
+          position: absolute; bottom: -2px; right: -2px; 
+          width: 12px; height: 12px; background: #10b981; 
+          border: 2px solid var(--bg); border-radius: 50%; z-index: 10; 
+        }
+        
+        .info { flex: 1; min-width: 0; } 
+        .name { font-weight: 700; font-size: 13px; margin-bottom: 2px; } 
+        .email { font-size: 11px; opacity: 0.5; }
+        
+        .badge { 
+          font-size: 8px; font-weight: 800; padding: 4px 8px; 
+          border-radius: 6px; background: var(--glass-border); 
+          letter-spacing: 0.5px;
+        }
+        
+        .card-actions { display: flex; border-top: 1px solid var(--border); background: rgba(0,0,0,0.05); }
+        .action-btn { 
+          flex: 1; padding: 10px; background: transparent; border: none; 
+          font-size: 10px; font-weight: 700; color: var(--fg); 
+          opacity: 0.6; cursor: pointer; transition: var(--transition);
+        }
+        .action-btn:hover { opacity: 1; background: rgba(255,255,255,0.05); }
+        .action-btn.switch { border-right: 1px solid var(--border); color: var(--neon-pro); }
+        .action-btn.remove:hover { color: #f87171; }
+
+        .hidden { display: none !important; }
       </style>
     </head>
     <body>
@@ -272,17 +458,26 @@ export class AccountsPanelProvider {
 
         <div id="tab-accounts" class="tab-content active">
           <div class="dashboard">
-            <div class="stat-tile tile-claude"><div class="stat-label">Claude 4.6</div><div class="stat-val" id="val-c">${initialStats.claude}%</div></div>
-            <div class="stat-tile tile-pro"><div class="stat-label">Gemini Pro 3.1</div><div class="stat-val" id="val-p">${initialStats.geminiPro}%</div></div>
-            <div class="stat-tile tile-flash"><div class="stat-label">Gemini Flash 3</div><div class="stat-val" id="val-f">${initialStats.geminiFlash}%</div></div>
+            <div class="stat-tile tile-claude"><div class="stat-label">Claude 3.5</div><div class="stat-val" id="val-c">${initialStats.claude}%</div></div>
+            <div class="stat-tile tile-pro"><div class="stat-label">Gemini 1.5 Pro</div><div class="stat-val" id="val-p">${initialStats.geminiPro}%</div></div>
+            <div class="stat-tile tile-flash"><div class="stat-label">Gemini 1.5 Flash</div><div class="stat-val" id="val-f">${initialStats.geminiFlash}%</div></div>
           </div>
           <div class="acc-list" id="account-list">${cardsHtml}</div>
         </div>
 
         <div id="tab-skills" class="tab-content">
+          <div class="search-bar">
+            <div class="search-input-wrap">
+              <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" class="search-input" id="skill-search" placeholder="Search expert skills..." oninput="filterSkills()">
+            </div>
+            <button class="filter-btn" onclick="toggleFilters()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            </button>
+          </div>
           <div class="skills-grid" id="skills-grid">
-            ${this.skillService.getSkills().map(skill => `
-              <div class="skill-card" data-title="${skill.title}" data-category="${skill.category}">
+            ${this.skillService.getSkills().map((skill, idx) => `
+              <div class="skill-card" data-title="${skill.title.toLowerCase()}" data-category="${skill.category.toLowerCase()}" style="animation-delay: ${idx * 0.05}s">
                 <div class="skill-header">
                   <div class="skill-icon-box" style="background: ${skill.color}">
                     <i class="codicon codicon-${skill.icon}"></i>
@@ -302,7 +497,7 @@ export class AccountsPanelProvider {
                 </div>
                 <div class="skill-footer">
                   <div class="skill-status ${skill.isActive ? 'active' : ''}">${skill.isActive ? 'ACTIVE' : 'INACTIVE'}</div>
-                  <button class="btn" style="flex:none; padding:4px 8px; border-radius:6px; border:1px solid var(--border);" onclick="vscode.postMessage({command:'skillAction', id:'${skill.id}'})">LEARN MORE</button>
+                  <button class="learn-more-btn" onclick="vscode.postMessage({command:'skillAction', id:'${skill.id}'})">DETAILS</button>
                 </div>
               </div>
             `).join('')}
@@ -320,6 +515,19 @@ export class AccountsPanelProvider {
           document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
           document.getElementById('tab-' + tabId).classList.add('active');
           event.currentTarget.classList.add('active');
+        }
+
+        function filterSkills() {
+          const query = document.getElementById('skill-search').value.toLowerCase();
+          document.querySelectorAll('.skill-card').forEach(card => {
+            const title = card.dataset.title;
+            const category = card.dataset.category;
+            if (title.includes(query) || category.includes(query)) {
+              card.classList.remove('hidden');
+            } else {
+              card.classList.add('hidden');
+            }
+          });
         }
 
         function toggleSkill(id) {

@@ -61,7 +61,7 @@ export class ApiClient {
 
       const text = await response.text();
       // Handle empty responses
-      if (!text) return {} as T;
+      if (!text) {return {} as T;}
       
       return JSON.parse(text) as T;
     } catch (error: any) {

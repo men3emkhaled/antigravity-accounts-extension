@@ -105,7 +105,7 @@ export class AccountRepositoryImpl implements IAccountRepository {
       const refreshToken = await this.context.secrets.get(SECRET_KEYS.REFRESH_TOKEN(email));
       const accessToken = await this.context.secrets.get(SECRET_KEYS.ACCESS_TOKEN(email));
       const metaStr = await this.context.secrets.get(SECRET_KEYS.METADATA(email));
-      if (!refreshToken || !accessToken) return null;
+      if (!refreshToken || !accessToken) {return null;}
       const meta = metaStr ? JSON.parse(metaStr) : { expiresAt: 0 };
       return { refreshToken, accessToken, expiresAt: meta.expiresAt };
     } catch (e) {
@@ -137,7 +137,7 @@ export class AccountRepositoryImpl implements IAccountRepository {
   async getDeviceProfile(email: string): Promise<DeviceProfile | null> {
     try {
       const raw = await this.context.secrets.get(this.deviceProfileKey(email));
-      if (!raw) return null;
+      if (!raw) {return null;}
       return JSON.parse(raw) as DeviceProfile;
     } catch (e) {
       return null;

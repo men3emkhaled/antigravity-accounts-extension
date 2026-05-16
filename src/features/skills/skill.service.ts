@@ -10,7 +10,9 @@ export interface Skill {
   isActive: boolean;
   color: string;
   fullInstructions: string;
+  isCustom?: boolean;
 }
+
 
 export class SkillService {
   private _onDidChangeSkills = new vscode.EventEmitter<void>();
@@ -18,9 +20,130 @@ export class SkillService {
 
   private skills: Skill[] = [
     {
+      id: 'frontend-material-design-3',
+      title: 'Material Design 3',
+      category: 'Premium UI & Design',
+      description: 'Material Design 3 Guidelines and Philosophy',
+      tags: ['Frontend', 'Design', 'UI'],
+      icon: 'browser',
+      isActive: false,
+      color: '#6366f1',
+      fullInstructions: `- DESIGN SYSTEM: Google Material Design 3 (M3)\n- PHILOSOPHY: "Material You" - highly personalized, adaptable, and accessible.\n- CHARACTERISTICS: Heavy use of dynamic color extraction, large rounded corners, prominent floating action buttons (FABs), elevation through tonal differences, and fluid responsive layouts.\n- TYPOGRAPHY: Roboto with fluid scaling.\n- CORE VISUAL: Flat surfaces with subtle depth, bold intentional colors, and playful micro-animations.\n- CORE RULES: Apply modern layout paradigms (CSS Grid/Flexbox), use design tokens, and ensure visible focus states.`
+    },
+    {
+      id: 'frontend-apple-hig',
+      title: 'Apple HIG',
+      category: 'Premium UI & Design',
+      description: 'Apple HIG Guidelines and Philosophy',
+      tags: ['Frontend', 'Design', 'UI'],
+      icon: 'browser',
+      isActive: false,
+      color: '#6366f1',
+      fullInstructions: `- DESIGN SYSTEM: Apple Human Interface Guidelines (HIG)\n- PHILOSOPHY: Clarity, Deference, and Depth.\n- CHARACTERISTICS: Heavy use of translucency (glassmorphism/blur effects), vibrant but constrained color palettes, minimal borders, large typography for hierarchy, and continuous curves (squarcles).\n- TYPOGRAPHY: San Francisco (SF Pro) - highly legible with tight kerning.\n- CORE VISUAL: Content is the hero, UI elements recede. Very smooth, physics-based spring animations.\n- CORE RULES: Apply modern layout paradigms (CSS Grid/Flexbox), use design tokens, and ensure visible focus states.`
+    },
+    {
+      id: 'frontend-ibm-carbon',
+      title: 'IBM Carbon',
+      category: 'Premium UI & Design',
+      description: 'IBM Carbon Guidelines and Philosophy',
+      tags: ['Frontend', 'Design', 'UI'],
+      icon: 'browser',
+      isActive: false,
+      color: '#6366f1',
+      fullInstructions: `- DESIGN SYSTEM: IBM Carbon Design System\n- PHILOSOPHY: Open-source, accessible, and highly systematic for enterprise scale.\n- CHARACTERISTICS: Strict grid systems (16-column base), high-contrast data visualization, monochromatic base with functional semantic colors.\n- TYPOGRAPHY: IBM Plex - a bespoke, highly legible, brutalist-leaning typeface.\n- CORE VISUAL: Utilitarian, sharp edges, precise, data-heavy but clean. Very professional and technical.\n- CORE RULES: Apply modern layout paradigms (CSS Grid/Flexbox), use design tokens, and ensure visible focus states.`
+    },
+    {
+      id: 'frontend-uber-base-web',
+      title: 'Uber Base Web',
+      category: 'Premium UI & Design',
+      description: 'Uber Base Web Guidelines and Philosophy',
+      tags: ['Frontend', 'Design', 'UI'],
+      icon: 'browser',
+      isActive: false,
+      color: '#6366f1',
+      fullInstructions: `- DESIGN SYSTEM: Uber Base Web\n- PHILOSOPHY: Utility, speed, and cross-platform consistency.\n- CHARACTERISTICS: Extremely stark contrast (black and white primary), heavy bold typography, geometric shapes, minimal decorative elements.\n- TYPOGRAPHY: Uber Move - a custom geometric sans-serif inspired by transportation signage.\n- CORE VISUAL: High utility, brutally simple, highly accessible. Focus is entirely on the task with zero visual friction.\n- CORE RULES: Apply modern layout paradigms (CSS Grid/Flexbox), use design tokens, and ensure visible focus states.`
+    },
+    {
+      id: 'frontend-microsoft-fluent',
+      title: 'Microsoft Fluent',
+      category: 'Premium UI & Design',
+      description: 'Microsoft Fluent Guidelines and Philosophy',
+      tags: ['Frontend', 'Design', 'UI'],
+      icon: 'browser',
+      isActive: false,
+      color: '#6366f1',
+      fullInstructions: `- DESIGN SYSTEM: Microsoft Fluent Design System\n- PHILOSOPHY: Sensory, engaging, and inclusive. "Light, Depth, Motion, Material, Scale."\n- CHARACTERISTICS: "Acrylic" material (blur/translucency), "Reveal" highlight (lighting effects on hover), elevation via shadows, responsive layouts for all devices.\n- TYPOGRAPHY: Segoe UI.\n- CORE VISUAL: Layered, textural, responsive. It feels like interacting with physical, illuminated glass.\n- CORE RULES: Apply modern layout paradigms (CSS Grid/Flexbox), use design tokens, and ensure visible focus states.`
+    },
+    {
+      id: 'frontend-airbnb-dls',
+      title: 'Airbnb DLS',
+      category: 'Premium UI & Design',
+      description: 'Airbnb DLS Guidelines and Philosophy',
+      tags: ['Frontend', 'Design', 'UI'],
+      icon: 'browser',
+      isActive: false,
+      color: '#6366f1',
+      fullInstructions: `- DESIGN SYSTEM: Airbnb Design Language System (DLS)\n- PHILOSOPHY: "Belong anywhere" - warm, human, and highly consistent.\n- CHARACTERISTICS: Large, high-quality imagery, generous whitespace, soft rounded corners, warm primary color (Bélo Red), conversational UI patterns.\n- TYPOGRAPHY: Cereal - a custom geometric sans-serif that feels friendly and highly readable.\n- CORE VISUAL: Inviting, editorial-style layouts, highly legible, focuses on storytelling and trust.\n- CORE RULES: Apply modern layout paradigms (CSS Grid/Flexbox), use design tokens, and ensure visible focus states.`
+    },
+    {
+      id: 'frontend-shopify-polaris',
+      title: 'Shopify Polaris',
+      category: 'Premium UI & Design',
+      description: 'Shopify Polaris Guidelines and Philosophy',
+      tags: ['Frontend', 'Design', 'UI'],
+      icon: 'browser',
+      isActive: false,
+      color: '#6366f1',
+      fullInstructions: `- DESIGN SYSTEM: Shopify Polaris\n- PHILOSOPHY: Merchant-first, accessible, and scalable for complex commerce interfaces.\n- CHARACTERISTICS: Functional utility, dense information hierarchy, restrained color palette (mostly grays, white, with green for primary actions and blue for info).\n- TYPOGRAPHY: Inter - highly legible for data-heavy tables and dashboards.\n- CORE VISUAL: A tool for work. Very clear boundaries between sections, extensive use of cards, unopinionated so merchant data stands out.\n- CORE RULES: Apply modern layout paradigms (CSS Grid/Flexbox), use design tokens, and ensure visible focus states.`
+    },
+    {
+      id: 'frontend-atlassian-design',
+      title: 'Atlassian Design',
+      category: 'Premium UI & Design',
+      description: 'Atlassian Design Guidelines and Philosophy',
+      tags: ['Frontend', 'Design', 'UI'],
+      icon: 'browser',
+      isActive: false,
+      color: '#6366f1',
+      fullInstructions: `- DESIGN SYSTEM: Atlassian Design System\n- PHILOSOPHY: Team collaboration, productivity, and practicality.\n- CHARACTERISTICS: Playful but professional, distinct "Atlassian Blue", extensive use of avatars, lozenges (badges) for status, clear structured navigation for complex nested hierarchies.\n- TYPOGRAPHY: Charlie Sans (headings) / system-ui (body).\n- CORE VISUAL: Information-dense but structured. Uses color coding heavily to indicate status and priority.\n- CORE RULES: Apply modern layout paradigms (CSS Grid/Flexbox), use design tokens, and ensure visible focus states.`
+    },
+    {
+      id: 'frontend-vercel-geist',
+      title: 'Vercel Geist',
+      category: 'Premium UI & Design',
+      description: 'Vercel Geist Guidelines and Philosophy',
+      tags: ['Frontend', 'Design', 'UI'],
+      icon: 'browser',
+      isActive: false,
+      color: '#6366f1',
+      fullInstructions: `- DESIGN SYSTEM: Vercel Geist (Next.js)\n- PHILOSOPHY: Developer-first, hyper-minimalist, fast.\n- CHARACTERISTICS: High-contrast monochrome (black/white), incredibly thin borders (1px gray), stark geometry, subtle hover states, zero fluff.\n- TYPOGRAPHY: Geist Sans / Geist Mono - highly technical and geometric.\n- CORE VISUAL: Feels like a modern code editor. Very sharp, extremely clean, highly technical.\n- CORE RULES: Apply modern layout paradigms (CSS Grid/Flexbox), use design tokens, and ensure visible focus states.`
+    },
+    {
+      id: 'frontend-linear-design',
+      title: 'Linear Design',
+      category: 'Premium UI & Design',
+      description: 'Linear Design Guidelines and Philosophy',
+      tags: ['Frontend', 'Design', 'UI'],
+      icon: 'browser',
+      isActive: false,
+      color: '#6366f1',
+      fullInstructions: `- DESIGN SYSTEM: Linear Design System\n- PHILOSOPHY: Magical, high-craft, and keyboard-first.\n- CHARACTERISTICS: Dark mode by default (or highly polished dark themes), deep space backgrounds, glowing subtle accents, extreme attention to micro-interactions, keyboard shortcut hints everywhere.\n- TYPOGRAPHY: Inter - used with varying opacities to establish hierarchy rather than just size.\n- CORE VISUAL: Sleek, premium, high-performance. Feels like a specialized tool for power users.\n- CORE RULES: Apply modern layout paradigms (CSS Grid/Flexbox), use design tokens, and ensure visible focus states.`
+    },
+    {
+      id: 'arabic-localization',
+      title: 'arabic-rtl for chat',
+      category: 'Standalone',
+      description: 'Ensure proper Right-to-Left text alignment for Arabic communication.',
+      tags: ['RTL', 'Arabic', 'Localization'],
+      icon: 'symbol-string',
+      isActive: false,
+      color: '#0ea5e9',
+      fullInstructions: `- RTL ARABIC SUPPORT: If the user communicates in Arabic, you MUST wrap your entire response in \`<div dir="rtl">\` and \`</div>\` to ensure proper Right-to-Left text alignment in the chat interface.\n- CONSISTENCY: Always ensure that the \`div\` tags correctly wrap the entire response when speaking in Arabic.`
+    },
+    {
       id: 'docx',
       title: 'docx',
-      category: 'Word Documents',
+      category: 'Document & Data Engine',
       description: 'Create, read, and edit Word documents, reports, and templates with professional formatting.',
       tags: ['docx.edit', 'Report/Memo', 'Word creation'],
       icon: 'word',
@@ -39,7 +162,7 @@ export class SkillService {
     {
       id: 'pdf-pro',
       title: 'pdf',
-      category: 'PDF Processing',
+      category: 'Document & Data Engine',
       description: 'Advanced PDF operations: text extraction, merging, splitting, watermarking, and form filling.',
       tags: ['Form filling', 'PDF Merge/Split', 'PDF Creation'],
       icon: 'pdf',
@@ -57,7 +180,7 @@ export class SkillService {
     {
       id: 'pdf-reading',
       title: 'pdf-reading',
-      category: 'PDF Reading Only',
+      category: 'Document & Data Engine',
       description: 'High-fidelity PDF parsing for text, tables, and images without modifying source files.',
       tags: ['Content Analysis', 'Text Extraction', 'PDF Read'],
       icon: 'book',
@@ -74,7 +197,7 @@ export class SkillService {
     {
       id: 'pptx',
       title: 'pptx',
-      category: 'PowerPoint',
+      category: 'Document & Data Engine',
       description: 'Create and manage professional presentation decks, templates, and speaker notes.',
       tags: ['pptx.file', 'Slide deck', 'Presentation'],
       icon: 'project',
@@ -92,7 +215,7 @@ export class SkillService {
     {
       id: 'xlsx',
       title: 'xlsx',
-      category: 'Excel / Spreadsheets',
+      category: 'Document & Data Engine',
       description: 'Complex data manipulation, formulas, pivot tables, and visualization for Excel/CSV.',
       tags: ['xlsx.file', 'Spreadsheet creation', 'Data Cleaning'],
       icon: 'table',
@@ -108,30 +231,11 @@ export class SkillService {
 - VALIDATE data entry with Data Validation rules and dropdown lists to prevent input errors at the source.
 - USE SUMIFS/COUNTIFS/AVERAGEIFS instead of array formulas where possible — they're more readable and faster.`
     },
-    {
-      id: 'frontend',
-      title: 'frontend-design',
-      category: 'UI / Web',
-      description: 'Build stunning, high-performance web interfaces with premium design aesthetics and modern architecture.',
-      tags: ['UI component', 'Web page', 'Dashboard', 'React', 'Next.js'],
-      icon: 'browser',
-      isActive: false,
-      color: '#6366f1',
-      fullInstructions: `- DESIGN with a "premium product" mindset — every interface should feel polished, intentional, and wow-worthy on first glance.
-- APPLY modern layout paradigms: CSS Grid for macro layout, Flexbox for component internals, Container Queries for truly responsive components.
-- USE design tokens (CSS custom properties) for colors, spacing, typography, and shadows — never hardcode raw values.
-- IMPLEMENT a clear visual hierarchy: size, weight, color contrast, and spacing must guide the user's eye naturally.
-- CHOOSE typography intentionally: pair a display font with a readable body font. Use fluid type scales (clamp()) for responsive sizes.
-- BUILD with component-driven architecture (Atomic Design): atoms, molecules, organisms, templates, pages.
-- ENSURE every interactive element has visible focus states, hover transitions (150-200ms ease), and active/pressed feedback.
-- OPTIMIZE images: WebP format, proper aspect ratios, lazy loading, and srcset for responsive images.
-- IMPLEMENT skeleton screens instead of spinners for content loading states.
-- NEVER ship UI without testing on mobile viewport (375px), tablet (768px), and desktop (1440px).`
-    },
+
     {
       id: 'security-shield',
       title: 'security-guard',
-      category: 'Cyber Security',
+      category: 'Cloud & Security',
       description: 'Proactive code auditing and protection against credential leaks and vulnerabilities.',
       tags: ['API Protection', 'Security Audit', 'Leak Prevention'],
       icon: 'shield',
@@ -146,12 +250,14 @@ export class SkillService {
 - USE HTTPS everywhere. Never transmit sensitive data over HTTP, even on internal networks.
 - HASH passwords with bcrypt (cost factor 12+) or Argon2id — never MD5, SHA1, or SHA256 for passwords.
 - AUDIT third-party dependencies: run npm audit / pip-audit on every build. Remove unused dependencies.
-- LOG security events (failed logins, permission denials, unusual access patterns) — never log passwords or tokens.`
+- LOG security events (failed logins, permission denials, unusual access patterns) — never log passwords or tokens.
+- IMPLEMENT Security Headers: Content-Security-Policy, Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options.
+- DESIGN for Zero Trust: verify every request, regardless of where it originates (even inside the network).`
     },
     {
       id: 'performance-pro',
       title: 'performance-optimizer',
-      category: 'Core Engineering',
+      category: 'Software Integrity',
       description: 'Deep optimization for execution speed, algorithmic efficiency, and memory usage.',
       tags: ['Code Speed', 'Optimization', 'Big O'],
       icon: 'zap',
@@ -171,7 +277,7 @@ export class SkillService {
     {
       id: 'human-coder',
       title: 'human-persona',
-      category: 'Stealth Coding',
+      category: 'Persona & Tone',
       description: 'Professional human-like communication. Eliminates AI markers and excessive emojis.',
       tags: ['Human Style', 'No Emojis', 'Clean Tone'],
       icon: 'person',
@@ -188,7 +294,7 @@ export class SkillService {
     {
       id: 'qa-expert',
       title: 'qa-tester',
-      category: 'Software Quality',
+      category: 'Software Integrity',
       description: 'Expertise in automated testing, bug hunting, and quality assurance benchmarks.',
       tags: ['Unit Test', 'Integration', 'Bug Hunting'],
       icon: 'check-all',
@@ -208,7 +314,7 @@ export class SkillService {
     {
       id: 'mobile-pro',
       title: 'mobile-expert',
-      category: 'Mobile Apps',
+      category: 'Mobile & Platforms',
       description: 'Build high-performance, cross-platform mobile applications with native UI feel and premium UX.',
       tags: ['Flutter', 'React Native', 'Native UI', 'iOS', 'Android'],
       icon: 'device-mobile',
@@ -226,7 +332,7 @@ export class SkillService {
     {
       id: 'data-science',
       title: 'data-scientist',
-      category: 'Data & AI',
+      category: 'AI & Intelligence',
       description: 'Comprehensive data analysis, model building, and big data visualization.',
       tags: ['Python Data', 'ML Ops', 'Visualization'],
       icon: 'graph',
@@ -246,7 +352,7 @@ export class SkillService {
     {
       id: 'ux-expert',
       title: 'ux-researcher',
-      category: 'Design Psychology',
+      category: 'Strategy & Logic',
       description: 'User-flow optimization, behavioral psychology, and WCAG 2.1 accessibility for digital products.',
       tags: ['A11y', 'User Flow', 'Heuristics', 'Cognitive Load', 'UX'],
       icon: 'search',
@@ -264,7 +370,7 @@ export class SkillService {
     {
       id: 'tech-writer',
       title: 'technical-writer',
-      category: 'Documentation',
+      category: 'Strategy & Logic',
       description: 'Professional technical documentation, API specifications, and README architecture.',
       tags: ['Docs', 'README', 'API Spec'],
       icon: 'book',
@@ -283,7 +389,7 @@ export class SkillService {
     {
       id: 'cloud-arch',
       title: 'cloud-architect',
-      category: 'DevOps / Infrastructure',
+      category: 'Cloud & Security',
       description: 'Scalable infrastructure design, containerization, and robust CI/CD orchestration.',
       tags: ['Docker', 'CI/CD', 'Scalable'],
       icon: 'cloud',
@@ -303,7 +409,7 @@ export class SkillService {
     {
       id: 'backend-arch',
       title: 'backend-architect',
-      category: 'System Design',
+      category: 'System Architecture',
       description: 'Scalable API architecture, high-performance databases, and microservices logic.',
       tags: ['API Design', 'Database', 'Microservices'],
       icon: 'server',
@@ -318,12 +424,14 @@ export class SkillService {
 - USE async messaging (Kafka/RabbitMQ/SQS) to decouple services and absorb traffic spikes — never synchronous calls for non-critical paths.
 - IMPLEMENT database connection pooling with explicit min/max pool sizes — never open unbounded connections.
 - ADD correlation IDs to every request/response and propagate them through all service calls for distributed tracing.
-- DESIGN pagination for all list endpoints: cursor-based pagination for large, frequently-updated datasets; offset-based for small static lists.`
+- DESIGN pagination for all list endpoints: cursor-based pagination for large, frequently-updated datasets; offset-based for small static lists.
+- IMPLEMENT Circuit Breakers and Retries with exponential backoff for all inter-service communication.
+- DESIGN for observability: expose structured logs, metrics (Prometheus), and traces (OpenTelemetry) from every service.`
     },
     {
       id: 'embedded-systems',
       title: 'embedded-expert',
-      category: 'Hardware / IoT',
+      category: 'System Architecture',
       description: 'Low-level firmware development, RTOS management, and hardware communication.',
       tags: ['C/C++', 'Firmware', 'IoT'],
       icon: 'circuit-board',
@@ -342,7 +450,7 @@ export class SkillService {
     {
       id: 'game-dev',
       title: 'game-developer',
-      category: 'Graphics / Media',
+      category: 'Mobile & Platforms',
       description: 'Game mechanics, physics optimization, and shader development (Unity/Unreal).',
       tags: ['Unity', 'Unreal', 'Shaders'],
       icon: 'game',
@@ -361,7 +469,7 @@ export class SkillService {
     {
       id: 'web3-blockchain',
       title: 'web3-expert',
-      category: 'Blockchain',
+      category: 'Mobile & Platforms',
       description: 'Smart contract development, security auditing, and decentralized application logic.',
       tags: ['Solidity', 'Smart Contracts', 'Web3.js'],
       icon: 'link-external',
@@ -380,7 +488,7 @@ export class SkillService {
     {
       id: 'mlops-engineer',
       title: 'mlops-expert',
-      category: 'Machine Learning',
+      category: 'AI & Intelligence',
       description: 'Model deployment pipelines, data versioning, and AI lifecycle monitoring.',
       tags: ['DVC', 'Model Deploy', 'Pipelines'],
       icon: 'pulse',
@@ -399,7 +507,7 @@ export class SkillService {
     {
       id: 'file-reader',
       title: 'file-reading',
-      category: 'Universal File Router',
+      category: 'Document & Data Engine',
       description: 'Intelligent file parsing router for various formats including images and data.',
       tags: ['File Upload', 'mnt/user-data/uploads/', 'Read File'],
       icon: 'files',
@@ -416,7 +524,7 @@ export class SkillService {
     {
       id: 'anthropic-knowledge',
       title: 'product-self-knowledge',
-      category: 'Anthropic Products',
+      category: 'AI & Intelligence',
       description: 'Direct consultation of official Anthropic docs for real-time API and feature specs.',
       tags: ['Claude API', 'Claude Pricing', 'Claude Code'],
       icon: 'hubot',
@@ -433,7 +541,7 @@ export class SkillService {
     {
       id: 'refactor-pro',
       title: 'refactor-pro',
-      category: 'Code Quality',
+      category: 'Software Integrity',
       description: 'Transform messy code into clean, maintainable, SOLID-compliant implementations.',
       tags: ['Clean Code', 'SOLID', 'Design Patterns', 'Refactor'],
       icon: 'symbol-class',
@@ -444,7 +552,7 @@ export class SkillService {
     {
       id: 'git-expert',
       title: 'git-expert',
-      category: 'Version Control',
+      category: 'Strategy & Logic',
       description: 'Advanced Git workflows, branching strategies, and history management.',
       tags: ['Git', 'Branching', 'Rebase', 'Conflict Resolution'],
       icon: 'source-control',
@@ -455,7 +563,7 @@ export class SkillService {
     {
       id: 'sql-expert',
       title: 'sql-expert',
-      category: 'Database',
+      category: 'System Architecture',
       description: 'Advanced SQL query optimization, schema design, and database performance tuning.',
       tags: ['SQL', 'Query Optimization', 'Indexing', 'Schema Design'],
       icon: 'database',
@@ -466,7 +574,7 @@ export class SkillService {
     {
       id: 'regex-master',
       title: 'regex-master',
-      category: 'Text Processing',
+      category: 'Strategy & Logic',
       description: 'Construct, explain, and optimize complex regular expressions across all flavors.',
       tags: ['Regex', 'Pattern Matching', 'Text Parsing'],
       icon: 'symbol-keyword',
@@ -477,7 +585,7 @@ export class SkillService {
     {
       id: 'api-tester',
       title: 'api-tester',
-      category: 'API Testing',
+      category: 'Software Integrity',
       description: 'Systematic REST and GraphQL API testing, edge case coverage, and contract validation.',
       tags: ['REST', 'GraphQL', 'API Testing', 'Edge Cases'],
       icon: 'plug',
@@ -488,7 +596,7 @@ export class SkillService {
     {
       id: 'debug-expert',
       title: 'debug-expert',
-      category: 'Debugging',
+      category: 'Software Integrity',
       description: 'Systematic root cause analysis and debugging strategy for complex software issues.',
       tags: ['Debugging', 'Root Cause', 'Profiling', 'Tracing'],
       icon: 'debug',
@@ -499,7 +607,7 @@ export class SkillService {
     {
       id: 'code-reviewer',
       title: 'code-reviewer',
-      category: 'Code Review',
+      category: 'Software Integrity',
       description: 'Thorough, constructive code review focusing on correctness, security, and maintainability.',
       tags: ['PR Review', 'Code Quality', 'Feedback', 'Best Practices'],
       icon: 'eye',
@@ -510,7 +618,7 @@ export class SkillService {
     {
       id: 'prompt-engineer',
       title: 'prompt-engineer',
-      category: 'AI Engineering',
+      category: 'AI & Intelligence',
       description: 'Craft precise, effective prompts for LLMs to maximize output quality and consistency.',
       tags: ['Prompting', 'LLM', 'Chain-of-Thought', 'Few-Shot'],
       icon: 'comment-discussion',
@@ -521,7 +629,7 @@ export class SkillService {
     {
       id: 'css-master',
       title: 'css-master',
-      category: 'CSS / Styling',
+      category: 'Premium UI & Design',
       description: 'Deep CSS mastery: layouts, custom properties, cascade layers, and cutting-edge techniques.',
       tags: ['CSS', 'Grid', 'Flexbox', 'Custom Properties', 'Cascade'],
       icon: 'symbol-color',
@@ -543,7 +651,7 @@ export class SkillService {
     {
       id: 'animation-expert',
       title: 'animation-expert',
-      category: 'Motion Design',
+      category: 'Premium UI & Design',
       description: 'Craft fluid micro-interactions, page transitions, and physics-based animations that delight users.',
       tags: ['CSS Animation', 'Micro-interactions', 'GSAP', 'Framer Motion', 'Motion Design'],
       icon: 'zap',
@@ -564,7 +672,7 @@ export class SkillService {
     {
       id: 'design-system-architect',
       title: 'design-system',
-      category: 'Design Systems',
+      category: 'Premium UI & Design',
       description: 'Architect scalable design systems with tokens, component libraries, and living documentation.',
       tags: ['Design Tokens', 'Component Library', 'Storybook', 'Figma Tokens', 'Style Dictionary'],
       icon: 'layers',
@@ -584,7 +692,7 @@ export class SkillService {
     {
       id: 'color-theory-expert',
       title: 'color-theory',
-      category: 'Visual Design',
+      category: 'Premium UI & Design',
       description: 'Apply color theory, psychology, and accessibility to craft harmonious, expressive palettes.',
       tags: ['Color Palette', 'HSL', 'Contrast', 'Color Psychology', 'Dark Mode'],
       icon: 'paintcan',
@@ -604,7 +712,7 @@ export class SkillService {
     {
       id: 'creative-ui-pro',
       title: 'creative-ui',
-      category: 'Premium UI',
+      category: 'Premium UI & Design',
       description: 'Create visually stunning, award-worthy interfaces using advanced CSS and modern design trends.',
       tags: ['Glassmorphism', 'Neumorphism', 'Bento Grid', 'Aurora', 'Premium Design'],
       icon: 'star-full',
@@ -621,11 +729,300 @@ export class SkillService {
 - APPLY text-gradient with background-clip: text for striking hero typography.
 - CREATE depth with layered shadows: use 3-5 shadow layers at different blur/offset values instead of one heavy shadow.
 - VALIDATE every "creative" decision against usability: if a user pauses to understand the UI, the creativity has failed.`
+    },
+    {
+      id: 'rag-architect',
+      title: 'rag-architect',
+      category: 'AI & Intelligence',
+      description: 'Architecting high-performance Retrieval-Augmented Generation systems with advanced chunking and hybrid search.',
+      tags: ['RAG', 'Chunking', 'Embeddings', 'Semantic Search', 'Hybrid Search'],
+      icon: 'brain',
+      isActive: false,
+      color: '#8b5cf6',
+      fullInstructions: `- IMPLEMENT advanced chunking strategies: semantic chunking based on header structure, sliding windows with overlap, and recursive character splitting.
+- DESIGN hybrid search architectures: combine dense vector retrieval (semantic) with sparse keyword search (BM25) using Reciprocal Rank Fusion (RRF).
+- OPTIMIZE retrieval with re-ranking: use Cross-Encoders (like Cohere Rerank or BGE) to refine top-K results before passing to LLM.
+- PREVENT hallucinations via citations: enforce that every claim in the response must map back to a specific retrieved chunk ID.
+- MANAGE metadata filtering: implement strict pre-filtering (at the vector DB level) for tenant isolation, categories, or date ranges.
+- EVALUATE RAG performance using RAGAS or TruLens: measure faithfulness, relevancy, and context precision.
+- IMPLEMENT Small-to-Big retrieval: retrieve small parent chunks for accuracy but provide larger context window chunks to the LLM.`
+    },
+    {
+      id: 'vector-db-expert',
+      title: 'vector-db-expert',
+      category: 'System Architecture',
+      description: 'Optimization and management of high-scale vector databases for AI similarity search.',
+      tags: ['Pinecone', 'Weaviate', 'Milvus', 'ChromaDB', 'Indexing'],
+      icon: 'database',
+      isActive: false,
+      color: '#06b6d4',
+      fullInstructions: `- CHOOSE the right index type: HNSW for low-latency/high-memory, IVF for high-compression/larger datasets.
+- OPTIMIZE HNSW parameters: adjust M (max connections) and efConstruction (build-time accuracy) for the optimal trade-off between build speed and recall.
+- IMPLEMENT Namespace isolation for multi-tenant applications — never mix tenant data in the same index without clear partitioning.
+- USE scalar quantization (SQ) or product quantization (PQ) to reduce memory footprint by 4x-10x while maintaining >95% recall.
+- MONITOR index freshness: handle upsert/delete lag and ensure indices are optimized after large batch operations.
+- DESIGN efficient batching strategies: use parallel workers for upserts but respect API rate limits and connection pooling.`
+    },
+    {
+      id: 'rust-systems',
+      title: 'rust-systems',
+      category: 'System Architecture',
+      description: 'Memory-safe, high-performance systems development with zero-cost abstractions.',
+      tags: ['Rust', 'Systems', 'WASM', 'High Performance', 'Memory Safety'],
+      icon: 'shield',
+      isActive: false,
+      color: '#f97316',
+      fullInstructions: `- ENFORCE strict ownership and borrowing: minimize use of .clone() and prefer references where possible.
+- USE zero-cost abstractions: leverage traits, generics, and closures without runtime overhead.
+- IMPLEMENT safe concurrency: utilize Send and Sync traits, Arc/Mutex/RwLock for shared state, and Rayon for data parallelism.
+- MANAGE errors with Result and Option — avoid .unwrap() or .expect() in production code. Use the ? operator for propagation.
+- OPTIMIZE for performance: profile with flamegraph, use jemalloc for high-allocation workloads, and minimize dynamic dispatch (dyn).
+- DESIGN API crates with clear documentation and examples (doc tests) following the Rust API Guidelines.`
+    },
+    {
+      id: 'advanced-typescript',
+      title: 'advanced-typescript',
+      category: 'System Architecture',
+      description: 'Mastery of type systems, advanced generics, and sound architecture for large-scale TS apps.',
+      tags: ['Type Gymnastics', 'Generics', 'Mapped Types', 'Conditional Types'],
+      icon: 'symbol-interface',
+      isActive: false,
+      color: '#3178c6',
+      fullInstructions: `- USE conditional types (T extends U ? X : Y) to build flexible, type-safe API responses.
+- IMPLEMENT mapped types and template literal types for robust string manipulation and configuration objects.
+- ENFORCE exhaustiveness checking in switch statements using the 'never' type.
+- LEVERAGE Discriminated Unions for complex state management and payload handling.
+- BUILD reusable utility types: DeepPartial, DeepReadonly, PickByType, and OmitByType for complex object manipulation.
+- PREFER 'unknown' over 'any' for untrusted inputs — enforce validation at the boundary before casting.`
+    },
+    {
+      id: 'ai-orchestration',
+      title: 'ai-orchestrator',
+      category: 'AI & Intelligence',
+      description: 'Building autonomous multi-agent systems and complex LLM workflows.',
+      tags: ['LangGraph', 'AutoGPT', 'Multi-agent', 'Workflows'],
+      icon: 'workflow',
+      isActive: false,
+      color: '#10b981',
+      fullInstructions: `- DESIGN stateful workflows: use graph-based state machines (like LangGraph) for multi-step agent interactions with feedback loops.
+- IMPLEMENT tool-use (Function Calling) with strict validation and retry logic for agent-to-environment interactions.
+- MANAGE agent hand-offs: define clear criteria for when one specialized agent should delegate to another.
+- IMPLEMENT 'Human-in-the-loop' checkpoints for sensitive actions (e.g., file deletion, database writes).
+- OPTIMIZE token usage: summarize long-running histories and use selective context injection (caching).
+- MONITOR agent behavior: log thought chains, tool calls, and execution graphs for debugging and audit trails.`
+    },
+    {
+      id: 'enterprise-i18n',
+      title: 'enterprise-i18n',
+      category: 'Standalone',
+      description: 'Scaling localized applications with complex RTL support and cultural adaptation.',
+      tags: ['i18n', 'L10n', 'RTL', 'Arabic', 'Multi-region'],
+      icon: 'globe',
+      isActive: false,
+      color: '#6366f1',
+      fullInstructions: `- DESIGN for RTL (Right-to-Left) from day one: use logical properties (margin-inline, padding-block) instead of physical ones.
+- IMPLEMENT pluralization and gender-aware translations using ICU MessageFormat — never concatenate strings.
+- MANAGE translation workflows: use TMS (Translation Management Systems) and automated pull requests for localized content.
+- HANDLE dynamic content: ensure layouts accommodate 30-50% text expansion in certain languages (e.g., German, Arabic).
+- OPTIMIZE font loading: use subsetted fonts for different character sets (Arabic, CJK) to reduce initial load time.
+- VALIDATE locale formatting: dates, numbers, currencies, and address formats must be localized using Intl API.`
+    },
+    {
+      id: 'database-tuning',
+      title: 'db-tuner',
+      category: 'Standalone',
+      description: 'Deep performance optimization and scaling for relational databases (Postgres/MySQL).',
+      tags: ['PostgreSQL', 'Query Plan', 'Vacuum', 'Indexing', 'Tuning'],
+      icon: 'server-process',
+      isActive: false,
+      color: '#22c55e',
+      fullInstructions: `- ANALYZE Wait Events: use pg_stat_activity and performance schema to identify bottlenecks (IO vs CPU vs Locks).
+- OPTIMIZE Indexing: identify redundant indices and add covering indices to eliminate heap fetches (Index Only Scan).
+- MANAGE Autovacuum (Postgres): tune scale factors and cost limits to prevent bloat without impacting performance.
+- TUNE configuration: adjust shared_buffers, work_mem, and maintenance_work_mem based on workload (OLTP vs OLAP).
+- IMPLEMENT connection pooling (PgBouncer/ProxySQL) to handle high-concurrency connections efficiently.
+- MONITOR Query Performance: use pg_stat_statements to identify the top 1% of queries consuming 90% of resources.`
+    },
+    {
+      id: 'stability-architect',
+      title: 'stability-architect',
+      category: 'Standalone',
+      description: 'Ensure code integrity, prevent regressions, and maintain architectural consistency during modifications.',
+      tags: ['Code Safety', 'Regression Prevention', 'Integrity'],
+      icon: 'shield-check',
+      isActive: false,
+      color: '#10b981',
+      fullInstructions: `- NEVER delete existing logic, functions, or utility calls unless explicitly requested or redundant.
+- ENSURE all new functions are properly invoked/referenced in the appropriate lifecycle or execution paths.
+- VERIFY imports and dependencies after modification to prevent "silent" breaks in functionality.
+- PRESERVE existing architectural patterns and naming conventions to maintain codebase homogeneity.
+- AUDIT the "before" state of a file before committing changes to ensure no unintended deletions occurred.
+- VALIDATE that new features do not shadow or overwrite existing critical variables or state.`
+    },
+    {
+      id: 'legacy-modernizer',
+      title: 'legacy-modernizer',
+      category: 'Standalone',
+      description: 'Transform aging codebases into modern, type-safe, and performant implementations.',
+      tags: ['Migration', 'Refactor', 'TypeScript Upgrade', 'Legacy Code'],
+      icon: 'history',
+      isActive: false,
+      color: '#78350f',
+      fullInstructions: `- ANALYZE legacy patterns: identify outdated APIs, class-based components, and untyped objects for modernization.
+- IMPLEMENT incremental migration: move from JS to TS by adding types to boundaries first, then internals.
+- REFACTOR Class-based components to Functional components with Hooks in React/Vue.
+- UPDATE deprecated dependencies: identify breaking changes in package updates and apply necessary shims or code changes.
+- ELIMINATE "Technical Debt": remove dead code, simplify complex conditionals, and introduce modern language features (ES6+).
+- ENSURE functional parity: use unit tests to verify that the modernized code behaves exactly like the original.`
+    },
+    {
+      id: 'docker-maestro',
+      title: 'docker-maestro',
+      category: 'Standalone',
+      description: 'Architect high-performance container environments and robust orchestration logic.',
+      tags: ['Docker', 'Kubernetes', 'CI/CD', 'Containers'],
+      icon: 'package',
+      isActive: false,
+      color: '#2496ed',
+      fullInstructions: `- DESIGN multi-stage builds: use separate stages for building and runtime to minimize image size and attack surface.
+- IMPLEMENT optimized Dockerfiles: leverage layer caching, use non-root users, and minimize installed packages.
+- ORCHESTRATE complex services: use Docker Compose for local development with proper networking, volumes, and health checks.
+- MANAGE Kubernetes manifests: write clean, versioned YAML for Deployments, Services, Ingress, and ConfigMaps.
+- CONFIGURE environment isolation: use secret managers and environment variables — never bake credentials into images.
+- OPTIMIZE container performance: set CPU/Memory limits and use efficient base images like Alpine or Distroless.`
+    },
+    {
+      id: 'threejs-wizard',
+      title: 'threejs-wizard',
+      category: 'Standalone',
+      description: 'Create immersive 3D web experiences using WebGL and advanced rendering techniques.',
+      tags: ['Three.js', 'WebGL', '3D Graphics', 'Shaders'],
+      icon: 'circuit-board',
+      isActive: false,
+      color: '#000000',
+      fullInstructions: `- OPTIMIZE the render loop: use requestAnimationFrame, minimize draw calls, and implement object pooling for dynamic scenes.
+- MANAGE assets efficiently: use GLTF/GLB formats, implement texture compression, and lazy-load heavy 3D assets.
+- CREATE custom shaders: write performant GLSL for special effects, lighting, and material transitions.
+- IMPLEMENT responsive 3D: handle window resizing, pixel ratio adjustments, and mobile-specific performance optimizations.
+- BUILD interactive environments: use Raycasting for mouse/touch interactions and implement smooth camera transitions (OrbitControls/Tweening).
+- DEBUG with precision: use Spector.js or Three.js Inspector to identify bottlenecking geometries or materials.`
+    },
+    {
+      id: 'accessibility-advocate',
+      title: 'accessibility-advocate',
+      category: 'Frontend Design',
+      description: 'Ensure digital products are usable by everyone through WCAG 2.1 compliance and inclusive design.',
+      tags: ['A11y', 'WCAG', 'ARIA', 'Inclusive Design'],
+      icon: 'accessibility',
+      isActive: false,
+      color: '#4f46e5',
+      fullInstructions: `- ENFORCE WCAG 2.1 AA standards: ensure 4.5:1 contrast ratios, proper heading hierarchy, and logical focus order.
+- IMPLEMENT semantic HTML: use proper elements (<button>, <nav>, <main>) instead of generic <div> tags for better screen reader support.
+- ENHANCE with ARIA: use aria-labels, aria-expanded, and live regions only when native HTML is insufficient.
+- OPTIMIZE for Keyboard Navigation: ensure all interactive elements are focusable and have visible focus indicators.
+- VALIDATE with tools: run automated audits (Lighthouse/axe-core) and perform manual screen reader testing (NVDA/VoiceOver).
+- DESIGN for diverse needs: support high-contrast modes, reduced motion preferences, and large font sizes.`
+    },
+    {
+      id: 'state-architect',
+      title: 'state-architect',
+      category: 'Standalone',
+      description: 'Design scalable, maintainable state management systems for complex frontend applications.',
+      tags: ['Redux', 'Zustand', 'Context API', 'State Management'],
+      icon: 'split-horizontal',
+      isActive: false,
+      color: '#7c3aed',
+      fullInstructions: `- DESIGN normalized state: store data in flat structures to simplify updates and prevent redundant synchronization.
+- MINIMIZE re-renders: use selectors (reselect) and memoization to ensure components only update when relevant state changes.
+- IMPLEMENT unidirectional data flow: ensure all state mutations happen through explicit actions/reducers to maintain predictability.
+- SEPARATE concerns: distinguish between Global UI state, Server-cached data (React Query), and Local component state.
+- ARCHITECT for scale: use slices or modular store patterns to keep state management logic maintainable as the app grows.
+- DEBUG effectively: leverage DevTools for time-travel debugging and state snapshot analysis.`
+    },
+    {
+      id: 'algorithm-strategist',
+      title: 'algorithm-strategist',
+      category: 'Strategy & Logic',
+      description: 'Optimize performance through advanced data structures and algorithmic efficiency.',
+      tags: ['Big O', 'Data Structures', 'Performance', 'Complexity'],
+      icon: 'symbol-method',
+      isActive: false,
+      color: '#1e40af',
+      fullInstructions: `- ANALYZE computational complexity: always calculate Big O (Time & Space) for critical logic paths.
+- SELECT optimal data structures: use Maps for O(1) lookups, Sets for unique collections, and Trees/Graphs when hierarchal relationships exist.
+- OPTIMIZE loops: eliminate nested loops where possible by using hash maps or two-pointer techniques.
+- IMPLEMENT memoization: cache results of expensive recursive functions to avoid redundant calculations.
+- REFACTOR for efficiency: replace brute-force solutions with divide-and-conquer or dynamic programming strategies when appropriate.
+- BENCHMARK execution: use performance.now() or console.time() to verify that the optimized algorithm is actually faster.`
+    },
+    {
+      id: 'unit-test-guardian',
+      title: 'unit-test-guardian',
+      category: 'Standalone',
+      description: 'Write bulletproof tests that document behavior and prevent regressions.',
+      tags: ['Testing', 'Vitest', 'Jest', 'Edge Cases'],
+      icon: 'shield',
+      isActive: false,
+      color: '#047857',
+      fullInstructions: `- TEST the edges: prioritize tests for null inputs, empty arrays, maximum values, and network failures.
+- DOCUMENT through testing: write test descriptions that explain exactly what the behavior should be, not how it's implemented.
+- USE the AAA pattern: ensure every test clearly separates Arrange, Act, and Assert stages.
+- IMPLEMENT effective mocks: mock external dependencies strictly at the boundary to keep tests fast and isolated.
+- ENSURE deterministic tests: avoid dependencies on current time, random numbers, or external file systems.
+- REPRODUCE before fixing: always write a failing test that captures a bug before implementing the fix.`
+    },
+    {
+      id: 'seo-engineer',
+      title: 'seo-engineer',
+      category: 'Standalone',
+      description: 'Optimize technical SEO, metadata, and semantic structure for maximum search visibility.',
+      tags: ['SEO', 'Semantic HTML', 'Meta Tags', 'JSON-LD'],
+      icon: 'search',
+      isActive: false,
+      color: '#ea580c',
+      fullInstructions: `- ENFORCE Semantic HTML: use <main>, <article>, <section>, and <header> correctly to provide document structure to crawlers.
+- OPTIMIZE Metadata: ensure unique, keyword-rich <title> and <meta name="description"> tags for every page.
+- IMPLEMENT Structured Data: use JSON-LD to provide rich snippets for articles, products, breadcrumbs, and organizations.
+- MONITOR Core Web Vitals: prioritize LCP, FID, and CLS by optimizing images, fonts, and scripts.
+- MANAGE robots & sitemaps: ensure correct robots.txt directives and automated sitemap generation for dynamic routes.
+- DESIGN for Mobile-First: verify that all layouts and interactive elements are optimized for mobile indexing.`
+    },
+    {
+      id: 'storybook-master',
+      title: 'storybook-master',
+      category: 'Standalone',
+      description: 'Architect living component libraries with comprehensive documentation and visual testing.',
+      tags: ['Storybook', 'Documentation', 'UI Library', 'Visual Testing'],
+      icon: 'layers',
+      isActive: false,
+      color: '#ff4785',
+      fullInstructions: `- DOCUMENT every variant: create stories for all states (default, hover, active, loading, disabled, error).
+- DEFINE clear Prop contracts: use ArgTypes to document every prop with descriptions, types, and default values.
+- IMPLEMENT accessibility checks: use the @storybook/addon-a11y to audit components during development.
+- STRUCTURE the library: group components logically (Atoms, Molecules, Organisms) using the Atomic Design methodology.
+- UTILIZE decorators: use decorators to provide theme, routing, and state context to isolated components.
+- ENABLE interaction testing: use play functions to automate user interactions within stories.`
+    },
+    {
+      id: 'cyber-compliance-auditor',
+      title: 'cyber-compliance-auditor',
+      category: 'Cloud & Security',
+      description: 'Ensure code complies with global security standards like OWASP Top 10 and GDPR.',
+      tags: ['Security', 'Compliance', 'GDPR', 'OWASP'],
+      icon: 'lock',
+      isActive: false,
+      color: '#dc2626',
+      fullInstructions: `- AUDIT against OWASP: identify and fix common vulnerabilities like SQL injection, XSS, and broken access control.
+- ENFORCE Data Privacy: implement strict field-level encryption for sensitive user data (PII) as per GDPR/HIPAA.
+- SECURE API Headers: implement Content-Security-Policy (CSP), HSTS, and X-Frame-Options to protect against browser-based attacks.
+- VALIDATE supply chain: audit third-party dependencies for known vulnerabilities and licenses using npm-audit or Snyk.
+- IMPLEMENT Least Privilege: ensure that service accounts and tokens have only the minimum necessary permissions.
+- LOG for Auditing: maintain immutable logs of security-sensitive operations (logins, permission changes, sensitive data access).`
     }
   ];
 
   constructor(private context: vscode.ExtensionContext) {
-    this.loadState();
+    // Initial state loading moved to loadState() called during activation
   }
 
   getSkills(): Skill[] {
@@ -842,9 +1239,19 @@ export class SkillService {
       return acc;
     }, {} as Record<string, boolean>);
     this.context.globalState.update('antigravity.skills', state);
+
+    // Save custom skills
+    const customSkills = this.skills.filter(s => s.isCustom);
+    this.context.globalState.update('antigravity.customSkills', customSkills);
   }
 
-  private loadState() {
+  public async loadState() {
+    // Load custom skills
+    const customSkills = this.context.globalState.get<Skill[]>('antigravity.customSkills') || [];
+    this.skills = this.skills.filter(s => !s.isCustom);
+    this.skills.push(...customSkills);
+
+
     const state = this.context.globalState.get<Record<string, boolean>>('antigravity.skills') || {};
     this.skills.forEach(s => {
       if (state[s.id] !== undefined) {
@@ -852,6 +1259,22 @@ export class SkillService {
       }
     });
     // Sync instruction files on activation with previously saved state
-    this.injectSkillsToWorkspace();
+    await this.injectSkillsToWorkspace();
   }
+
+  public addCustomSkill(skill: Skill) {
+    skill.isCustom = true;
+    this.skills.push(skill);
+    this.saveState();
+    this.injectSkillsToWorkspace();
+    this._onDidChangeSkills.fire();
+  }
+
+  public deleteCustomSkill(id: string) {
+    this.skills = this.skills.filter(s => s.id !== id);
+    this.saveState();
+    this.injectSkillsToWorkspace();
+    this._onDidChangeSkills.fire();
+  }
+
 }

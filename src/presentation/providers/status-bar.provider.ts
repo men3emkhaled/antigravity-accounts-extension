@@ -119,7 +119,7 @@ export class StatusBarProvider implements vscode.Disposable {
 
     // ── Phase 0: Collect and categorize ──
     for (const [k, rawV] of Object.entries(balances)) {
-      if (!k) continue;
+      if (!k) {continue;}
       const lowerKey = k.toLowerCase();
 
       if (typeof rawV === 'object' && rawV !== null && 'value' in rawV) {
@@ -155,7 +155,7 @@ export class StatusBarProvider implements vscode.Disposable {
     // ── Phase 4: Unconditional exclusion of "lite" models ──
     const afterLiteFilter = new Map<string, { key: string; value: number; resetTime?: string }>();
     for (const [baseKey, model] of baseKeyMap) {
-      if (baseKey.match(/[-_\s]?lite$/i)) continue;
+      if (baseKey.match(/[-_\s]?lite$/i)) {continue;}
       afterLiteFilter.set(baseKey, model);
     }
 
@@ -182,7 +182,7 @@ export class StatusBarProvider implements vscode.Disposable {
     const claudeByBalance = new Map<string, typeof claudeModels>();
     for (const cm of claudeModels) {
       const fp = balanceFingerprint(cm.model);
-      if (!claudeByBalance.has(fp)) claudeByBalance.set(fp, []);
+      if (!claudeByBalance.has(fp)) {claudeByBalance.set(fp, []);}
       claudeByBalance.get(fp)!.push(cm);
     }
 
@@ -196,7 +196,7 @@ export class StatusBarProvider implements vscode.Disposable {
       const byVersion = new Map<string, typeof group>();
       for (const cm of group) {
         const version = extractClaudeVersion(cm.baseKey);
-        if (!byVersion.has(version)) byVersion.set(version, []);
+        if (!byVersion.has(version)) {byVersion.set(version, []);}
         byVersion.get(version)!.push(cm);
       }
 
@@ -219,9 +219,9 @@ export class StatusBarProvider implements vscode.Disposable {
     models.sort((a, b) => {
       const aCritical = a.value < 20;
       const bCritical = b.value < 20;
-      if (aCritical && !bCritical) return 1;
-      if (!aCritical && bCritical) return -1;
-      if (a.value !== b.value) return b.value - a.value;
+      if (aCritical && !bCritical) {return 1;}
+      if (!aCritical && bCritical) {return -1;}
+      if (a.value !== b.value) {return b.value - a.value;}
       return 0;
     });
 

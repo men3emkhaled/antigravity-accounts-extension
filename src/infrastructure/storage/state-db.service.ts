@@ -15,6 +15,7 @@ import { DeviceProfile } from '../../core/domain/models/device-profile.model';
 import { STATE_DB_KEYS, STORAGE_JSON_KEYS, PERSONAL_EMAIL_DOMAINS } from '../../core/constants/app.constants';
 import { getAntigravityVersion, isVersionSupported, MIN_SUPPORTED_VERSION } from '../../core/utils/version.utils';
 import { IStateDbService } from '../../core/domain/services/state-db.service';
+import initSqlJs = require('sql.js');
 
 export class StateDbService implements IStateDbService {
   constructor(private readonly context?: vscode.ExtensionContext) { }
@@ -34,7 +35,9 @@ export class StateDbService implements IStateDbService {
 
     try {
       this.performRollingBackup(dbPath);
-      if (deviceProfile) this.writeDeviceProfileToStorageJson(deviceProfile);
+      if (deviceProfile) {
+        this.writeDeviceProfileToStorageJson(deviceProfile);
+      }
 
       const isGcpTos = !PERSONAL_EMAIL_DOMAINS.some(d => account.email.toLowerCase().endsWith(d));
       const oauthToken = ProtobufUtils.createUnifiedOAuthToken(tokens.accessToken, tokens.refreshToken, tokens.expiresAt, isGcpTos, undefined, account.email);
@@ -54,7 +57,7 @@ export class StateDbService implements IStateDbService {
       const triggered = await this.triggerWorkerAndClose(account.email, dbPath, rows);
       return triggered ? 'success' : 'cancelled';
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       Logger.getInstance().error('Injection failed', error);
       return 'error';
     }
@@ -62,23 +65,34 @@ export class StateDbService implements IStateDbService {
 
   async getActiveEmail(): Promise<string | null> {
     const dbPath = PathUtils.getVscdbPath();
-    if (!fs.existsSync(dbPath)) return null;
+    if (!fs.existsSync(dbPath)) {
+      return null;
+    }
     try {
-      const SQL = await (require('sql.js'))();
+      const SQL = await initSqlJs();
       const db = new SQL.Database(fs.readFileSync(dbPath));
       const stmt = db.prepare('SELECT value FROM ItemTable WHERE key = $key');
       stmt.bind({ $key: STATE_DB_KEYS.USER_STATUS });
-      if (!stmt.step()) { stmt.free(); db.close(); return null; }
+      if (!stmt.step()) {
+        stmt.free();
+        db.close();
+        return null;
+      }
       const email = this.extractEmailFromUserStatus(stmt.get()[0] as string);
-      stmt.free(); db.close();
+      stmt.free();
+      db.close();
       return email;
-    } catch { return null; }
+    } catch {
+      return null;
+    }
   }
 
-  private async triggerWorkerAndClose(email: string, dbPath: string, rows: any[]): Promise<boolean> {
+  private async triggerWorkerAndClose(email: string, dbPath: string, rows: Array<{ key: string; value: string | null }>): Promise<boolean> {
     const i18n = I18nService.getInstance();
     const choice = await vscode.window.showInformationMessage(i18n.t('switchPrompt.title', { email }), { modal: true, detail: i18n.t('stateDb.reloadPrompt') }, i18n.t('switchPrompt.actionYes'), i18n.t('switchPrompt.actionNo'));
-    if (choice !== i18n.t('switchPrompt.actionYes')) return false;
+    if (choice !== i18n.t('switchPrompt.actionYes')) {
+      return false;
+    }
 
     const workDir = __dirname;
     const payloadPath = path.join(workDir, '.inject-payload.json');
@@ -161,10 +175,15 @@ run().catch(() => process.exit(1));
           const type = tag & 0x07; const num = tag >> 3;
           if (type === 2) {
             const len = data[off++];
-            if (num === field) return data.slice(off, off + len);
+            if (num === field) {return data.slice(off, off + len);}
             off += len;
-          } else if (type === 0) { while (data[off++] & 0x80); }
-          else break;
+          } else if (type === 0) {
+            while (data[off++] & 0x80) {
+              // Skip varint
+            }
+          } else {
+            break;
+          }
         }
         return null;
       };
@@ -172,27 +191,39 @@ run().catch(() => process.exit(1));
       const data = extract(bytes, 1);
       const row = data ? extract(data, 2) : null;
       const inner = row ? extract(row, 1)?.toString('utf-8') : null;
-      if (!inner) return null;
+      if (!inner) {
+        return null;
+      }
       const payload = Buffer.from(inner, 'base64');
       return extract(payload, 3)?.toString('utf-8') || extract(payload, 7)?.toString('utf-8') || null;
-    } catch { return null; }
+    } catch {
+      return null;
+    }
   }
 
   private performRollingBackup(dbPath: string): void {
     try {
-      for (let i = 4; i >= 1; i--) { if (fs.existsSync(`${dbPath}.${i}`)) fs.renameSync(`${dbPath}.${i}`, `${dbPath}.${i+1}`); }
+      for (let i = 4; i >= 1; i--) {
+        if (fs.existsSync(`${dbPath}.${i}`)) {
+          fs.renameSync(`${dbPath}.${i}`, `${dbPath}.${i + 1}`);
+        }
+      }
       fs.copyFileSync(dbPath, `${dbPath}.1`);
-    } catch {}
+    } catch (e) {
+      Logger.getInstance().error('Backup failed', e);
+    }
   }
 
   private writeDeviceProfileToStorageJson(profile: DeviceProfile): void {
     const p = PathUtils.getStorageJsonPath();
     try {
-      let d = fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf-8')) : {};
+      const d = fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf-8')) : {};
       d[STORAGE_JSON_KEYS.MACHINE_ID] = profile.machineId;
       d[STORAGE_JSON_KEYS.MAC_MACHINE_ID] = profile.macMachineId;
       d[STORAGE_JSON_KEYS.DEV_DEVICE_ID] = profile.devDeviceId;
       fs.writeFileSync(p, JSON.stringify(d, null, 2));
-    } catch {}
+    } catch (e) {
+      Logger.getInstance().error('Failed to write device profile', e);
+    }
   }
 }

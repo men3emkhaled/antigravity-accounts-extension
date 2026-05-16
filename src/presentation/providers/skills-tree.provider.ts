@@ -1,25 +1,86 @@
 import * as vscode from 'vscode';
 import { SkillService, Skill } from '../../features/skills/skill.service';
 
-export class SkillsTreeProvider implements vscode.TreeDataProvider<SkillTreeItem> {
-  private _onDidChangeTreeData: vscode.EventEmitter<SkillTreeItem | undefined | void> = new vscode.EventEmitter<SkillTreeItem | undefined | void>();
-  readonly onDidChangeTreeData: vscode.Event<SkillTreeItem | undefined | void> = this._onDidChangeTreeData.event;
+export class SkillsTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+  private filterQuery: string = '';
+  private _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined | void> = new vscode.EventEmitter<vscode.TreeItem | undefined | void>();
+  readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined | void> = this._onDidChangeTreeData.event;
 
-  constructor(private skillService: SkillService) {}
+  constructor(private skillService: SkillService) {
+    skillService.onDidChangeSkills(() => this.refresh());
+  }
 
   refresh(): void {
     this._onDidChangeTreeData.fire();
   }
 
-  getTreeItem(element: SkillTreeItem): vscode.TreeItem {
+  setFilter(query: string): void {
+    this.filterQuery = query.toLowerCase();
+    this.refresh();
+  }
+
+  getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
     return element;
   }
 
-  getChildren(element?: SkillTreeItem): Thenable<SkillTreeItem[]> {
-    if (element) return Promise.resolve([]);
+  getChildren(element?: vscode.TreeItem): Thenable<vscode.TreeItem[]> {
+    let skills = this.skillService.getSkills();
+    
+    if (this.filterQuery) {
+      skills = skills.filter(skill => 
+        skill.title.toLowerCase().includes(this.filterQuery) || 
+        skill.category.toLowerCase().includes(this.filterQuery) ||
+        skill.description.toLowerCase().includes(this.filterQuery) ||
+        skill.tags.some(tag => tag.toLowerCase().includes(this.filterQuery))
+      );
+      return Promise.resolve(skills.map(skill => new SkillTreeItem(skill)));
+    }
 
-    const skills = this.skillService.getSkills();
-    return Promise.resolve(skills.map(skill => new SkillTreeItem(skill)));
+    if (element) {
+      if (element instanceof CategoryTreeItem) {
+        const categorySkills = skills.filter(s => s.category === element.categoryName);
+        return Promise.resolve(categorySkills.map(skill => new SkillTreeItem(skill)));
+      }
+      return Promise.resolve([]);
+    }
+
+    // Root level
+    const groups = new Map<string, Skill[]>();
+    const standalone: Skill[] = [];
+
+    skills.forEach(skill => {
+      if (!skill.category || skill.category.toLowerCase() === 'standalone') {
+        standalone.push(skill);
+      } else {
+        if (!groups.has(skill.category)) {
+          groups.set(skill.category, []);
+        }
+        groups.get(skill.category)!.push(skill);
+      }
+    });
+
+    const items: vscode.TreeItem[] = [];
+    
+    for (const [category, groupSkills] of groups.entries()) {
+      const activeCount = groupSkills.filter(s => s.isActive).length;
+      items.push(new CategoryTreeItem(category, groupSkills.length, activeCount));
+    }
+
+    standalone.forEach(skill => {
+      items.push(new SkillTreeItem(skill));
+    });
+
+    items.sort((a, b) => {
+      // arabic-localization always at the very top
+      if (a instanceof SkillTreeItem && a.skill.id === 'arabic-localization') return -1;
+      if (b instanceof SkillTreeItem && b.skill.id === 'arabic-localization') return 1;
+      
+      if (a instanceof CategoryTreeItem && b instanceof SkillTreeItem) return -1;
+      if (a instanceof SkillTreeItem && b instanceof CategoryTreeItem) return 1;
+      return a.label!.toString().localeCompare(b.label!.toString());
+    });
+
+    return Promise.resolve(items);
   }
 }
 
@@ -44,5 +105,14 @@ class SkillTreeItem extends vscode.TreeItem {
       title: 'Toggle Skill',
       arguments: [skill.id]
     };
+  }
+}
+
+export class CategoryTreeItem extends vscode.TreeItem {
+  constructor(public readonly categoryName: string, count: number, activeCount: number) {
+    super(categoryName, vscode.TreeItemCollapsibleState.Collapsed);
+    this.contextValue = 'categoryItem';
+    this.description = activeCount > 0 ? `${activeCount}/${count} ACTIVE` : `${count} skills`;
+    this.iconPath = new vscode.ThemeIcon('folder');
   }
 }

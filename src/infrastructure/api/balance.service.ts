@@ -29,16 +29,16 @@ export class BalanceService implements IBalanceService {
       if (codeAssist) {
         result.plan = this.parsePlanName(codeAssist.planName);
         result.projectId = codeAssist.projectId;
-        if (codeAssist.balances) result.balances = codeAssist.balances;
+        if (codeAssist.balances) {result.balances = codeAssist.balances;}
       }
 
       // Strategy 2: Fallback daily loadCodeAssist
       if (Object.keys(result.balances).length === 0) {
         const fallback = await this.tryFallbackLoadCodeAssist(accessToken);
         if (fallback) {
-          if (result.plan === AccountPlan.UNKNOWN) result.plan = this.parsePlanName(fallback.planName);
-          if (!result.projectId) result.projectId = fallback.projectId;
-          if (fallback.balances) result.balances = fallback.balances;
+          if (result.plan === AccountPlan.UNKNOWN) {result.plan = this.parsePlanName(fallback.planName);}
+          if (!result.projectId) {result.projectId = fallback.projectId;}
+          if (fallback.balances) {result.balances = fallback.balances;}
         }
       }
 
@@ -101,13 +101,13 @@ export class BalanceService implements IBalanceService {
         try {
           const data = await ApiClient.request<any>(url, { method: 'POST', body, accessToken });
           const models = data?.models;
-          if (!models) continue;
+          if (!models) {continue;}
 
           const modelEntries = Array.isArray(models) ? models.map((m: any) => [m.id || m.modelId, m]) : Object.entries(models);
 
           modelEntries.forEach((entry: any) => {
             const [id, m] = entry;
-            if (!m || typeof m !== 'object') return;
+            if (!m || typeof m !== 'object') {return;}
             
             const quota = m.quotaInfo || m.quota_info;
             if (quota) {
@@ -118,7 +118,7 @@ export class BalanceService implements IBalanceService {
             }
           });
 
-          if (Object.keys(balances).length > 0) return balances;
+          if (Object.keys(balances).length > 0) {return balances;}
         } catch {}
       }
     }
@@ -126,7 +126,7 @@ export class BalanceService implements IBalanceService {
   }
 
   private parseCodeAssistData(data: any) {
-    if (!data) return null;
+    if (!data) {return null;}
     const balances: Record<string, number> = {};
     let planName: string | undefined;
     
@@ -138,7 +138,7 @@ export class BalanceService implements IBalanceService {
         credits.forEach((c: any) => {
           const name = (c.creditType || c.credit_type || c.modelName || c.model_name || c.modelId || c.model_id || 'default').toString().toLowerCase();
           const amount = parseInt((c.creditAmount ?? c.credit_amount ?? c.amount ?? 0).toString(), 10);
-          if (!isNaN(amount)) balances[name] = amount;
+          if (!isNaN(amount)) {balances[name] = amount;}
         });
       }
     }
@@ -175,11 +175,11 @@ export class BalanceService implements IBalanceService {
   }
 
   private parsePlanName(name?: string): AccountPlan {
-    if (!name) return AccountPlan.UNKNOWN;
+    if (!name) {return AccountPlan.UNKNOWN;}
     const l = name.toLowerCase();
-    if (l.includes('ultra')) return AccountPlan.ULTRA;
-    if (l.includes('premium')) return AccountPlan.PREMIUM;
-    if (l.includes('free') || l.includes('standard')) return AccountPlan.FREE;
+    if (l.includes('ultra')) {return AccountPlan.ULTRA;}
+    if (l.includes('premium')) {return AccountPlan.PREMIUM;}
+    if (l.includes('free') || l.includes('standard')) {return AccountPlan.FREE;}
     return AccountPlan.UNKNOWN;
   }
 }

@@ -74,7 +74,7 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
   }
 
   public async refresh() {
-    if (!this._view || this._isDisposed) return;
+    if (!this._view || this._isDisposed) {return;}
 
     try {
       const html = await this._getHtmlForWebview();
@@ -100,7 +100,7 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
   private _getNonce(): string {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let i = 0; i < 32; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+    for (let i = 0; i < 32; i++) {text += possible.charAt(Math.floor(Math.random() * possible.length));}
     return text;
   }
 
@@ -111,25 +111,25 @@ export class AccountsWebviewProvider implements vscode.WebviewViewProvider {
     const isRefreshing = this.accountService.isRefreshing();
 
     const getAvgBalance = (acc: any) => {
-      if (!acc.balances || Object.keys(acc.balances).length === 0) return 0;
+      if (!acc.balances || Object.keys(acc.balances).length === 0) {return 0;}
       const values = Object.values(acc.balances).map((v: any) => typeof v === 'number' ? v : (v?.value || 0));
       return values.reduce((a, b) => a + b, 0) / values.length;
     };
 
     const sortedAccounts = [...rawAccounts].sort((a, b) => {
-      if (a.email === activeEmail) return -1;
-      if (b.email === activeEmail) return 1;
+      if (a.email === activeEmail) {return -1;}
+      if (b.email === activeEmail) {return 1;}
       return getAvgBalance(b) - getAvgBalance(a);
     });
 
     const getHeroStats = (acc: any) => {
-      let stats = { claude: 0, pro: 0, flash: 0 };
+      const stats = { claude: 0, pro: 0, flash: 0 };
       if (acc?.balances) {
         Object.keys(acc.balances).forEach(k => {
           const l = k.toLowerCase();
-          if (l.includes('claude') && !l.includes('all')) stats.claude = acc.balances[k]?.value || acc.balances[k] || 0;
-          if (l.includes('pro') || k === 'google_one_ai' || l.includes('total')) stats.pro = acc.balances[k]?.value || acc.balances[k] || 0;
-          if (l.includes('flash')) stats.flash = acc.balances[k]?.value || acc.balances[k] || 0;
+          if (l.includes('claude') && !l.includes('all')) {stats.claude = acc.balances[k]?.value || acc.balances[k] || 0;}
+          if (l.includes('pro') || k === 'google_one_ai' || l.includes('total')) {stats.pro = acc.balances[k]?.value || acc.balances[k] || 0;}
+          if (l.includes('flash')) {stats.flash = acc.balances[k]?.value || acc.balances[k] || 0;}
         });
       }
       return stats;

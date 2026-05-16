@@ -70,8 +70,8 @@ export class AccountsTreeProvider implements vscode.TreeDataProvider<AccountTree
 
       // Sort: active first, then by balance
       const sorted = [...accounts].sort((a, b) => {
-        if (a.email === activeEmail) return -1;
-        if (b.email === activeEmail) return 1;
+        if (a.email === activeEmail) {return -1;}
+        if (b.email === activeEmail) {return 1;}
         return 0;
       });
 
@@ -113,9 +113,9 @@ export class AccountsTreeProvider implements vscode.TreeDataProvider<AccountTree
           );
           
           let icon = 'circle-outline';
-          if (value === 0) icon = 'error';
-          else if (value <= 20) icon = 'warning';
-          else if (value > 50) icon = 'circle-filled';
+          if (value === 0) {icon = 'error';}
+          else if (value <= 20) {icon = 'warning';}
+          else if (value > 50) {icon = 'circle-filled';}
           
           child.iconPath = new vscode.ThemeIcon(icon);
           balanceItems.push(child);

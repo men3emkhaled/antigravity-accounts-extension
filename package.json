@@ -2,9 +2,9 @@
   "name": "agent-assistant",
   "displayName": "Agent Assistant",
   "description": "The definitive Expert Persona & Quota Management system for AI Agents. Empower your workflow with deep skill injection and real-time resource tracking.",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "icon": "logo2.png",
-  "publisher": "men3em",
+  "publisher": "Men3emkhaled",
   "repository": {
     "type": "git",
     "url": "https://github.com/men3emkhaled/agent-assistant-extension.git"
@@ -20,20 +20,23 @@
     "Other"
   ],
   "keywords": [
-    "men3em",
+    "antigravity",
+    "antigravity-ide",
+    "antigravity-hub",
     "agent-assistant",
-    "agent assistant",
-    "antigravity model balance",
-    "antigravity balance",
-    "antigravity ai",
-    "antigravity google-ai",
-    "antigravity credits",
-    "account-manager",
-    "google-ai",
-    "credits",
-    "multi-account"
+    "expert-skills",
+    "ai-assistant",
+    "vscode-extension",
+    "persona-management",
+    "rtl-support",
+    "arabic-ai",
+    "men3em"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:agent-assistant.addAccount",
+    "onView:agent-assistant.accountsView"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
@@ -45,6 +48,12 @@
       {
         "command": "agent-assistant.refreshAccounts",
         "title": "Refresh Accounts",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "agent-assistant.refreshBalances",
+        "title": "Refresh Model Balances",
+        "category": "Agent Assistant",
         "icon": "$(refresh)"
       },
       {
@@ -73,6 +82,32 @@
         "title": "Remove Account",
         "category": "Agent Assistant",
         "icon": "$(trash)"
+      },
+      {
+        "command": "agent-assistant.switchAccount",
+        "title": "Switch Active Account",
+        "category": "Agent Assistant",
+        "icon": "$(zap)"
+      },
+      {
+        "command": "agent-assistant.searchSkills",
+        "title": "Search Skills",
+        "icon": "$(search)"
+      },
+      {
+        "command": "agent-assistant.clearSkillsSearch",
+        "title": "Clear Search",
+        "icon": "$(close)"
+      },
+      {
+        "command": "agent-assistant.createCustomSkill",
+        "title": "Create Custom Skill",
+        "icon": "$(add)"
+      },
+      {
+        "command": "agent-assistant.deleteCustomSkill",
+        "title": "Delete Custom Skill",
+        "icon": "$(trash)"
       }
     ],
     "viewsContainers": {
@@ -95,19 +130,29 @@
           "id": "agent-assistant.skillsView",
           "name": "Expert Skills",
           "icon": "resources/icons/sidebar-icon.svg"
+        },
+        {
+          "id": "agent-assistant.customSkillsView",
+          "name": "Custom Skills",
+          "icon": "resources/icons/sidebar-icon.svg"
         }
       ]
     },
     "menus": {
       "view/item/context": [
         {
-          "command": "agent-assistant.treeSwitch",
+          "command": "agent-assistant.switchAccount",
           "when": "viewItem == inactiveAccount",
           "group": "inline"
         },
         {
           "command": "agent-assistant.treeDelete",
           "when": "viewItem == activeAccount || viewItem == inactiveAccount",
+          "group": "inline"
+        },
+        {
+          "command": "agent-assistant.deleteCustomSkill",
+          "when": "viewItem == customSkillItem",
           "group": "inline"
         }
       ],
@@ -130,6 +175,21 @@
         {
           "command": "agent-assistant.addAccount",
           "when": "view == agent-assistant.accountsView",
+          "group": "navigation"
+        },
+        {
+          "command": "agent-assistant.searchSkills",
+          "when": "view == agent-assistant.skillsView",
+          "group": "navigation"
+        },
+        {
+          "command": "agent-assistant.clearSkillsSearch",
+          "when": "view == agent-assistant.skillsView",
+          "group": "navigation"
+        },
+        {
+          "command": "agent-assistant.createCustomSkill",
+          "when": "view == agent-assistant.customSkillsView",
           "group": "navigation"
         }
       ]
@@ -209,6 +269,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
+    "@types/sql.js": "^1.4.11",
     "@types/vscode": "^1.85.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
