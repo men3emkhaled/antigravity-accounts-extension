@@ -4,6 +4,13 @@ All notable changes to the Agent Assistant ecosystem are documented here. This p
 
 ---
 
+## [1.0.6] - 2026-05-16
+### Visual Identity & Search Optimization
+- **Square Logo**: Replaced the rectangular icon with a high-fidelity square logo (1:1) and transparent background for maximum visibility in search results.
+- **Search Engine Optimization**: Expanded keywords to include 20+ variations of "Agent Assistant" and relevant AI models (GPT-4o, Claude 3.5, Gemini 1.5) to ensure top ranking in marketplaces.
+
+
+
 ## [1.0.5] - 2026-05-16
 ### Expert Skills Categorization & UI Overhaul
 - **Skill Folders**: Introduced a hierarchical tree view for Expert Skills, organizing 60+ skills into 9 premium categories (e.g., Premium UI & Design, System Architecture).
